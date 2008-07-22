@@ -100,6 +100,8 @@ import org.pentaho.di.ui.core.widget.TreeMemory;
 import org.pentaho.pms.core.CWM;
 import org.pentaho.pms.core.exception.CWMException;
 import org.pentaho.pms.factory.CwmSchemaFactoryInterface;
+import org.pentaho.pms.locale.LocaleInterface;
+import org.pentaho.pms.locale.Locales;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.mql.MQLQuery;
 import org.pentaho.pms.mql.MQLQueryFactory;
@@ -119,6 +121,8 @@ import org.pentaho.pms.schema.concept.types.aggregation.AggregationSettings;
 import org.pentaho.pms.schema.concept.types.datatype.DataTypeSettings;
 import org.pentaho.pms.schema.concept.types.fieldtype.FieldTypeSettings;
 import org.pentaho.pms.schema.concept.types.tabletype.TableTypeSettings;
+import org.pentaho.pms.schema.security.SecurityReference;
+import org.pentaho.pms.schema.security.SecurityService;
 import org.pentaho.pms.ui.concept.editor.ConceptEditorDialog;
 import org.pentaho.pms.ui.concept.editor.ConceptTreeModel;
 import org.pentaho.pms.ui.concept.editor.Constants;
@@ -135,8 +139,6 @@ import org.pentaho.pms.ui.jface.tree.ITreeNode;
 import org.pentaho.pms.ui.jface.tree.ITreeNodeChangedListener;
 import org.pentaho.pms.ui.jface.tree.TreeContentProvider;
 import org.pentaho.pms.ui.security.SecurityDialog;
-import org.pentaho.pms.schema.security.SecurityReference;
-import org.pentaho.pms.schema.security.SecurityService;
 import org.pentaho.pms.ui.tree.BusinessColumnTreeNode;
 import org.pentaho.pms.ui.tree.BusinessModelTreeNode;
 import org.pentaho.pms.ui.tree.BusinessModelsTreeNode;
@@ -155,16 +157,16 @@ import org.pentaho.pms.ui.tree.RelationshipTreeNode;
 import org.pentaho.pms.ui.tree.RelationshipsTreeNode;
 import org.pentaho.pms.ui.tree.SchemaMetaTreeNode;
 import org.pentaho.pms.ui.util.Const;
-import org.pentaho.pms.util.FileUtil;
+import org.pentaho.pms.ui.util.EnterOptionsDialog;
 import org.pentaho.pms.ui.util.GUIResource;
+import org.pentaho.pms.ui.util.ListSelectionDialog;
+import org.pentaho.pms.ui.util.Splash;
+import org.pentaho.pms.util.FileUtil;
 import org.pentaho.pms.util.ObjectAlreadyExistsException;
 import org.pentaho.pms.util.Settings;
-import org.pentaho.pms.ui.util.Splash;
 import org.pentaho.pms.util.UniqueArrayList;
 import org.pentaho.pms.util.UniqueList;
 import org.pentaho.pms.util.VersionHelper;
-import org.pentaho.pms.ui.util.EnterOptionsDialog;
-import org.pentaho.pms.ui.util.ListSelectionDialog;
 import org.pentaho.pms.util.logging.Log4jPMELayout;
 
 /**
@@ -2231,15 +2233,21 @@ public class MetaEditor implements SelectionListener {
       }
     }
 
-    String tableName = ""; //$NON-NLS-1$
-    if (physicalTable != null) {
-      tableName = physicalTable.getDisplayName(activeLocale);
-    }
-
     // Create a business table with a new ID and localized name
     BusinessTable businessTable = new BusinessTable(null, physicalTable);
   
-    businessTable.getConcept().setName(activeLocale, tableName);
+    // copy all localized names from physical table to new business table
+    Locales locales = schemaMeta.getLocales();
+    Iterator locIter = locales.getLocaleList().iterator();
+    while (locIter.hasNext()) {
+      LocaleInterface loc = (LocaleInterface) locIter.next();
+      String tableName = ""; //$NON-NLS-1$
+      if (physicalTable != null) {
+        tableName = physicalTable.getDisplayName(loc.getCode());
+      }
+      businessTable.getConcept().setName(loc.getCode(), tableName);
+    }
+    
     try {
       businessTable.setId(BusinessTable.proposeId(activeLocale, businessTable, physicalTable, activeModel
           .getBusinessTables()));
