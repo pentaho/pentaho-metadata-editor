@@ -55,11 +55,18 @@ public abstract class AbstractPropertyEditorWidget extends Composite implements 
 
   public AbstractPropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
       final String propertyId, final Map context) {
+    this(parent, style, conceptModel, propertyId, context, false);
+  }
+  
+  public AbstractPropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
+      final String propertyId, final Map context, final boolean lazyCreate) {
     super(parent, style);
     this.conceptModel = conceptModel;
     this.propertyId = propertyId;
     this.context = context;
-    createContents();
+    if (!lazyCreate) {
+      createContents();
+    }
     // subclasses can ditch this layout if they like
     setLayout(new FormLayout());
   }

@@ -26,17 +26,20 @@ import org.pentaho.pms.ui.util.GUIResource;
 public class SecurityPropertyEditorWidget extends AbstractPropertyEditorWidget {
 
   private static final Log logger = LogFactory.getLog(SecurityPropertyEditorWidget.class);
-  SecurityTableViewer securityTableViewer;
-  SecurityTablePermEditor securityTablePermEditor;
-  SecurityReference securityReference;
-  ToolItem addPermsToolItem;
-  ToolItem removePermsToolItem;
+  private SecurityTableViewer securityTableViewer;
+  private SecurityTablePermEditor securityTablePermEditor;
+  private SecurityReference securityReference;
+  private ToolItem addPermsToolItem;
+  private ToolItem removePermsToolItem;
+  private boolean contentsCreated = false;
+  private boolean securityOK;
   
   public SecurityPropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
       final String propertyId, final Map context, SecurityReference securityReference) {
-    super(parent, style, conceptModel, propertyId, context);
+    // delay call to createContents!
+    super(parent, style, conceptModel, propertyId, context, true);
     this.securityReference = securityReference;
-    securityTablePermEditor.setSecurityReference(securityReference);
+    createContents();
     refresh();
   }
 
@@ -46,7 +49,23 @@ public class SecurityPropertyEditorWidget extends AbstractPropertyEditorWidget {
         SecurityPropertyEditorWidget.this.widgetDisposed(e);
       }
     });
+    
+    securityOK = true;
+    try {
+      securityReference.getAcls();
+    } catch (Exception e) {
+      if (logger.isErrorEnabled()) {
+        logger.error("exception during connection to security service; ignoring", e);
+      }
+      securityOK = false;
+    }
 
+    if (!securityOK) {
+      parent.setLayout(new GridLayout(1, false));
+      Label label = new Label(parent, SWT.NONE);
+      label.setText("Unable to display widget. Either your security \nconfiguration is incorrect or your Pentaho BI \nServer is not running or not accessible.");
+    } else {
+    
     parent.setLayout(new GridLayout(3, false));
     
     Label label = new Label(parent, SWT.NONE);
@@ -94,7 +113,16 @@ public class SecurityPropertyEditorWidget extends AbstractPropertyEditorWidget {
     gridData.heightHint = 100;
     
     securityTablePermEditor = new SecurityTablePermEditor(parent, SWT.BORDER, securityTableViewer);
+    try {
+      securityTablePermEditor.setSecurityReference(securityReference);
+    } catch (Exception ignored) {
+      if (logger.isErrorEnabled()) {
+        logger.error("an exception occurred; ignoring");
+      }
+    }
     securityTablePermEditor.setLayoutData(gridData);
+    }
+    contentsCreated = true;
   }
 
   protected void widgetDisposed(final DisposeEvent e) {
@@ -133,11 +161,17 @@ public class SecurityPropertyEditorWidget extends AbstractPropertyEditorWidget {
   
   public void refresh() {
     refreshOverrideButton();
-    addPermsToolItem.setEnabled(isEditable());
-    removePermsToolItem.setEnabled(isEditable());
-    securityTableViewer.setSelection(new StructuredSelection());
-    securityTablePermEditor.setAllowEditing(isEditable());
-    setValue(getProperty().getValue());
+
+    if (securityOK) {
+      addPermsToolItem.setEnabled(isEditable());
+      removePermsToolItem.setEnabled(isEditable());
+      securityTableViewer.setSelection(new StructuredSelection());
+      securityTablePermEditor.setAllowEditing(isEditable());
+      securityTableViewer.getTable().setEnabled(isEditable());
+      setValue(getProperty().getValue());
+    }
+    
+    
   }
 
   public void cleanup() {
