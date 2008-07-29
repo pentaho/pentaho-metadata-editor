@@ -66,6 +66,7 @@ public class ConceptEditorDialog extends Dialog {
 
   public ConceptEditorDialog(final Shell parent, final IConceptTreeModel conceptTreeModel) {
     super(parent);
+    propertyEditorContext.put("locales", conceptTreeModel.getSchemaMeta().getLocales());
     this.conceptTreeModel = conceptTreeModel;
   }
 
