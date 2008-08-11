@@ -229,7 +229,6 @@ public abstract class AbstractPropertyEditorWidget extends Composite implements 
         e.printStackTrace();
       }
     }
-    refresh();
   }
 
   protected Map getContext() {
