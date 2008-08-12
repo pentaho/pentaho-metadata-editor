@@ -79,6 +79,9 @@ public class Constants {
     imageRegistry.put("remove-all-arrow", createImage(display, "remove_all.gif"));
     imageRegistry.put("pentaho-icon", createImage(display, "icon.png"));
     imageRegistry.put("bus-table-graph-icon", createImage(display, "business_table_lrg.png"));
+    
+    imageRegistry.put("role-icon", createImage(display, "group.png")); //$NON-NLS-1$ //$NON-NLS-2$
+    imageRegistry.put("user-icon", createImage(display, "user.png")); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private static Image createImage(final Display display, final String filename) {

@@ -58,6 +58,7 @@ public class PropertyGroupHelper {
     add(DefaultPropertyID.DESCRIPTION.getId(), GROUP_GENERAL);
     add(DefaultPropertyID.COMMENTS.getId(), GROUP_GENERAL);
     add(DefaultPropertyID.SECURITY.getId(), GROUP_GENERAL);
+    add(DefaultPropertyID.ROW_LEVEL_SECURITY.getId(), GROUP_GENERAL);
 
     // formatting group
     add(DefaultPropertyID.FONT.getId(), GROUP_FORMATTING);

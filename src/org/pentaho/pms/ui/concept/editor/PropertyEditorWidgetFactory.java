@@ -52,6 +52,7 @@ public class PropertyEditorWidgetFactory {
     propertyEditors.put(ConceptPropertyType.SECURITY, SecurityPropertyEditorWidget.class);
     propertyEditors.put(ConceptPropertyType.ALIGNMENT, AlignmentPropertyEditorWidget.class);
     propertyEditors.put(ConceptPropertyType.COLUMN_WIDTH, ColumnWidthPropertyEditorWidget.class);
+    propertyEditors.put(ConceptPropertyType.ROW_LEVEL_SECURITY, RowLevelSecurityPropertyEditorWidget.class);
     propertyEditorMap = Collections.unmodifiableMap(propertyEditors);
   }
 
