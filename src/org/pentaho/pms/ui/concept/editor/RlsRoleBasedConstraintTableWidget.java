@@ -199,6 +199,9 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
     }
 
     public Object[] getElements(final Object parent) {
+      if (map == null) {
+        return new Object[0];
+      }
       ConstraintEntry[] entries = new ConstraintEntry[map.keySet().size()];
       int i = 0;
       for (Map.Entry<SecurityOwner, String> entry : map.entrySet()) {
