@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.pentaho.pms.schema.security.RowLevelSecurity;
 import org.pentaho.pms.schema.security.SecurityOwner;
+import org.pentaho.pms.schema.security.SecurityReference;
 import org.pentaho.pms.schema.security.RowLevelSecurity.Type;
 
 /**
@@ -41,12 +42,16 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
   private RlsGlobalConstraintWidget globalWidget;
 
   private RlsRoleBasedConstraintWidget roleBasedWidget;
+  
+  private SecurityReference securityReference;
 
   // ~ Constructors ====================================================================================================
 
   public RowLevelSecurityPropertyEditorWidget(final Composite parent, final int style,
-      final IConceptModel conceptModel, final String propertyId, final Map context) {
-    super(parent, style, conceptModel, propertyId, context);
+      final IConceptModel conceptModel, final String propertyId, final Map context, final SecurityReference securityReference) {
+    super(parent, style, conceptModel, propertyId, context, true);
+    this.securityReference = securityReference;
+    createContents();
     refresh();
     if (logger.isDebugEnabled()) {
       logger.debug("created RowLevelSecurityPropertyEditorWidget");
@@ -128,7 +133,7 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
     });
     Map<SecurityOwner, String> constraintMap = ((RowLevelSecurity) getProperty().getValue())
         .getRoleBasedConstraintMap();
-    roleBasedWidget = new RlsRoleBasedConstraintWidget(parent, SWT.NONE, constraintMap);
+    roleBasedWidget = new RlsRoleBasedConstraintWidget(parent, SWT.NONE, securityReference, constraintMap);
     FormData fdRoleBasedWidget = new FormData();
     fdRoleBasedWidget.left = new FormAttachment(0, 20);
     fdRoleBasedWidget.top = new FormAttachment(roleBasedRadio, 0);

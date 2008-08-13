@@ -63,6 +63,7 @@ public class RlsGlobalConstraintWidget extends Composite {
       formulaField.dispose();
     }
     formulaField = new Text(this, SWT.WRAP | SWT.MULTI | SWT.BORDER  | SWT.H_SCROLL | SWT.V_SCROLL);
+    formulaField.setFont(Constants.getFontRegistry(Display.getCurrent()).get("formula-editor-font"));
     FormData fdFormula = new FormData();
     fdFormula.top = new FormAttachment(toolBar, 10);
     fdFormula.right = new FormAttachment(100, 0);

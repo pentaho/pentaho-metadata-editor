@@ -67,7 +67,7 @@ public class PropertyEditorWidgetFactory {
     Constructor cons = null;
     try {
       ArrayList<Class<?>> constParams = new ArrayList<Class<?>>(Arrays.asList(constructorParamTypes));
-      if (clazz == SecurityPropertyEditorWidget.class) {
+      if (clazz == SecurityPropertyEditorWidget.class || clazz == RowLevelSecurityPropertyEditorWidget.class) {
         constParams.add(SecurityReference.class);
       }
       cons = clazz.getConstructor((Class[]) constParams.toArray(new Class[0]));
@@ -97,10 +97,10 @@ public class PropertyEditorWidgetFactory {
       constructorArgs.add(conceptModel);
       constructorArgs.add(propertyId);
       constructorArgs.add(context);
-      if (clazz == SecurityPropertyEditorWidget.class) {
+      if (clazz == SecurityPropertyEditorWidget.class || clazz == RowLevelSecurityPropertyEditorWidget.class) {
         constructorArgs.add(securityReference);
       }
-
+      
       widget = (IPropertyEditorWidget) cons.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
     } catch (IllegalArgumentException e) {
       if (logger.isErrorEnabled()) {

@@ -1,6 +1,8 @@
 package org.pentaho.pms;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -28,6 +30,7 @@ import org.pentaho.pms.schema.concept.types.rowlevelsecurity.ConceptPropertyRowL
 import org.pentaho.pms.schema.concept.types.string.ConceptPropertyString;
 import org.pentaho.pms.schema.security.RowLevelSecurity;
 import org.pentaho.pms.schema.security.SecurityOwner;
+import org.pentaho.pms.schema.security.SecurityReference;
 import org.pentaho.pms.ui.concept.editor.ConceptModel;
 import org.pentaho.pms.ui.concept.editor.ConceptModificationEvent;
 import org.pentaho.pms.ui.concept.editor.Constants;
@@ -47,6 +50,8 @@ public class RowLevelSecurityPropertyEditorWidgetTestApp extends ApplicationWind
   private IConceptModel conceptModel;
 
   private SchemaMeta schemaMeta;
+  
+  private SecurityReference dummySecurityReference;
 
   // ~ Constructors ====================================================================================================
 
@@ -70,6 +75,35 @@ public class RowLevelSecurityPropertyEditorWidgetTestApp extends ApplicationWind
   }
 
   protected void initModel() {
+    dummySecurityReference = new SecurityReference() {
+
+      @Override
+      public List<String> getRoles() {
+          List<String> roles = new ArrayList<String>();
+          roles.add("Admin");
+          roles.add("Anonymous");
+          roles.add("Authenticated");
+          roles.add("ceo");
+          roles.add("cto");
+          roles.add("dev");
+          roles.add("dev_mgr");
+          return roles;
+      }
+
+      @Override
+      public List<String> getUsers() {
+        List<String> users = new ArrayList<String>();
+        users.add("joe");
+        users.add("suzy");
+        users.add("pat");
+        users.add("tiffany");
+        return users;
+      }
+      
+    };
+    
+    
+    
     conceptModel = new ConceptModel(new Concept());
     LocalizedStringSettings s1 = new LocalizedStringSettings();
     s1.setLocaleString("en_US", "chicken");
@@ -82,7 +116,7 @@ public class RowLevelSecurityPropertyEditorWidgetTestApp extends ApplicationWind
     map.put(new SecurityOwner(SecurityOwner.OWNER_TYPE_ROLE, "Admin"), "TRUE()");
     map.put(new SecurityOwner(SecurityOwner.OWNER_TYPE_USER, "suzy"), "TRUE()");
     map.put(new SecurityOwner(SecurityOwner.OWNER_TYPE_ROLE, "ceo"), "TRUE()");
-    map.put(new SecurityOwner(SecurityOwner.OWNER_TYPE_USER, "alice"), "TRUE()");
+//    map.put(new SecurityOwner(SecurityOwner.OWNER_TYPE_USER, "alice"), "TRUE()");
     RowLevelSecurity rls = new RowLevelSecurity(map);
     conceptModel.setProperty(new ConceptPropertyRowLevelSecurity(DefaultPropertyID.ROW_LEVEL_SECURITY.getId(), rls));
     // end setup RLS property
@@ -141,7 +175,7 @@ public class RowLevelSecurityPropertyEditorWidgetTestApp extends ApplicationWind
 
   protected Control createContents(final Composite parent) {
     RowLevelSecurityPropertyEditorWidget rlsWidget = new RowLevelSecurityPropertyEditorWidget(parent, SWT.NONE,
-        conceptModel, "row_level_security", null);
+        conceptModel, "row_level_security", null, dummySecurityReference);
     return rlsWidget;
   }
 

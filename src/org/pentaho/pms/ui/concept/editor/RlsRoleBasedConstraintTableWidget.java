@@ -145,6 +145,7 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
 
     // Set the default sorter for the viewer
     tableViewer.setSorter(new RlsRoleBasedConstraintTableSorter(0));
+    
   }
   
   class RlsRoleBasedConstraintTableSorter extends ViewerSorter {
@@ -212,7 +213,7 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
     }
   }
 
-  private class ConstraintEntry {
+  public static class ConstraintEntry {
     private SecurityOwner owner;
 
     private String formula;
@@ -303,6 +304,11 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
 
   public void refresh() {
     tableViewer.refresh();
+  }
+  
+  // poor way of providing access to selection changed events
+  public TableViewer getTableViewer() {
+    return tableViewer;
   }
 
 }

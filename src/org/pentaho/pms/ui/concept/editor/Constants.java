@@ -45,6 +45,7 @@ public class Constants {
     fontRegistry.put("card-title", new FontData[] { new FontData("Tahoma", 10, SWT.BOLD) }); //$NON-NLS-1$ //$NON-NLS-2$
     fontRegistry.put("group-name", new FontData[] { new FontData("Tahoma", 12, SWT.BOLD) }); //$NON-NLS-1$ //$NON-NLS-2$
     fontRegistry.put("prop-mgmt-title", new FontData[] { new FontData("Tahoma", 10, SWT.BOLD) }); //$NON-NLS-1$ //$NON-NLS-2$
+    fontRegistry.put("formula-editor-font", new FontData[] { new FontData("Courier New", 10, SWT.NORMAL) }); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private static void initImageRegistry(final Display display) {

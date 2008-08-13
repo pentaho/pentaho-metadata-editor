@@ -47,7 +47,7 @@ public class AddSecurityPermsDialog extends Dialog {
     label = new Label(composite, SWT.NONE);
     label = new Label(composite, SWT.NONE);
     label.setText("Assigned Users/Roles");
-    availSecurityOwnersTable = new AvailSecurityOwnersTableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL, securityReference);
+    availSecurityOwnersTable = new AvailSecurityOwnersTableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL, securityReference, security.getOwners());
     GridData gridData = new GridData(GridData.FILL_BOTH);
     gridData.verticalSpan = 3;
     availSecurityOwnersTable.getTable().setLayoutData(gridData);
@@ -95,7 +95,7 @@ public class AddSecurityPermsDialog extends Dialog {
     gridData.heightHint = 150;
     securityTablePermEditor.setLayoutData(gridData);
     
-    availSecurityOwnersTable.setSecuritySettings(security);
+//    availSecurityOwnersTable.setSecuritySettings(security);
     securityTablePermEditor.setSecurityReference(securityReference);
     return composite;
   }
@@ -105,7 +105,7 @@ public class AddSecurityPermsDialog extends Dialog {
     SecurityOwner[] selectedOwners = availSecurityOwnersTable.getSelectedOwners();
     for (int i = 0; i < selectedOwners.length; i++) {
       securityTableViewer.addOwner(selectedOwners[i]);
-      availSecurityOwnersTable.removeOwner(selectedOwners[i]);
+      removeOwner(selectedOwners[i]);
     }
     availSecurityOwnersTable.setSelection(new StructuredSelection());
     securityTableViewer.setSelection(new StructuredSelection(selectedOwners));
@@ -117,7 +117,7 @@ public class AddSecurityPermsDialog extends Dialog {
   protected void removePermsFromSelectedUsers() {
     SecurityOwner[] selectedOwners = securityTableViewer.getSelectedOwners();
     for (int i = 0; i < selectedOwners.length; i++) {
-      availSecurityOwnersTable.addOwner(selectedOwners[i]);
+      addOwner(selectedOwners[i]);
       securityTableViewer.removeOwner(selectedOwners[i]);
     }
   }
@@ -137,6 +137,16 @@ public class AddSecurityPermsDialog extends Dialog {
     }
     security = newSecurity;
     super.okPressed();
+  }
+  
+  public void addOwner(SecurityOwner owner) {
+    security.putOwnerRights(owner, 0);
+    availSecurityOwnersTable.refresh();
+  }
+  
+  public void removeOwner(SecurityOwner owner) {
+    security.removeOwnerRights(owner);
+    availSecurityOwnersTable.remove(owner);
   }
   
   
