@@ -190,7 +190,7 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
       rls.setType(NONE);
     }
 
-    // TODO get global formula and set on rls
+    rls.setGlobalConstraint(globalWidget.getGlobalConstraint());
 
     rls.setRoleBasedConstraintMap(roleBasedWidget.getRoleBasedConstraintMap());
     return rls;
@@ -209,5 +209,5 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
       updateRadioButtons(rls.getType());
     }
   }
-
+  
 }

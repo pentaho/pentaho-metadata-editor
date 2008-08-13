@@ -1,6 +1,9 @@
 package org.pentaho.pms.ui.concept.editor;
 
-import org.eclipse.jface.dialogs.MessageDialog;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -12,6 +15,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.pentaho.pms.schema.security.SecurityOwner;
+import org.pentaho.pms.ui.dialog.GlobalConstraintDialog;
 
 /**
  * Part of {@link RowLevelSecurityPropertyEditorWidget}.
@@ -23,7 +28,7 @@ public class RlsGlobalConstraintWidget extends Composite {
   private ToolBar toolBar;
 
   private ToolItem editButton;
-  
+
   private Text formulaField;
 
   public RlsGlobalConstraintWidget(final Composite parent, final int style) {
@@ -57,12 +62,12 @@ public class RlsGlobalConstraintWidget extends Composite {
       }
     });
   }
-  
+
   protected void createFormulaField() {
     if (null != formulaField) {
       formulaField.dispose();
     }
-    formulaField = new Text(this, SWT.WRAP | SWT.MULTI | SWT.BORDER  | SWT.H_SCROLL | SWT.V_SCROLL);
+    formulaField = new Text(this, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     formulaField.setFont(Constants.getFontRegistry(Display.getCurrent()).get("formula-editor-font"));
     FormData fdFormula = new FormData();
     fdFormula.top = new FormAttachment(toolBar, 10);
@@ -73,7 +78,12 @@ public class RlsGlobalConstraintWidget extends Composite {
   }
 
   protected void editButtonPressed() {
-    MessageDialog.openInformation(getShell(), "Place Holder", "Not implemented yet.");
+    GlobalConstraintDialog diag = new GlobalConstraintDialog(getShell(), formulaField.getText());
+    int returnCode = diag.open();
+    if (Window.OK == returnCode) {
+      String formula = diag.getFormula();
+      formulaField.setText(formula);
+    }
   }
 
   @Override
@@ -83,4 +93,9 @@ public class RlsGlobalConstraintWidget extends Composite {
     formulaField.setEnabled(enabled);
   }
   
+  public String getGlobalConstraint() {
+    return formulaField.getText();
+  }
+
+
 }
