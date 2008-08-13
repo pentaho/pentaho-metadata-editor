@@ -176,6 +176,7 @@ public class RowLevelSecurityPropertyEditorWidgetTestApp extends ApplicationWind
   protected Control createContents(final Composite parent) {
     RowLevelSecurityPropertyEditorWidget rlsWidget = new RowLevelSecurityPropertyEditorWidget(parent, SWT.NONE,
         conceptModel, "row_level_security", null, dummySecurityReference);
+    rlsWidget.refresh();
     return rlsWidget;
   }
 

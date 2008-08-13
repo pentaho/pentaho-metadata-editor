@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.pentaho.pms.schema.security.SecurityOwner;
 import org.pentaho.pms.ui.concept.editor.Constants;
+import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel;
 
 public class GlobalConstraintDialog extends TitleAreaDialog {
 
@@ -38,23 +38,21 @@ public class GlobalConstraintDialog extends TitleAreaDialog {
 
   private Text formulaField;
 
-  private String formulaToEdit;
-
   private FormulaModifyListener formulaModifyListener;
 
-  /**
-   * Saved when the user clicks OK.
-   */
-  private String formula;
-
+  private IRowLevelSecurityModel rlsModel;
+  
+  private String originalFormula;
+  
   // ~ Constructors ======================================================================================================
 
   /**
    * Puts the dialog in EDIT mode.
    */
-  public GlobalConstraintDialog(Shell parentShell, String formulaToEdit) {
+  public GlobalConstraintDialog(Shell parentShell, IRowLevelSecurityModel rlsModel) {
     super(parentShell);
-    this.formulaToEdit = formulaToEdit == null ? "" : formulaToEdit;
+    this.rlsModel = rlsModel;
+    originalFormula = rlsModel.getGlobalConstraint() != null ? rlsModel.getGlobalConstraint() : "";
   }
 
   // ~ Methods ===========================================================================================================
@@ -90,8 +88,8 @@ public class GlobalConstraintDialog extends TitleAreaDialog {
     fdFormulaField.right = new FormAttachment(100, -10);
     fdFormulaField.bottom = new FormAttachment(100, -10);
     formulaField.setLayoutData(fdFormulaField);
-    if (null != formulaToEdit) {
-      formulaField.setText(formulaToEdit);
+    if (null != rlsModel.getGlobalConstraint()) {
+      formulaField.setText(rlsModel.getGlobalConstraint());
     }
     formulaField.setFont(Constants.getFontRegistry(Display.getCurrent()).get("formula-editor-font"));
     formulaModifyListener = new FormulaModifyListener();
@@ -101,7 +99,7 @@ public class GlobalConstraintDialog extends TitleAreaDialog {
   }
 
   protected void validate() {
-    if (StringUtils.isNotBlank(formulaField.getText()) && !formulaToEdit.equals(formulaField.getText())) {
+    if (StringUtils.isNotBlank(formulaField.getText()) && !originalFormula.equals(formulaField.getText())) {
       getButton(IDialogConstants.OK_ID).setEnabled(true);
     } else {
       getButton(IDialogConstants.OK_ID).setEnabled(false);
@@ -120,7 +118,7 @@ public class GlobalConstraintDialog extends TitleAreaDialog {
   }
 
   protected void okPressed() {
-    formula = formulaField.getText();
+    rlsModel.setGlobalConstraint(formulaField.getText());
     super.okPressed();
   }
 
@@ -130,10 +128,6 @@ public class GlobalConstraintDialog extends TitleAreaDialog {
       validate();
     }
 
-  }
-
-  public String getFormula() {
-    return formula;
   }
 
 }

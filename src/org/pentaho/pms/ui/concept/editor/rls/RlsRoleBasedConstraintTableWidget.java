@@ -1,4 +1,4 @@
-package org.pentaho.pms.ui.concept.editor;
+package org.pentaho.pms.ui.concept.editor.rls;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,6 +29,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.pentaho.pms.schema.security.SecurityOwner;
+import org.pentaho.pms.ui.concept.editor.ConceptModificationEvent;
+import org.pentaho.pms.ui.concept.editor.Constants;
+import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel.IRlsModelListener;
+import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel.RlsModelEvent;
 
 /**
  * A specialized table for holding localized string values. Automatically persists changes to the model as they occur.
@@ -48,13 +52,14 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
 
   private String[] columnNames = new String[] { "", "Role", "Formula" };
 
-  private Map<SecurityOwner, String> map;
+  private IRowLevelSecurityModel rlsModel;
 
   // ~ Constructors ====================================================================================================
 
-  public RlsRoleBasedConstraintTableWidget(final Composite parent, final int style, final Map<SecurityOwner, String> map) {
+  public RlsRoleBasedConstraintTableWidget(final Composite parent, final int style,
+      final IRowLevelSecurityModel rlsModel) {
     super(parent, style);
-    this.map = cloneRoleBasedConstraintMap(map);
+    this.rlsModel = rlsModel;
     createContents();
   }
 
@@ -155,6 +160,14 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
 
     // Set the default sorter for the viewer
     tableViewer.setSorter(new RlsRoleBasedConstraintTableSorter(0));
+
+    rlsModel.addRlsModelListener(new IRlsModelListener() {
+
+      public void rlsModelModified(RlsModelEvent e) {
+        tableViewer.refresh();
+      }
+
+    });
   }
 
   class RlsRoleBasedConstraintTableSorter extends ViewerSorter {
@@ -209,13 +222,10 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
     }
 
     public Object[] getElements(final Object parent) {
-      if (map == null) {
-        return new Object[0];
-      }
-      ConstraintEntry[] entries = new ConstraintEntry[map.keySet().size()];
+      ConstraintEntry[] entries = new ConstraintEntry[rlsModel.getOwners().size()];
       int i = 0;
-      for (Map.Entry<SecurityOwner, String> entry : map.entrySet()) {
-        entries[i] = new ConstraintEntry(entry.getKey(), entry.getValue());
+      for (SecurityOwner owner : rlsModel.getOwners()) {
+        entries[i] = new ConstraintEntry(owner, rlsModel.getFormula(owner));
         i++;
       }
       return entries;
@@ -247,7 +257,7 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
     public SecurityOwner getOwner() {
       return owner;
     }
-    
+
     public void setOwnerName(String name) {
       owner.setOwnerName(name);
     }
@@ -322,20 +332,6 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
   // poor way of providing access to selection changed events
   public TableViewer getTableViewer() {
     return tableViewer;
-  }
-
-  public Map<SecurityOwner, String> getMap() {
-    return map;
-  }
-  
-  public void putAll(Map<SecurityOwner, String> entries) {
-    map.putAll(entries);
-    tableViewer.refresh();
-  }
-  
-  public void removeOwner(SecurityOwner owner) {
-    map.remove(owner);
-    tableViewer.refresh();
   }
 
 }

@@ -1,4 +1,4 @@
-package org.pentaho.pms.ui.concept.editor;
+package org.pentaho.pms.ui.concept.editor.rls;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,9 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.pentaho.pms.schema.security.SecurityOwner;
 import org.pentaho.pms.schema.security.SecurityReference;
-import org.pentaho.pms.ui.concept.editor.RlsRoleBasedConstraintTableWidget.ConstraintEntry;
+import org.pentaho.pms.ui.concept.editor.Constants;
+import org.pentaho.pms.ui.concept.editor.RowLevelSecurityPropertyEditorWidget;
+import org.pentaho.pms.ui.concept.editor.rls.RlsRoleBasedConstraintTableWidget.ConstraintEntry;
 import org.pentaho.pms.ui.dialog.RoleBasedConstraintDialog;
 
 /**
@@ -43,25 +45,16 @@ public class RlsRoleBasedConstraintWidget extends Composite {
 
   private SecurityReference securityReference;
 
-  private Map<SecurityOwner, String> map;
-
   private SelectionListener tableSelectionListener;
 
+  private IRowLevelSecurityModel rlsModel;
+
   public RlsRoleBasedConstraintWidget(final Composite parent, final int style, SecurityReference securityReference,
-      Map<SecurityOwner, String> map) {
+      IRowLevelSecurityModel rlsModel) {
     super(parent, style);
     this.securityReference = securityReference;
-    this.map = cloneRoleBasedConstraintMap(map);
+    this.rlsModel = rlsModel;
     createContents();
-  }
-
-  protected Map<SecurityOwner, String> cloneRoleBasedConstraintMap(Map<SecurityOwner, String> map) {
-    Map<SecurityOwner, String> copy = new HashMap<SecurityOwner, String>();
-    for (Map.Entry<SecurityOwner, String> entry : map.entrySet()) {
-      SecurityOwner clonedOwner = (SecurityOwner) entry.getKey().clone();
-      copy.put(clonedOwner, entry.getValue());
-    }
-    return copy;
   }
 
   private void createContents() {
@@ -112,7 +105,7 @@ public class RlsRoleBasedConstraintWidget extends Composite {
     if (null != tableWidget) {
       tableWidget.dispose();
     }
-    tableWidget = new RlsRoleBasedConstraintTableWidget(this, SWT.NONE, map);
+    tableWidget = new RlsRoleBasedConstraintTableWidget(this, SWT.NONE, rlsModel);
     FormData fdFormula = new FormData();
     fdFormula.top = new FormAttachment(toolBar, 10);
     fdFormula.right = new FormAttachment(100, 0);
@@ -127,35 +120,11 @@ public class RlsRoleBasedConstraintWidget extends Composite {
     IStructuredSelection selection = (IStructuredSelection) tableWidget.getTableViewer().getSelection();
     ConstraintEntry entry = (ConstraintEntry) selection.getFirstElement();
     SecurityOwner owner = new SecurityOwner(entry.getOwnerType(), entry.getOwnerName());
-    RoleBasedConstraintDialog diag = new RoleBasedConstraintDialog(getShell(), owner, entry.getFormula());
-    int returnCode = diag.open();
-    if (Window.OK == returnCode) {
-      String formula = diag.getFormula();
-      Map<SecurityOwner, String> updatedEntry = new HashMap<SecurityOwner, String>();
-      updatedEntry.put(owner, formula);
-      tableWidget.putAll(updatedEntry);
-    }
+    new RoleBasedConstraintDialog(getShell(), owner, rlsModel).open();
   }
 
   protected void addButtonPressed() {
-    RoleBasedConstraintDialog diag = new RoleBasedConstraintDialog(getShell(), securityReference,
-        new ArrayList<SecurityOwner>(tableWidget.getMap().keySet()));
-    int returnCode = diag.open();
-    if (Window.OK == returnCode) {
-      List<SecurityOwner> owners = diag.getAddedOwners();
-      String formula = diag.getFormula();
-      // create array of ConstraintEntry
-      //      ConstraintEntry[] entries = new ConstraintEntry[owners.size()];
-      //      for (int i = 0; i < entries.length; i++) {
-      //        entries[i] = new ConstraintEntry(owners.get(i), formula); 
-      //      }
-      //      tableWidget.getTableViewer().add(entries);
-      Map<SecurityOwner, String> newEntries = new HashMap<SecurityOwner, String>();
-      for (SecurityOwner owner : owners) {
-        newEntries.put(owner, formula);
-      }
-      tableWidget.putAll(newEntries);
-    }
+    new RoleBasedConstraintDialog(getShell(), securityReference, rlsModel).open();
   }
 
   protected void removeButtonPressed() {
@@ -168,7 +137,7 @@ public class RlsRoleBasedConstraintWidget extends Composite {
         owner.getOwnerType() == SecurityOwner.OWNER_TYPE_ROLE ? "role" : "user", owner.getOwnerName()));
 
     if (delete) {
-      tableWidget.removeOwner(owner);
+      rlsModel.removeRoleBasedConstraint(owner);
       rowNotSelected();
     }
   }
@@ -206,8 +175,5 @@ public class RlsRoleBasedConstraintWidget extends Composite {
     }
 
   }
-  
-  public Map<SecurityOwner, String> getRoleBasedConstraintMap() {
-    return tableWidget.getMap();
-  }
+
 }

@@ -1,10 +1,8 @@
-package org.pentaho.pms.ui.concept.editor;
+package org.pentaho.pms.ui.concept.editor.rls;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
@@ -15,7 +13,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.pentaho.pms.schema.security.SecurityOwner;
+import org.pentaho.pms.ui.concept.editor.Constants;
+import org.pentaho.pms.ui.concept.editor.RowLevelSecurityPropertyEditorWidget;
+import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel.IRlsModelListener;
+import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel.RlsModelEvent;
 import org.pentaho.pms.ui.dialog.GlobalConstraintDialog;
 
 /**
@@ -31,8 +32,11 @@ public class RlsGlobalConstraintWidget extends Composite {
 
   private Text formulaField;
 
-  public RlsGlobalConstraintWidget(final Composite parent, final int style) {
+  private IRowLevelSecurityModel rlsModel;
+
+  public RlsGlobalConstraintWidget(final Composite parent, final int style, IRowLevelSecurityModel rlsModel) {
     super(parent, style);
+    this.rlsModel = rlsModel;
     createContents();
   }
 
@@ -40,6 +44,15 @@ public class RlsGlobalConstraintWidget extends Composite {
     setLayout(new FormLayout());
     createToolBar();
     createFormulaField();
+
+    rlsModel.addRlsModelListener(new IRlsModelListener() {
+
+      public void rlsModelModified(RlsModelEvent e) {
+        // heard either from modification in the global constraint dialog or the formulaField itself
+        formulaField.setText(rlsModel.getGlobalConstraint());
+      }
+
+    });
   }
 
   protected final void createToolBar() {
@@ -67,7 +80,7 @@ public class RlsGlobalConstraintWidget extends Composite {
     if (null != formulaField) {
       formulaField.dispose();
     }
-    formulaField = new Text(this, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+    formulaField = new Text(this, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
     formulaField.setFont(Constants.getFontRegistry(Display.getCurrent()).get("formula-editor-font"));
     FormData fdFormula = new FormData();
     fdFormula.top = new FormAttachment(toolBar, 10);
@@ -75,15 +88,13 @@ public class RlsGlobalConstraintWidget extends Composite {
     fdFormula.left = new FormAttachment(0, 0);
     fdFormula.height = 50;
     formulaField.setLayoutData(fdFormula);
+    if (rlsModel.getGlobalConstraint() != null) {
+      formulaField.setText(rlsModel.getGlobalConstraint());
+    }
   }
 
   protected void editButtonPressed() {
-    GlobalConstraintDialog diag = new GlobalConstraintDialog(getShell(), formulaField.getText());
-    int returnCode = diag.open();
-    if (Window.OK == returnCode) {
-      String formula = diag.getFormula();
-      formulaField.setText(formula);
-    }
+    new GlobalConstraintDialog(getShell(), rlsModel).open();
   }
 
   @Override
@@ -92,10 +103,5 @@ public class RlsGlobalConstraintWidget extends Composite {
     toolBar.setEnabled(enabled);
     formulaField.setEnabled(enabled);
   }
-  
-  public String getGlobalConstraint() {
-    return formulaField.getText();
-  }
-
 
 }

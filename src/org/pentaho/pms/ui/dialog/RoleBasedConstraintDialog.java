@@ -1,7 +1,8 @@
 package org.pentaho.pms.ui.dialog;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -29,6 +30,7 @@ import org.pentaho.pms.schema.security.SecurityOwner;
 import org.pentaho.pms.schema.security.SecurityReference;
 import org.pentaho.pms.ui.concept.editor.AvailSecurityOwnersTableViewer;
 import org.pentaho.pms.ui.concept.editor.Constants;
+import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel;
 
 public class RoleBasedConstraintDialog extends TitleAreaDialog {
 
@@ -48,36 +50,29 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
 
   private SecurityReference securityReference;
 
-  private List<SecurityOwner> usedOwners;
-
-  private SecurityOwner ownerToEdit;
-
   private Text formulaField;
 
   private Label ownerField;
 
-  private String formulaToEdit;
+  private SecurityOwner ownerToEdit;
 
   private TableSelectionListener tableSelectionListener;
 
   private FormulaModifyListener formulaModifyListener;
 
-  /**
-   * Saved when the user clicks OK.
-   */
-  private String formula;
-  
-  /**
-   * Saved when the user clicks OK.
-   */
-  private List<SecurityOwner> addedOwners;
-  
+  private IRowLevelSecurityModel rlsModel;
+
+  private String originalFormula;
+
   // ~ Constructors ======================================================================================================
 
+  /**
+   * Puts the dialog in ADD mode.
+   */
   public RoleBasedConstraintDialog(Shell parentShell, SecurityReference securityReference,
-      List<SecurityOwner> usedOwners) {
+      IRowLevelSecurityModel rlsModel) {
     super(parentShell);
-    this.usedOwners = usedOwners;
+    this.rlsModel = rlsModel;
     this.securityReference = securityReference;
     this.mode = Mode.ADD;
   }
@@ -85,10 +80,11 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
   /**
    * Puts the dialog in EDIT mode.
    */
-  public RoleBasedConstraintDialog(Shell parentShell, SecurityOwner ownerToEdit, String formulaToEdit) {
+  public RoleBasedConstraintDialog(Shell parentShell, SecurityOwner ownerToEdit, IRowLevelSecurityModel rlsModel) {
     super(parentShell);
+    this.rlsModel = rlsModel;
     this.ownerToEdit = ownerToEdit;
-    this.formulaToEdit = formulaToEdit;
+    originalFormula = rlsModel.getFormula(ownerToEdit) != null ? rlsModel.getFormula(ownerToEdit) : "";
     this.mode = Mode.EDIT;
   }
 
@@ -129,7 +125,7 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
       availableLabel.setLayoutData(fdAvailLabel);
 
       availableOwnersViewer = new AvailSecurityOwnersTableViewer(c1, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI
-          | SWT.H_SCROLL | SWT.V_SCROLL, securityReference, usedOwners);
+          | SWT.H_SCROLL | SWT.V_SCROLL, securityReference, new ArrayList<SecurityOwner>(rlsModel.getOwners()));
       FormData fdAvailOwners = new FormData();
       fdAvailOwners.left = new FormAttachment(0, 10);
       fdAvailOwners.top = new FormAttachment(availableLabel, 10);
@@ -179,7 +175,7 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
     fdFormulaField.bottom = new FormAttachment(100, -10);
     formulaField.setLayoutData(fdFormulaField);
     if (mode == Mode.EDIT) {
-      formulaField.setText(formulaToEdit);
+      formulaField.setText(rlsModel.getFormula(ownerToEdit));
     }
 
     formulaField.setFont(Constants.getFontRegistry(Display.getCurrent()).get("formula-editor-font"));
@@ -192,145 +188,6 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
     formulaModifyListener = new FormulaModifyListener();
     formulaField.addModifyListener(formulaModifyListener);
 
-    //    predefinedButton = new Button(c1, SWT.RADIO);
-    //    FormData fdPreDefButton = new FormData();
-    //    fdPreDefButton.left = new FormAttachment(0, 10);
-    //    fdPreDefButton.top = new FormAttachment(0, 10);
-    //    predefinedButton.setLayoutData(fdPreDefButton);
-    //
-    //    predefinedButton.setText("Add a pre-defined property");
-    //    predefinedButton.addSelectionListener(new DisableFieldsListener());
-    //    propertyTree = new PropertyTreeWidget(c1, PropertyTreeWidget.SHOW_UNUSED, false);
-    //    propertyTree.setConceptModel(conceptModel);
-    //    propertyTree.addSelectionChangedListener(new ISelectionChangedListener() {
-    //      public void selectionChanged(final SelectionChangedEvent e) {
-    //        validatePredefined();
-    //      }
-    //
-    //    });
-    //
-    //    customButton = new Button(c1, SWT.RADIO);
-    //
-    //    FormData fdTree = new FormData();
-    //    fdTree.left = new FormAttachment(0, 10);
-    //    fdTree.top = new FormAttachment(predefinedButton, 10);
-    //    fdTree.right = new FormAttachment(100, -10);
-    //    fdTree.bottom = new FormAttachment(65, 0);
-    //    propertyTree.getTree().setLayoutData(fdTree);
-    //
-    //    FormData fdCustomButton = new FormData();
-    //    fdCustomButton.left = new FormAttachment(0, 10);
-    //    fdCustomButton.top = new FormAttachment(propertyTree.getTree(), 10);
-    //    customButton.setLayoutData(fdCustomButton);
-    //
-    //    customButton.setText("Add a custom property");
-    //    customButton.addSelectionListener(new DisableFieldsListener());
-    //
-    //    Composite c2 = new Composite(c1, SWT.NONE);
-    //    FormData fdC2 = new FormData();
-    //    fdC2.left = new FormAttachment(0, 0);
-    //    fdC2.top = new FormAttachment(customButton, 10);
-    //    fdC2.right = new FormAttachment(100, 0);
-    //    c2.setLayoutData(fdC2);
-    //
-    //    c2.setLayout(new FormLayout());
-    //
-    //    Label lab1 = new Label(c2, SWT.RIGHT);
-    //    idField = new Text(c2, SWT.BORDER);
-    //    Label lab2 = new Label(c2, SWT.RIGHT);
-    //    typeField = new Combo(c2, SWT.NONE | SWT.READ_ONLY);
-    //
-    //    lab1.setText("ID:");
-    //    FormData fdLab1 = new FormData();
-    //    fdLab1.left = new FormAttachment(0, 10);
-    //    fdLab1.top = new FormAttachment(idField, 0, SWT.CENTER);
-    //    lab1.setLayoutData(fdLab1);
-    //
-    //    // default to predefined property (the other radio group)
-    //    idField.setEnabled(false);
-    //
-    //    idField.addModifyListener(new ModifyListener() {
-    //
-    //      public void modifyText(ModifyEvent e) {
-    //        validateCustom();
-    //      }
-    //
-    //    });
-    //    FormData fdIdField = new FormData();
-    //    fdIdField.left = new FormAttachment(lab1, 10);
-    //    fdIdField.right = new FormAttachment(100, -10);
-    //    idField.setLayoutData(fdIdField);
-    //
-    //    lab2.setText("Type:");
-    //    FormData fdLab2 = new FormData();
-    //    fdLab2.left = new FormAttachment(0, 10);
-    //    fdLab2.top = new FormAttachment(typeField, 0, SWT.CENTER);
-    //    lab2.setLayoutData(fdLab2);
-    //
-    //    // default to predefined property (the other radio group)
-    //    typeField.setEnabled(false);
-    //    FormData fdTypeField = new FormData();
-    //    fdTypeField.left = new FormAttachment(lab2, 10);
-    //    fdTypeField.right = new FormAttachment(100, -10);
-    //    fdTypeField.top = new FormAttachment(idField, 10);
-    //    typeField.setLayoutData(fdTypeField);
-    //
-    //    comboViewer = new ComboViewer(typeField);
-    //    comboViewer.setContentProvider(new IStructuredContentProvider() {
-    //      public Object[] getElements(final Object inputElement) {
-    //        List ul = (List) inputElement;
-    //        return ul.toArray();
-    //      }
-    //
-    //      public void dispose() {
-    //        if (logger.isDebugEnabled()) {
-    //          logger.debug("Disposing ...");
-    //        }
-    //      }
-    //
-    //      public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-    //        if (logger.isDebugEnabled()) {
-    //          logger.debug("Input changed: old=" + oldInput + ", new=" + newInput);
-    //        }
-    //      }
-    //    });
-    //
-    //    List<Object> list2 = new ArrayList<Object>();
-    //    list2.add("");
-    //    list2.addAll(Arrays.asList(ConceptPropertyType.propertyTypes));
-    //
-    //    comboViewer.setInput(list2);
-    //
-    //    comboViewer.setLabelProvider(new LabelProvider() {
-    //      public Image getImage(Object element) {
-    //        return null;
-    //      }
-    //
-    //      public String getText(Object element) {
-    //        if (element instanceof ConceptPropertyType) {
-    //          ConceptPropertyType type = (ConceptPropertyType) element;
-    //          if (logger.isDebugEnabled()) {
-    //            logger.debug("desc: " + type.getDescription());
-    //          }
-    //          return type.getDescription();
-    //        } else {
-    //          if (logger.isDebugEnabled()) {
-    //            logger.debug("obj class: " + element.getClass());
-    //          }
-    //          return "";
-    //        }
-    //      }
-    //    });
-    //
-    //    comboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-    //
-    //      public void selectionChanged(SelectionChangedEvent e) {
-    //        validateCustom();
-    //      }
-    //
-    //    });
-    //
-    //    predefinedButton.setSelection(true);
     return c0;
   }
 
@@ -346,7 +203,7 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
     } else {
       // in edit mode, only enable OK button if the formula is not blank AND they have made changes to the original 
       // formula
-      if (StringUtils.isNotBlank(formulaField.getText()) && !formulaToEdit.equals(formulaField.getText())) {
+      if (StringUtils.isNotBlank(formulaField.getText()) && !originalFormula.equals(formulaField.getText())) {
         getButton(IDialogConstants.OK_ID).setEnabled(true);
       } else {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
@@ -354,55 +211,6 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
     }
 
   }
-
-  private void validatePredefined() {
-    //    IStructuredSelection structuredSelection = (StructuredSelection)propertyTree.getSelection();
-    //    Object objectSelected = structuredSelection.getFirstElement();
-    //    if (!(objectSelected instanceof PropertyTreeWidget.GroupNode)) {
-    //      setErrorMessage(null);
-    //      getButton(IDialogConstants.OK_ID).setEnabled(true);
-    //    } else {
-    //      setErrorMessage("Please select a property within a group.");
-    //      getButton(IDialogConstants.OK_ID).setEnabled(false);
-    //    }
-  }
-
-  private void validateCustom() {
-    //    if (StringUtils.isBlank(idField.getText())) {
-    //      setErrorMessage("Please enter an ID.");
-    //      getButton(IDialogConstants.OK_ID).setEnabled(false);
-    //      return;
-    //    } else if (isPredefinedPropertyId(idField.getText())) {
-    //      setErrorMessage("The ID entered cannot be a pre-defined property ID. Please enter a different ID.");
-    //      getButton(IDialogConstants.OK_ID).setEnabled(false);
-    //      return;
-    //    }  else {
-    //      setErrorMessage(null);
-    //      getButton(IDialogConstants.OK_ID).setEnabled(true);
-    //    }
-    //
-    //    IStructuredSelection selection = (IStructuredSelection) comboViewer.getSelection();
-    //    if (selection.getFirstElement() instanceof ConceptPropertyType) {
-    //      setErrorMessage(null);
-    //      getButton(IDialogConstants.OK_ID).setEnabled(true);
-    //    } else {
-    //      setErrorMessage("Please select a type.");
-    //      getButton(IDialogConstants.OK_ID).setEnabled(false);
-    //    }
-  }
-
-  //  /**
-  //   * Returns true if the given id is a pre-defined property id.
-  //   */
-  //  private boolean isPredefinedPropertyId(final String propertyId) {
-  //    String[] propertyIds = DefaultPropertyID.getDefaultPropertyIDs();
-  //    for (int i = 0; i < propertyIds.length; i++) {
-  //      if (propertyIds[i].equals(propertyId)) {
-  //        return true;
-  //      }
-  //    }
-  //    return false;
-  //  }
 
   protected Control createContents(Composite parent) {
     // start with the OK button disabled
@@ -418,16 +226,17 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
   protected void okPressed() {
     // save what's changed in the dialog for when user calls getFormula or getAddedOwners
     if (mode == Mode.ADD) {
-      List<SecurityOwner> addedOwners = new ArrayList<SecurityOwner>();
+      Map<SecurityOwner, String> newEntries = new HashMap<SecurityOwner, String>();
       IStructuredSelection sel = (IStructuredSelection) availableOwnersViewer.getSelection();
       Object[] selectedItems = sel.toArray();
       for (int i = 0; i < selectedItems.length; i++) {
         SecurityOwner owner = (SecurityOwner) selectedItems[i];
-        addedOwners.add(owner);
+        newEntries.put(owner, formulaField.getText());
       }
-      this.addedOwners = addedOwners;
+      rlsModel.putAll(newEntries);
+    } else {
+      rlsModel.put(ownerToEdit, formulaField.getText());
     }
-    formula = formulaField.getText();
     super.okPressed();
   }
 
@@ -449,14 +258,6 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
       validate();
     }
 
-  }
-
-  public String getFormula() {
-    return formula;
-  }
-
-  public List<SecurityOwner> getAddedOwners() {
-    return addedOwners;
   }
 
 }

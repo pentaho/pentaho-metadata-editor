@@ -19,6 +19,10 @@ import org.pentaho.pms.schema.security.RowLevelSecurity;
 import org.pentaho.pms.schema.security.SecurityOwner;
 import org.pentaho.pms.schema.security.SecurityReference;
 import org.pentaho.pms.schema.security.RowLevelSecurity.Type;
+import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel;
+import org.pentaho.pms.ui.concept.editor.rls.RlsGlobalConstraintWidget;
+import org.pentaho.pms.ui.concept.editor.rls.RlsRoleBasedConstraintWidget;
+import org.pentaho.pms.ui.concept.editor.rls.RowLevelSecurityModel;
 
 /**
  * Widget to represent the row level security concept property.
@@ -48,6 +52,8 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
 
   private SecurityReference securityReference;
 
+  private IRowLevelSecurityModel rlsModel;
+
   // ~ Constructors ====================================================================================================
 
   public RowLevelSecurityPropertyEditorWidget(final Composite parent, final int style,
@@ -55,6 +61,8 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
       final SecurityReference securityReference) {
     super(parent, style, conceptModel, propertyId, context, true);
     this.securityReference = securityReference;
+    // set this here so that table viewer getElements won't fail but it will be reset in setValue
+    this.rlsModel = new RowLevelSecurityModel((RowLevelSecurity) getProperty().getValue());
     createContents();
     refresh();
     if (logger.isDebugEnabled()) {
@@ -110,7 +118,7 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
 
     });
 
-    globalWidget = new RlsGlobalConstraintWidget(parent, SWT.NONE);
+    globalWidget = new RlsGlobalConstraintWidget(parent, SWT.NONE, rlsModel);
     FormData fdGlobalWidget = new FormData();
     fdGlobalWidget.left = new FormAttachment(0, 20);
     fdGlobalWidget.top = new FormAttachment(globalRadio, 0);
@@ -137,7 +145,7 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
     });
     Map<SecurityOwner, String> constraintMap = ((RowLevelSecurity) getProperty().getValue())
         .getRoleBasedConstraintMap();
-    roleBasedWidget = new RlsRoleBasedConstraintWidget(parent, SWT.NONE, securityReference, constraintMap);
+    roleBasedWidget = new RlsRoleBasedConstraintWidget(parent, SWT.NONE, securityReference, rlsModel);
     FormData fdRoleBasedWidget = new FormData();
     fdRoleBasedWidget.left = new FormAttachment(0, 20);
     fdRoleBasedWidget.top = new FormAttachment(roleBasedRadio, 0);
@@ -146,6 +154,8 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
   }
 
   protected void updateRadioButtons(Type t) {
+    rlsModel.setType(t);
+
     switch (t) {
       case GLOBAL:
         globalWidget.setEnabled(true);
@@ -181,19 +191,20 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
   }
 
   public Object getValue() {
-    RowLevelSecurity rls = new RowLevelSecurity();
-    if (globalRadio.getSelection()) {
-      rls.setType(GLOBAL);
-    } else if (roleBasedRadio.getSelection()) {
-      rls.setType(ROLEBASED);
-    } else {
-      rls.setType(NONE);
-    }
-
-    rls.setGlobalConstraint(globalWidget.getGlobalConstraint());
-
-    rls.setRoleBasedConstraintMap(roleBasedWidget.getRoleBasedConstraintMap());
-    return rls;
+    //    RowLevelSecurity rls = new RowLevelSecurity();
+    //    if (globalRadio.getSelection()) {
+    //      rls.setType(GLOBAL);
+    //    } else if (roleBasedRadio.getSelection()) {
+    //      rls.setType(ROLEBASED);
+    //    } else {
+    //      rls.setType(NONE);
+    //    }
+    //
+    //    rls.setGlobalConstraint(globalWidget.getGlobalConstraint());
+    //
+    //    rls.setRoleBasedConstraintMap(roleBasedWidget.getRoleBasedConstraintMap());
+    //    return rls;
+    return rlsModel.getWrappedRowLevelSecurity();
   }
 
   protected void setValue(final Object value) {
@@ -206,8 +217,9 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
       } else {
         noneRadio.setSelection(true);
       }
+      rlsModel = new RowLevelSecurityModel(rls);
       updateRadioButtons(rls.getType());
     }
   }
-  
+
 }
