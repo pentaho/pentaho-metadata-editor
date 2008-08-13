@@ -127,27 +127,50 @@ public class RlsRoleBasedConstraintWidget extends Composite {
     IStructuredSelection selection = (IStructuredSelection) tableWidget.getTableViewer().getSelection();
     ConstraintEntry entry = (ConstraintEntry) selection.getFirstElement();
     SecurityOwner owner = new SecurityOwner(entry.getOwnerType(), entry.getOwnerName());
-    new RoleBasedConstraintDialog(getShell(), owner, entry.getFormula()).open();
+    RoleBasedConstraintDialog diag = new RoleBasedConstraintDialog(getShell(), owner, entry.getFormula());
+    int returnCode = diag.open();
+    if (Window.OK == returnCode) {
+      String formula = diag.getFormula();
+      Map<SecurityOwner, String> updatedEntry = new HashMap<SecurityOwner, String>();
+      updatedEntry.put(owner, formula);
+      tableWidget.putAll(updatedEntry);
+    }
   }
 
   protected void addButtonPressed() {
     RoleBasedConstraintDialog diag = new RoleBasedConstraintDialog(getShell(), securityReference,
-        new ArrayList<SecurityOwner>(map.keySet()));
+        new ArrayList<SecurityOwner>(tableWidget.getMap().keySet()));
     int returnCode = diag.open();
     if (Window.OK == returnCode) {
       List<SecurityOwner> owners = diag.getAddedOwners();
       String formula = diag.getFormula();
       // create array of ConstraintEntry
-      ConstraintEntry[] entries = new ConstraintEntry[owners.size()];
-      for (int i = 0; i < entries.length; i++) {
-        entries[i] = new ConstraintEntry(owners.get(i), formula); 
+      //      ConstraintEntry[] entries = new ConstraintEntry[owners.size()];
+      //      for (int i = 0; i < entries.length; i++) {
+      //        entries[i] = new ConstraintEntry(owners.get(i), formula); 
+      //      }
+      //      tableWidget.getTableViewer().add(entries);
+      Map<SecurityOwner, String> newEntries = new HashMap<SecurityOwner, String>();
+      for (SecurityOwner owner : owners) {
+        newEntries.put(owner, formula);
       }
-      tableWidget.getTableViewer().add(entries);
+      tableWidget.putAll(newEntries);
     }
   }
 
   protected void removeButtonPressed() {
-    MessageDialog.openInformation(getShell(), "Place Holder", "Not implemented yet.");
+    IStructuredSelection sel = (IStructuredSelection) tableWidget.getTableViewer().getSelection();
+    ConstraintEntry entry = (ConstraintEntry) sel.getFirstElement();
+    SecurityOwner owner = entry.getOwner();
+
+    boolean delete = MessageDialog.openConfirm(getShell(), "Confirm", String.format(
+        "Are you sure you want to remove the entry for %s '%s'?",
+        owner.getOwnerType() == SecurityOwner.OWNER_TYPE_ROLE ? "role" : "user", owner.getOwnerName()));
+
+    if (delete) {
+      tableWidget.removeOwner(owner);
+      rowNotSelected();
+    }
   }
 
   @Override
@@ -182,5 +205,9 @@ public class RlsRoleBasedConstraintWidget extends Composite {
       rowSelected();
     }
 
+  }
+  
+  public Map<SecurityOwner, String> getRoleBasedConstraintMap() {
+    return tableWidget.getMap();
   }
 }

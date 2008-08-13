@@ -426,13 +426,8 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
         addedOwners.add(owner);
       }
       this.addedOwners = addedOwners;
-    } else {
-      throw new RuntimeException("not allowed to ask dialog in edit mode for added owners!");
     }
-    
-    
     formula = formulaField.getText();
-    
     super.okPressed();
   }
 

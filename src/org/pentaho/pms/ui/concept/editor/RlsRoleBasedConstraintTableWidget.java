@@ -1,6 +1,7 @@
 package org.pentaho.pms.ui.concept.editor;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,11 +54,20 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
 
   public RlsRoleBasedConstraintTableWidget(final Composite parent, final int style, final Map<SecurityOwner, String> map) {
     super(parent, style);
-    this.map = map;
+    this.map = cloneRoleBasedConstraintMap(map);
     createContents();
   }
 
   // ~ Methods =========================================================================================================
+
+  protected Map<SecurityOwner, String> cloneRoleBasedConstraintMap(Map<SecurityOwner, String> map) {
+    Map<SecurityOwner, String> copy = new HashMap<SecurityOwner, String>();
+    for (Map.Entry<SecurityOwner, String> entry : map.entrySet()) {
+      SecurityOwner clonedOwner = (SecurityOwner) entry.getKey().clone();
+      copy.put(clonedOwner, entry.getValue());
+    }
+    return copy;
+  }
 
   private List getColumnNames() {
     return Arrays.asList(columnNames);
@@ -145,17 +155,16 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
 
     // Set the default sorter for the viewer
     tableViewer.setSorter(new RlsRoleBasedConstraintTableSorter(0));
-    
   }
-  
+
   class RlsRoleBasedConstraintTableSorter extends ViewerSorter {
-    
+
     private int column;
-    
+
     public RlsRoleBasedConstraintTableSorter(int column) {
-     this.column = column; 
+      this.column = column;
     }
-    
+
     @Override
     public int compare(Viewer viewer, Object e1, Object e2) {
       ConstraintEntry entry1 = (ConstraintEntry) e1;
@@ -168,7 +177,7 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
         default:
           return compareFormula(entry1.getFormula(), entry2.getFormula());
       }
-        
+
     }
 
     private int compareOwnerType(ConstraintEntry entry1, ConstraintEntry entry2) {
@@ -183,13 +192,13 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
     }
 
     private int compareFormula(String formula, String formula2) {
-      return formula.compareTo(formula2);  
+      return formula.compareTo(formula2);
     }
 
     private int compareOwnerName(String string, String string2) {
       return string.compareTo(string2);
     }
-    
+
   }
 
   class RlsRoleBasedConstraintTableContentProvider implements IStructuredContentProvider {
@@ -235,6 +244,10 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
       return owner.getOwnerName();
     }
 
+    public SecurityOwner getOwner() {
+      return owner;
+    }
+    
     public void setOwnerName(String name) {
       owner.setOwnerName(name);
     }
@@ -305,10 +318,24 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
   public void refresh() {
     tableViewer.refresh();
   }
-  
+
   // poor way of providing access to selection changed events
   public TableViewer getTableViewer() {
     return tableViewer;
+  }
+
+  public Map<SecurityOwner, String> getMap() {
+    return map;
+  }
+  
+  public void putAll(Map<SecurityOwner, String> entries) {
+    map.putAll(entries);
+    tableViewer.refresh();
+  }
+  
+  public void removeOwner(SecurityOwner owner) {
+    map.remove(owner);
+    tableViewer.refresh();
   }
 
 }

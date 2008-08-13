@@ -23,6 +23,9 @@ import org.pentaho.pms.schema.security.RowLevelSecurity.Type;
 /**
  * Widget to represent the row level security concept property.
  * 
+ * TODO This class reaches into all kinds of data structures instead of properly listening to events. (Widgets that
+ * compose this widget provide access to their internal data structures, etc.  Bad!
+ * 
  * @author mlowery
  */
 public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditorWidget {
@@ -42,13 +45,14 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
   private RlsGlobalConstraintWidget globalWidget;
 
   private RlsRoleBasedConstraintWidget roleBasedWidget;
-  
+
   private SecurityReference securityReference;
 
   // ~ Constructors ====================================================================================================
 
   public RowLevelSecurityPropertyEditorWidget(final Composite parent, final int style,
-      final IConceptModel conceptModel, final String propertyId, final Map context, final SecurityReference securityReference) {
+      final IConceptModel conceptModel, final String propertyId, final Map context,
+      final SecurityReference securityReference) {
     super(parent, style, conceptModel, propertyId, context, true);
     this.securityReference = securityReference;
     createContents();
@@ -188,8 +192,7 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
 
     // TODO get global formula and set on rls
 
-    // TODO get role-based constraint and set on rls
-
+    rls.setRoleBasedConstraintMap(roleBasedWidget.getRoleBasedConstraintMap());
     return rls;
   }
 
