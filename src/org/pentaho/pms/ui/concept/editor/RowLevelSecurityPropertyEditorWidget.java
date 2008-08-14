@@ -100,7 +100,7 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
     });
 
     globalRadio = new Button(parent, SWT.RADIO);
-    globalRadio.setText("Enforce Global Constraint:");
+    globalRadio.setText("Global Constraint:");
     FormData fdGlobal = new FormData();
     fdGlobal.left = new FormAttachment(0, 0);
     fdGlobal.top = new FormAttachment(noneRadio, 10);

@@ -93,9 +93,9 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
   protected void configureShell(Shell shell) {
     super.configureShell(shell);
     if (mode == Mode.ADD) {
-      shell.setText("Add");
+      shell.setText("Add Role Based Constraint");
     } else {
-      shell.setText("Edit");
+      shell.setText("Edit Role Based Constraint");
     }
   }
 
@@ -109,16 +109,16 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
     c1.setLayoutData(new GridData(GridData.FILL_BOTH));
     c1.setLayout(new FormLayout());
     if (mode == Mode.ADD) {
-      setTitle("Add Rules");
-      setMessage("Select one or more roles then enter a formula.");
+      setTitle("Add Constraint");
+      setMessage("Select one or more roles and enter a constraint formula.");
     } else {
-      setTitle("Edit Rule");
-      setMessage("Edit the formula associated with a role.");
+      setTitle("Edit Constraint Formula");
+      //      setMessage("Edit the formula associated with a role.");
     }
 
     if (mode == Mode.ADD) {
       Label availableLabel = new Label(c1, SWT.NULL);
-      availableLabel.setText("Available:");
+      availableLabel.setText("Role:");
       FormData fdAvailLabel = new FormData();
       fdAvailLabel.left = new FormAttachment(0, 10);
       fdAvailLabel.top = new FormAttachment(0, 10);
@@ -134,7 +134,11 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
       availableOwnersViewer.getTable().setLayoutData(fdAvailOwners);
     } else {
       Label ownerLabel = new Label(c1, SWT.NULL);
-      ownerLabel.setText("Owner:");
+      if (ownerToEdit.getOwnerType() == SecurityOwner.OWNER_TYPE_ROLE) {
+        ownerLabel.setText("Role:");
+      } else {
+        ownerLabel.setText("User:");
+      }
       FormData fdOwnerLabel = new FormData();
       fdOwnerLabel.left = new FormAttachment(0, 10);
       fdOwnerLabel.top = new FormAttachment(0, 10);
@@ -161,7 +165,7 @@ public class RoleBasedConstraintDialog extends TitleAreaDialog {
     }
 
     Label formulaLabel = new Label(c1, SWT.NULL);
-    formulaLabel.setText("Constraint:");
+    formulaLabel.setText("Constraint Formula:");
     FormData fdFormulaLabel = new FormData();
     fdFormulaLabel.left = new FormAttachment(mode == Mode.ADD ? availableOwnersViewer.getTable() : ownerField, 10);
     fdFormulaLabel.top = new FormAttachment(0, 10);

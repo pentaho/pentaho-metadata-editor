@@ -12,6 +12,11 @@ import org.pentaho.pms.schema.security.SecurityOwner;
 import org.pentaho.pms.schema.security.RowLevelSecurity.Type;
 import org.pentaho.pms.ui.concept.editor.EventSupport;
 
+/**
+ * Implementation of {@link IRowLevelSecurityModel}.
+ * 
+ * @author mlowery
+ */
 public class RowLevelSecurityModel implements IRowLevelSecurityModel {
 
   // ~ Static fields/initializers ====================================================================================== 

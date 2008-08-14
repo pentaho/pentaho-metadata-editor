@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.pentaho.pms.schema.security.SecurityOwner;
-import org.pentaho.pms.ui.concept.editor.ConceptModificationEvent;
 import org.pentaho.pms.ui.concept.editor.Constants;
 import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel.IRlsModelListener;
 import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel.RlsModelEvent;
@@ -50,7 +49,7 @@ public class RlsRoleBasedConstraintTableWidget extends Composite {
 
   private TableViewer tableViewer;
 
-  private String[] columnNames = new String[] { "", "Role", "Formula" };
+  private String[] columnNames = new String[] { "", "Role", "Constraint Formula" };
 
   private IRowLevelSecurityModel rlsModel;
 
