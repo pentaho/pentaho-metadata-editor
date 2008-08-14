@@ -55,7 +55,7 @@ public class SecurityPropertyEditorWidget extends AbstractPropertyEditorWidget {
       securityReference.getAcls();
     } catch (Exception e) {
       if (logger.isErrorEnabled()) {
-        logger.error("exception during connection to security service; ignoring", e);
+        logger.error("exception during connection to security service; ignoring");
       }
       securityOK = false;
     }

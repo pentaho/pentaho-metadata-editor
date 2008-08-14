@@ -118,6 +118,13 @@ public class RlsRoleBasedConstraintWidget extends Composite {
   }
 
   protected void addButtonPressed() {
+    try {
+      securityReference.getUsers();
+    } catch (Exception e) {
+      MessageDialog.openError(getShell(), "Error", "Unable to display dialog. Either your security configuration "
+          + "is incorrect or your Pentaho BI Server is not " + "running or not accessible.");
+      return;
+    }
     new RoleBasedConstraintDialog(getShell(), securityReference, rlsModel).open();
   }
 
