@@ -48,8 +48,10 @@ public class RlsGlobalConstraintWidget extends Composite {
     rlsModel.addRlsModelListener(new IRlsModelListener() {
 
       public void rlsModelModified(RlsModelEvent e) {
-        // heard either from modification in the global constraint dialog or the formulaField itself
-        formulaField.setText(rlsModel.getGlobalConstraint());
+        // have to have the 'if' to prevent ping-pong action between the RlsModelEvent and the ModifyEvent
+        if (!rlsModel.getGlobalConstraint().equals(formulaField.getText())) {
+          formulaField.setText(rlsModel.getGlobalConstraint());
+        }
       }
 
     });
@@ -80,7 +82,7 @@ public class RlsGlobalConstraintWidget extends Composite {
     if (null != formulaField) {
       formulaField.dispose();
     }
-    formulaField = new Text(this, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
+    formulaField = new Text(this, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     formulaField.setFont(Constants.getFontRegistry(Display.getCurrent()).get("formula-editor-font"));
     FormData fdFormula = new FormData();
     fdFormula.top = new FormAttachment(toolBar, 10);
@@ -91,6 +93,17 @@ public class RlsGlobalConstraintWidget extends Composite {
     if (rlsModel.getGlobalConstraint() != null) {
       formulaField.setText(rlsModel.getGlobalConstraint());
     }
+    
+    formulaField.addModifyListener(new ModifyListener() {
+
+      public void modifyText(ModifyEvent e) {
+        // have to have the 'if' to prevent ping-pong action between the RlsModelEvent and the ModifyEvent
+        if (!rlsModel.getGlobalConstraint().equals(formulaField.getText())) {
+          rlsModel.setGlobalConstraint(formulaField.getText());
+        }
+      }
+      
+    });
   }
 
   protected void editButtonPressed() {
