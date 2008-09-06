@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0">
+    <info organisation="pentaho" module="pentaho-metadata-editor" revision="${project.revision}" />
+    
+    <configurations>
+    	<conf name="default"/>
+    	<conf name="test" visibility="private"/>
+    </configurations>
+    
+    <dependencies defaultconf="default->default">
+
+        <!--  Special Note:  This ivy file only resolves internal dependencies -->
+
+        <dependency org="jfree"        name="jcommon" rev="1.0.12" />
+        <dependency org="pentaho.reporting" name="libformula" rev="0.1.12" />
+        <dependency org="pentaho"        name="pentaho-connections" rev="${dependency.pentaho-connections.revision}"  changing="true" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-metadata"    rev="${dependency.pentaho-metadata.revision}"  changing="true" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-mql-editor"  rev="${dependency.pentaho-mql-editor.revision}"  changing="true" transitive="false"/>
+        <dependency org="pentaho.kettle" name="kettle-engine"       rev="${dependency.kettle.revision}" transitive="false"/>
+        <dependency org="pentaho.kettle" name="kettle-ui-swt"       rev="${dependency.kettle.revision}" transitive="false"/>
+        <!--  need to locate! -->
+        <dependency org="pentaho" name="pentaho-publisher"         rev="${dependency.pentaho-publisher.revision}" transitive="false"/>
+        
+    </dependencies>
+</ivy-module>
