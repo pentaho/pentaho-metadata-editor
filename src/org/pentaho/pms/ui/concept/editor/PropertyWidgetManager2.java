@@ -1,5 +1,6 @@
 package org.pentaho.pms.ui.concept.editor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,7 +41,7 @@ public class PropertyWidgetManager2 extends Composite implements ISelectionChang
 
   private Layout layout;
 
-  private Map<String,IPropertyEditorWidget> widgets = new HashMap<String,IPropertyEditorWidget>();
+  private Map<String, IPropertyEditorWidget> widgets = new HashMap<String, IPropertyEditorWidget>();
 
   private Composite widgetArea;
 
@@ -48,7 +49,7 @@ public class PropertyWidgetManager2 extends Composite implements ISelectionChang
 
   private ScrolledComposite widgetAreaWrapper;
 
-  private Map<String,Control> groupNameWidgets = new HashMap<String,Control>();
+  private Map<String, Control> groupNameWidgets = new HashMap<String, Control>();
 
   private SecurityReference securityReference;
 
@@ -62,7 +63,8 @@ public class PropertyWidgetManager2 extends Composite implements ISelectionChang
 
   // ~ Constructors ====================================================================================================
 
-  public PropertyWidgetManager2(final Composite parent, final int style, final Map context, SecurityReference securityReference) {
+  public PropertyWidgetManager2(final Composite parent, final int style, final Map context,
+      SecurityReference securityReference) {
     super(parent, style);
     this.context = context;
     this.securityReference = securityReference;
@@ -161,6 +163,18 @@ public class PropertyWidgetManager2 extends Composite implements ISelectionChang
     }
   }
 
+  public List<String> validateWidgets() {
+    List<String> errorMessages = new ArrayList<String>();
+    for (Iterator widgetIter = widgets.keySet().iterator(); widgetIter.hasNext();) {
+      IPropertyEditorWidget control = widgets.get(widgetIter.next());
+      String errorMessage = control.validate();
+      if (null != errorMessage) {
+        errorMessages.add(errorMessage);
+      }
+    }
+    return errorMessages;
+  }
+
   public void setConceptModel(IConceptModel cm) {
     conceptModel = cm;
     conceptModel.addConceptModificationListener(conceptModificationListener);
@@ -181,10 +195,10 @@ public class PropertyWidgetManager2 extends Composite implements ISelectionChang
   public void selectionChanged(final SelectionChangedEvent e) {
     // TODO mlowery this class should not be coupled to property "tree" selection;
     // TODO mlowery maybe just property selection
-    TreeSelection treeSelection = (TreeSelection)e.getSelection();
+    TreeSelection treeSelection = (TreeSelection) e.getSelection();
     Object selectedObject = treeSelection.getFirstElement();
     if (selectedObject instanceof PropertyTreeWidget.PropertyNode) {
-      focusWidget(((PropertyTreeWidget.PropertyNode)selectedObject).getId());
+      focusWidget(((PropertyTreeWidget.PropertyNode) selectedObject).getId());
     } else {
       focusWidget(null);
     }

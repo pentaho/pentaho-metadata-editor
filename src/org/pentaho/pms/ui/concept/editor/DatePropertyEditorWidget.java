@@ -33,9 +33,11 @@ public class DatePropertyEditorWidget extends AbstractPropertyEditorWidget {
     return null;
   }
 
-  protected boolean isValid() {
-    // TODO Auto-generated method stub
-    return false;
+  public String validate() {
+    if (isEditable()) {
+    return String.format("%s is invalid.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+    }
+    return null;
   }
 
   protected void setValue(final Object value) {

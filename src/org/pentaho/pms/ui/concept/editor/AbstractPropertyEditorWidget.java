@@ -1,5 +1,7 @@
 package org.pentaho.pms.ui.concept.editor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -96,12 +98,6 @@ public abstract class AbstractPropertyEditorWidget extends Composite implements 
     return parent;
   }
 
-
-  /**
-   * Returns whether or not the value encapsulated by this widget is valid so that it can be saved.
-   */
-  protected abstract boolean isValid();
-
   /**
    * Subclasses should:
    * <ol>
@@ -168,7 +164,7 @@ public abstract class AbstractPropertyEditorWidget extends Composite implements 
   }
 
   protected synchronized void putPropertyValue() {
-    if (isValid()) {
+    if (validate() == null) { // if widget value is valid
       if (logger.isDebugEnabled()) {
         logger.debug("writing to the concept model");
       }

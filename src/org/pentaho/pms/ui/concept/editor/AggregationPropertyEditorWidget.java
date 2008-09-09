@@ -114,8 +114,8 @@ public class AggregationPropertyEditorWidget extends AbstractPropertyEditorWidge
     }
   }
 
-  protected boolean isValid() {
-    return true;
+  public String validate() {
+    return null;
   }
 
   public void selectionChanged(SelectionChangedEvent arg0) {

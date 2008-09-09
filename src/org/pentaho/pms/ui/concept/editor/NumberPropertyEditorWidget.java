@@ -136,13 +136,16 @@ public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget imp
     }
   }
 
-  protected boolean isValid() {
-    try {
-      new BigDecimal(numberField.getText());
-    } catch (NumberFormatException e) {
-      return false;
+  public String validate() {
+    // only validate if this control is editable
+    if (isEditable()) {
+      try {
+        new BigDecimal(numberField.getText());
+      } catch (NumberFormatException e) {
+        return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+      }
     }
-    return true;
+    return null;
   }
 
   public void focusGained(FocusEvent arg0) {

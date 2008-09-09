@@ -167,13 +167,15 @@ public class ColumnWidthPropertyEditorWidget extends AbstractPropertyEditorWidge
     }
   }
 
-  protected boolean isValid() {
-    try {
-      new BigDecimal(width.getText());
-    } catch (NumberFormatException e) {
-      return false;
+  public String validate() {
+    if (isEditable()) {
+      try {
+        new BigDecimal(width.getText());
+      } catch (NumberFormatException e) {
+        return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+      }
     }
-    return true;
+    return null;
   }
 
   public void refresh() {

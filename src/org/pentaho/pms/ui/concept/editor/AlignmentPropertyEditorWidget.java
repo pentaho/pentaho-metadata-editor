@@ -113,8 +113,8 @@ public class AlignmentPropertyEditorWidget extends AbstractPropertyEditorWidget 
     }
   }
 
-  protected boolean isValid() {
-    return true;
+  public String validate() {
+    return null;
   }
 
   public void selectionChanged(SelectionChangedEvent arg0) {

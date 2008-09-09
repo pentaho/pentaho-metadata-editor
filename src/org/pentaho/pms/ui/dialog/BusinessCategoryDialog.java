@@ -14,6 +14,7 @@
 
 package org.pentaho.pms.ui.dialog;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -57,6 +58,7 @@ public class BusinessCategoryDialog extends Dialog
   private IConceptModel conceptModel;
   private ConceptUtilityInterface conceptUtil;
   private SchemaMeta schemaMeta;
+  private PropertyWidgetManager2 propertyWidgetManager;
 
   public BusinessCategoryDialog(Shell parent, ConceptUtilityInterface conceptUtil, SchemaMeta schemaMeta) {
     super(parent);
@@ -72,7 +74,7 @@ public class BusinessCategoryDialog extends Dialog
 
   protected void configureShell(final Shell shell) {
     super.configureShell(shell);
-    shell.setText("Business Model Properties");
+    shell.setText("Business Category Properties");
   }
 
   protected Point getInitialSize() {
@@ -106,7 +108,7 @@ public class BusinessCategoryDialog extends Dialog
     s0.SASH_WIDTH = 10;
     PropertyNavigationWidget propertyNavigationWidget = new PropertyNavigationWidget(s0, SWT.NONE);
     propertyNavigationWidget.setConceptModel(conceptModel);
-    PropertyWidgetManager2 propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, schemaMeta.getSecurityReference());
+    propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, schemaMeta.getSecurityReference());
     propertyWidgetManager.setConceptModel(conceptModel);
     propertyNavigationWidget.addSelectionChangedListener(propertyWidgetManager);
     s0.setWeights(new int[] { 1, 2 });
@@ -116,17 +118,37 @@ public class BusinessCategoryDialog extends Dialog
 
 
   protected void okPressed() {
-    try {
-      conceptUtil.setId(wId.getText());
-    } catch (ObjectAlreadyExistsException e) {
-      if (logger.isErrorEnabled()) {
-        logger.error("an exception occurred", e);
+    boolean hasErrors = popupValidationErrorDialogIfNecessary();
+    if (!hasErrors) {
+      try {
+        conceptUtil.setId(wId.getText());
+      } catch (ObjectAlreadyExistsException e) {
+        if (logger.isErrorEnabled()) {
+          logger.error("an exception occurred", e);
+        }
+        MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
+            "PhysicalTableDialog.USER_ERROR_CATEGORY_ID_EXISTS", wId.getText()));
+        return;
       }
-      MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
-          "PhysicalTableDialog.USER_ERROR_CATEGORY_ID_EXISTS", wId.getText()));
-      return;
+      
+      super.okPressed();
     }
+   }
 
-    super.okPressed();
+  /**
+   * Unfortunate duplication of code. (Same method is in AbstractTableDialog.)
+   */
+protected boolean popupValidationErrorDialogIfNecessary() {
+  List<String> errorMessages = propertyWidgetManager.validateWidgets();
+  if (errorMessages.isEmpty()) {
+    return false;
+  } else {
+    StringBuilder buf = new StringBuilder();
+    for (String errorMessage : errorMessages) {
+      buf.append(errorMessage + "\n");
+    }
+    MessageDialog.openError(getShell(), "Errors", buf.toString());
+    return true;
   }
+}
 }

@@ -147,13 +147,15 @@ public class UrlPropertyEditorWidget extends AbstractPropertyEditorWidget implem
     }
   }
 
-  protected boolean isValid() {
-    try {
-      new URL(urlField.getText());
-    } catch (MalformedURLException e) {
-      return false;
+  public String validate() {
+    if (isEditable()) {
+      try {
+        new URL(urlField.getText());
+      } catch (MalformedURLException e) {
+        return String.format("%s is not a valid URL.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+      }
     }
-    return true;
+    return null;
   }
 
   public void focusGained(FocusEvent arg0) {

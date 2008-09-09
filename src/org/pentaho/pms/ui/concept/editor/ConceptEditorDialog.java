@@ -1,6 +1,7 @@
 package org.pentaho.pms.ui.concept.editor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -9,6 +10,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -61,6 +63,10 @@ public class ConceptEditorDialog extends Dialog {
   private ISelectionChangedListener conceptTreeSelectionChangedListener;
 
   private ConceptTreeWidget conceptTree;
+  
+  private PropertyWidgetManager2 propertyWidgetManager;
+  
+  private ConceptInterface lastSelection;
   
   // ~ Constructors ====================================================================================================
 
@@ -126,22 +132,30 @@ public class ConceptEditorDialog extends Dialog {
 
     conceptTreeSelectionChangedListener = new ISelectionChangedListener() {
       public void selectionChanged(SelectionChangedEvent e) {
-        if (logger.isDebugEnabled()) {
-          logger.debug("heard conceptTree selection changed event: " + e);
-          logger.debug("attempting to swap cards");
+        
+        if (lastSelection != null && lastSelection.equals(((StructuredSelection)e.getSelection()).getFirstElement())) {
+          return;
         }
-        if (!e.getSelection().isEmpty()) {
-          TreeSelection treeSel = (TreeSelection) e.getSelection();
-          if (treeSel.getFirstElement() instanceof ConceptInterface) {
-            ConceptInterface cu = (ConceptInterface) treeSel.getFirstElement();
-            //                if (tableModel.isColumn(cu)) {
-            //                  delButton.setEnabled(true);
-            //                } else {
-            //                  delButton.setEnabled(false);
-            //                }
-            swapCard(cu);
-          } else {
-            swapCard(null);
+        
+        boolean hasErrors = popupValidationErrorDialogIfNecessary();
+        if (!hasErrors) {
+          if (logger.isDebugEnabled()) {
+            logger.debug("heard conceptTree selection changed event: " + e);
+            logger.debug("attempting to swap cards");
+          }
+          if (!e.getSelection().isEmpty()) {
+            TreeSelection treeSel = (TreeSelection) e.getSelection();
+            if (treeSel.getFirstElement() instanceof ConceptInterface) {
+              ConceptInterface cu = (ConceptInterface) treeSel.getFirstElement();
+              swapCard(cu);
+            } else {
+              swapCard(null);
+            }
+          }
+        } else {
+          // set selection back where it was
+          if (!lastSelection.equals(((TreeSelection) e.getSelection()).getFirstElement())) {
+            conceptTree.setSelection(new StructuredSelection(lastSelection));
           }
         }
       }
@@ -173,45 +187,21 @@ public class ConceptEditorDialog extends Dialog {
     return c0;
   }
 
-  //  protected Control createTop(final Composite parent) {
-  //    Composite c0 = new Composite(parent, SWT.NONE);
-  //    c0.setLayout(new FormLayout());
-  //
-  //    Label wlId = new Label(c0, SWT.RIGHT);
-  //    wlId.setText(Messages.getString("PhysicalTableDialog.USER_NAME_ID")); //$NON-NLS-1$
-  //    conceptNameField = new Text(c0, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
-  //
-  //    FormData fdlId = new FormData();
-  //    fdlId.left = new FormAttachment(0, 0);
-  //
-  //    fdlId.top = new FormAttachment(conceptNameField, 0, SWT.CENTER);
-  //    wlId.setLayoutData(fdlId);
-  //
-  //    FormData fdId = new FormData();
-  //    fdId.left = new FormAttachment(wlId, 10);
-  //    fdId.top = new FormAttachment(0, 0);
-  //    fdId.right = new FormAttachment(100, 0);
-  //    conceptNameField.setLayoutData(fdId);
-  //
-  //    if (conceptUtil.getId() != null) {
-  //      conceptNameField.setText(conceptUtil.getId());
-  //      conceptNameField.selectAll();
-  //    }
-  //    return c0;
-  //  }
-
   protected void okPressed() {
-    try {
-      conceptTreeModel.save();
-    } catch (ObjectAlreadyExistsException e) {
-      if (logger.isErrorEnabled()) {
-      	logger.error("an exception occurred", e);
+    boolean hasErrors = popupValidationErrorDialogIfNecessary();
+    if (!hasErrors) {
+      try {
+        conceptTreeModel.save();
+      } catch (ObjectAlreadyExistsException e) {
+        if (logger.isErrorEnabled()) {
+        	logger.error("an exception occurred", e);
+        }
+        MessageDialog.openError(getShell(), "Error", "There was an error during save.");
+  
       }
-      MessageDialog.openError(getShell(), "Error", "There was an error during save.");
-
+      cleanup();
+      super.okPressed();
     }
-    cleanup();
-    super.okPressed();
   }
 
   protected void cleanup() {
@@ -235,7 +225,7 @@ public class ConceptEditorDialog extends Dialog {
         s0.SASH_WIDTH = 10;
         PropertyNavigationWidget propertyNavigationWidget = new PropertyNavigationWidget(s0, SWT.NONE);
         propertyNavigationWidget.setConceptModel(conceptModel);
-        PropertyWidgetManager2 propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, conceptTreeModel.getSchemaMeta().getSecurityReference());
+        propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, conceptTreeModel.getSchemaMeta().getSecurityReference());
         propertyWidgetManager.setConceptModel(conceptModel);
         propertyNavigationWidget.addSelectionChangedListener(propertyWidgetManager);
         s0.setWeights(new int[] { 1, 2 });
@@ -243,6 +233,7 @@ public class ConceptEditorDialog extends Dialog {
       }
       stackLayout.topControl = (Control) cards.get(concept);
     }
+    lastSelection = concept;
     cardComposite.layout();
   }
 
@@ -275,4 +266,25 @@ public class ConceptEditorDialog extends Dialog {
 
   }
 
+  /**
+   * Unfortunate duplication of code. (Same method is in AbstractTableDialog.)
+   */
+  protected boolean popupValidationErrorDialogIfNecessary() {
+    // if propertyWidgetManager is null, then we are not currently displaying a card; we displaying the defaultCard
+    if (propertyWidgetManager == null) {
+      return false;
+    }
+    List<String> errorMessages = propertyWidgetManager.validateWidgets();
+    if (errorMessages.isEmpty()) {
+      return false;
+    } else {
+      StringBuilder buf = new StringBuilder();
+      for (String errorMessage : errorMessages) {
+        buf.append(errorMessage + "\n");
+      }
+      MessageDialog.openError(getShell(), "Errors", buf.toString());
+      return true;
+    }
+  }   
+  
 }

@@ -28,6 +28,7 @@
 package org.pentaho.pms.ui.dialog;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -312,7 +313,6 @@ public abstract class AbstractTableDialog extends Dialog implements ISelectionCh
   }
 
   protected void configureShell(Shell arg0) {
-    // TODO Auto-generated method stub
     super.configureShell(arg0);
     arg0.setImage(null);
   }
@@ -329,5 +329,19 @@ public abstract class AbstractTableDialog extends Dialog implements ISelectionCh
     propertyNavigationWidget.addSelectionChangedListener(propertyWidgetManager);
     
     conceptIdText.setText(cu.getId());
+  }
+  
+  protected boolean popupValidationErrorDialogIfNecessary() {
+    List<String> errorMessages = propertyWidgetManager.validateWidgets();
+    if (errorMessages.isEmpty()) {
+      return false;
+    } else {
+      StringBuilder buf = new StringBuilder();
+      for (String errorMessage : errorMessages) {
+        buf.append(errorMessage + "\n");
+      }
+      MessageDialog.openError(getShell(), "Errors", buf.toString());
+      return true;
+    }
   }
 }

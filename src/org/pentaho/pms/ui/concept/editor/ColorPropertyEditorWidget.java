@@ -136,8 +136,8 @@ public class ColorPropertyEditorWidget extends AbstractPropertyEditorWidget {
     setValue(getProperty().getValue());
   }
 
-  protected boolean isValid() {
-    return true;
+  public String validate() {
+    return null;
   }
 
   public void cleanup() {

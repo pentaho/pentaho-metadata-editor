@@ -6,6 +6,7 @@ import static org.pentaho.pms.schema.security.RowLevelSecurity.Type.ROLEBASED;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -172,11 +173,20 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
     }
   }
 
-  @Override
-  protected boolean isValid() {
-    // TODO finish this
-    return true;
-
+  public String validate() {
+    if (isEditable()) {
+    RowLevelSecurity rls = rlsModel.getWrappedRowLevelSecurity();
+    if (rls.getType() == GLOBAL) {
+      if (StringUtils.isBlank(rls.getGlobalConstraint())) {
+        return String.format("%s cannot be blank.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+      }
+    } else if (rls.getType() == ROLEBASED) {
+      if (rls.getRoleBasedConstraintMap().isEmpty()) {
+        return String.format("%s must have at least one constraint.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+      }
+    }
+    }
+    return null;
   }
 
   @Override

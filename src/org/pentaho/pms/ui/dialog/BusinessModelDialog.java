@@ -85,6 +85,8 @@ public class BusinessModelDialog extends Dialog {
   private ComboViewer comboViewer;
 
   private static final String DUMMY_CON_NAME = "^never^going^to^use^this";
+  
+  private PropertyWidgetManager2 propertyWidgetManager;
 
   /**
    * mlowery: hack. DatabaseMeta.equals has a bug (PDI-9) which prevents adding a simple string to the comboviewer's
@@ -144,7 +146,7 @@ public class BusinessModelDialog extends Dialog {
     s0.SASH_WIDTH = 10;
     PropertyNavigationWidget propertyNavigationWidget = new PropertyNavigationWidget(s0, SWT.NONE);
     propertyNavigationWidget.setConceptModel(conceptModel);
-    PropertyWidgetManager2 propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, schemaMeta.getSecurityReference());
+    propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, schemaMeta.getSecurityReference());
     propertyWidgetManager.setConceptModel(conceptModel);
     propertyNavigationWidget.addSelectionChangedListener(propertyWidgetManager);
     s0.setWeights(new int[] { 1, 2 });
@@ -252,28 +254,49 @@ public class BusinessModelDialog extends Dialog {
   }
 
   protected void okPressed() {
-    try {
-      conceptUtil.setId(wId.getText());
-    } catch (ObjectAlreadyExistsException e) {
-      if (logger.isErrorEnabled()) {
-      	logger.error("an exception occurred", e);
+    boolean hasErrors = popupValidationErrorDialogIfNecessary();
+      
+    if (!hasErrors) {
+      try {
+        conceptUtil.setId(wId.getText());
+      } catch (ObjectAlreadyExistsException e) {
+        if (logger.isErrorEnabled()) {
+          logger.error("an exception occurred", e);
+        }
+        MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
+            "PhysicalTableDialog.USER_ERROR_PHYSICAL_TABLE_ID_EXISTS", wId.getText()));
+        return;
       }
-      MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
-          "PhysicalTableDialog.USER_ERROR_PHYSICAL_TABLE_ID_EXISTS", wId.getText()));
-      return;
-    }
 
-    // attempt to set the connection
-    IStructuredSelection selection = (IStructuredSelection) comboViewer.getSelection();
-    DatabaseMeta con = (DatabaseMeta) selection.getFirstElement();
-    BusinessModel busModel = (BusinessModel) conceptUtil;
-    if (!DUMMY_CON_NAME.equals(con.getName())) {
-      busModel.setConnection((DatabaseMeta) con);
-    } else {
-      busModel.clearConnection();
+      // attempt to set the connection
+      IStructuredSelection selection = (IStructuredSelection) comboViewer.getSelection();
+      DatabaseMeta con = (DatabaseMeta) selection.getFirstElement();
+      BusinessModel busModel = (BusinessModel) conceptUtil;
+      if (!DUMMY_CON_NAME.equals(con.getName())) {
+        busModel.setConnection((DatabaseMeta) con);
+      } else {
+        busModel.clearConnection();
+      }      
+      
+      super.okPressed();
     }
-
-    super.okPressed();
+    
   }
 
+  /**
+   * Unfortunate duplication of code. (Same method is in AbstractTableDialog.)
+   */
+  protected boolean popupValidationErrorDialogIfNecessary() {
+    List<String> errorMessages = propertyWidgetManager.validateWidgets();
+    if (errorMessages.isEmpty()) {
+      return false;
+    } else {
+      StringBuilder buf = new StringBuilder();
+      for (String errorMessage : errorMessages) {
+        buf.append(errorMessage + "\n");
+      }
+      MessageDialog.openError(getShell(), "Errors", buf.toString());
+      return true;
+    }
+  }   
 }

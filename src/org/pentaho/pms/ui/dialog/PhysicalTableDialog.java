@@ -133,6 +133,8 @@ public class PhysicalTableDialog extends AbstractTableDialog {
   }
 
   protected void okPressed() {
+    boolean hasErrors = popupValidationErrorDialogIfNecessary();
+    if (!hasErrors) {
     try {
       if (lastSelection != null) {
         String id = conceptIdText.getText();
@@ -156,9 +158,17 @@ public class PhysicalTableDialog extends AbstractTableDialog {
       }
       MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("PhysicalTableDialog.USER_ERROR_PHYSICAL_TABLE_ID_EXISTS", conceptIdText.getText()));
     }
+    }
   }
     
   public void selectionChanged(SelectionChangedEvent e) {
+    if (lastSelection != null && lastSelection.equals(((StructuredSelection)e.getSelection()).getFirstElement())) {
+      return;
+    }
+    
+    boolean hasErrors = popupValidationErrorDialogIfNecessary();
+    if (!hasErrors) {
+
     if (lastSelection != null) {
       try {
         String id = conceptIdText.getText();
@@ -187,6 +197,13 @@ public class PhysicalTableDialog extends AbstractTableDialog {
     } else {
       super.selectionChanged(e);
     }
+  } else {
+    // set selection back where it was
+    if (!lastSelection.equals(((StructuredSelection)e.getSelection()).getFirstElement())) {
+    tableColumnTree.setSelection(new StructuredSelection(lastSelection));
+    }
+  }
+
   }
   
   private void updateOriginalPhysicalTable() {

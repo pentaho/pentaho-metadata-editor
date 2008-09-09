@@ -65,8 +65,8 @@ public class BooleanPropertyEditorWidget extends AbstractPropertyEditorWidget im
     button.setSelection(((Boolean) value).booleanValue());
   }
 
-  protected boolean isValid() {
-    return true;
+  public String validate() {
+    return null;
   }
 
   public void focusGained(FocusEvent arg0) {

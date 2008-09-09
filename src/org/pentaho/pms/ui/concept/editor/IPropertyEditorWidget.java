@@ -20,4 +20,10 @@ public interface IPropertyEditorWidget {
    * Called just before disposal. Typically used to remove listeners set on child controls.
    */
   void cleanup();
+  
+  /**
+   * Returns an error message if the widget's value is invalid or <code>null</code> if valid.
+   * @return
+   */
+  String validate();
 }

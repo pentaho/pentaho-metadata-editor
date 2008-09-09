@@ -55,8 +55,8 @@ public class LocalizedStringPropertyEditorWidget extends AbstractPropertyEditorW
     throw new UnsupportedOperationException();
   }
 
-  protected boolean isValid() {
-    return true;
+  public String validate() {
+    return null;
   }
 
   public void cleanup() {

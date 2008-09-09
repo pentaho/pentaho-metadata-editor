@@ -130,9 +130,8 @@ public class SecurityPropertyEditorWidget extends AbstractPropertyEditorWidget {
 
   }
 
-  protected boolean isValid() {
-    // TODO Auto-generated method stub
-    return false;
+  public String validate() {
+    return null;
   }
 
   public Object getValue() {

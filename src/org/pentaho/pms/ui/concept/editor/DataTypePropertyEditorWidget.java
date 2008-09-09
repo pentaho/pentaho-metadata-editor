@@ -179,14 +179,16 @@ public class DataTypePropertyEditorWidget extends AbstractPropertyEditorWidget i
     }
   }
 
-  protected boolean isValid() {
+  public String validate() {
+    if (isEditable()) {
     try {
       new Integer(precision.getText());
       new Integer(length.getText());
     } catch (NumberFormatException e) {
-      return false;
+      return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
     }
-    return true;
+    }
+    return null;
   }
 
   public void focusGained(FocusEvent arg0) {

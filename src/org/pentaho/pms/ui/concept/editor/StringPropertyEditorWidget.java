@@ -87,8 +87,8 @@ public class StringPropertyEditorWidget extends AbstractPropertyEditorWidget imp
   }
   
 
-  protected boolean isValid() {
-    return true;
+  public String validate() {
+    return null;
   }
 
   public void modifyText(ModifyEvent arg0) {
