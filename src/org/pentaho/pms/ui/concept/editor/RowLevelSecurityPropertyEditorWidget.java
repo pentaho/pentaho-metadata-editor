@@ -175,16 +175,17 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
 
   public String validate() {
     if (isEditable()) {
-    RowLevelSecurity rls = rlsModel.getWrappedRowLevelSecurity();
-    if (rls.getType() == GLOBAL) {
-      if (StringUtils.isBlank(rls.getGlobalConstraint())) {
-        return String.format("%s cannot be blank.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+      RowLevelSecurity rls = rlsModel.getWrappedRowLevelSecurity();
+      if (rls.getType() == GLOBAL) {
+        if (StringUtils.isBlank(rls.getGlobalConstraint())) {
+          return String.format("%s cannot be blank.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+        }
+      } else if (rls.getType() == ROLEBASED) {
+        if (rls.getRoleBasedConstraintMap().isEmpty()) {
+          return String.format("%s must have at least one constraint.", PredefinedVsCustomPropertyHelper
+              .getDescription(getPropertyId()));
+        }
       }
-    } else if (rls.getType() == ROLEBASED) {
-      if (rls.getRoleBasedConstraintMap().isEmpty()) {
-        return String.format("%s must have at least one constraint.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
-      }
-    }
     }
     return null;
   }

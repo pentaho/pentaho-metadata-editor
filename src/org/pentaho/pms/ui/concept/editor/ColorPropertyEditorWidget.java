@@ -33,6 +33,7 @@ public class ColorPropertyEditorWidget extends AbstractPropertyEditorWidget {
   private Color color = null;
 
   private Button button;
+
   Label colorLabel;
 
   // ~ Constructors ====================================================================================================
@@ -124,7 +125,7 @@ public class ColorPropertyEditorWidget extends AbstractPropertyEditorWidget {
       ColorSettings colorSettings = (ColorSettings) value;
       color = new Color(Display.getCurrent(), colorSettings.getRed(), colorSettings.getGreen(), colorSettings.getBlue());
     } else {
-      this.color = (Color)value;
+      this.color = (Color) value;
     }
     button.redraw();
   }

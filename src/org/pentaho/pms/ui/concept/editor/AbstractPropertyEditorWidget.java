@@ -59,7 +59,7 @@ public abstract class AbstractPropertyEditorWidget extends Composite implements 
       final String propertyId, final Map context) {
     this(parent, style, conceptModel, propertyId, context, false);
   }
-  
+
   public AbstractPropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
       final String propertyId, final Map context, final boolean lazyCreate) {
     super(parent, style);
@@ -215,11 +215,11 @@ public abstract class AbstractPropertyEditorWidget extends Composite implements 
     } else {
       ConceptPropertyInterface effectiveProperty = conceptModel.getEffectiveProperty(propertyId);
       try {
-        ConceptPropertyInterface clonedProperty = (ConceptPropertyInterface)effectiveProperty.clone();
+        ConceptPropertyInterface clonedProperty = (ConceptPropertyInterface) effectiveProperty.clone();
         clonedProperty.setRequired(false);
         conceptModel.setProperty(clonedProperty);
-//        conceptModel.setProperty((ConceptPropertyInterface)PredefinedVsCustomPropertyHelper.createEmptyProperty(propertyId, effectiveProperty
-//            .getType()).clone());
+        //        conceptModel.setProperty((ConceptPropertyInterface)PredefinedVsCustomPropertyHelper.createEmptyProperty(propertyId, effectiveProperty
+        //            .getType()).clone());
       } catch (CloneNotSupportedException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();

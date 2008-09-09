@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.util.Const;
 
-public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget implements FocusListener{ 
+public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget implements FocusListener {
 
   // ~ Static fields/initializers ======================================================================================
 
@@ -37,7 +37,7 @@ public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget imp
   private FocusListener focusListener;
 
   Label numberLabel;
-  
+
   // ~ Constructors ====================================================================================================
 
   public NumberPropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
@@ -61,7 +61,7 @@ public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget imp
     // final DecoratedField field = new DecoratedField(parent, SWT.BORDER, new TextControlCreator());
     numberField = new Text(parent, SWT.BORDER);
     final ControlDecoration controlDecoration = new ControlDecoration(numberField, SWT.TOP | SWT.RIGHT);
-    
+
     final FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
     FieldDecoration fieldDecoration = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
     Image decorationImage = fieldDecoration.getImage();
@@ -80,7 +80,7 @@ public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget imp
     FormData fd1 = new FormData();
     fd1.left = new FormAttachment(0, 0);
     fd1.top = new FormAttachment(0, 0);
-    fd1.right= new FormAttachment(100, -decorationImage.getBounds().width);
+    fd1.right = new FormAttachment(100, -decorationImage.getBounds().width);
     numberField.setLayoutData(fd1);
 
     Listener listener = new Listener() {
@@ -100,9 +100,11 @@ public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget imp
           }
           controlDecoration.show();
           if (Const.isEmpty(text)) {
-        	  controlDecoration.showHoverText(Messages.getString("NumberPropertyEditorWidget.USER_FEEDBACK_MESSAGE_NUMBER_CANT_BE_EMPTY", text));
+            controlDecoration.showHoverText(Messages.getString(
+                "NumberPropertyEditorWidget.USER_FEEDBACK_MESSAGE_NUMBER_CANT_BE_EMPTY", text));
           } else {
-        	  controlDecoration.showHoverText(Messages.getString("NumberPropertyEditorWidget.USER_FEEDBACK_MESSAGE_NOT_A_BIGNUMBER", text));
+            controlDecoration.showHoverText(Messages.getString(
+                "NumberPropertyEditorWidget.USER_FEEDBACK_MESSAGE_NOT_A_BIGNUMBER", text));
           }
           return;
         }
@@ -115,7 +117,7 @@ public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget imp
     numberField.addListener(SWT.MouseUp, listener);
     numberField.addListener(SWT.KeyDown, listener);
     numberField.addListener(SWT.KeyUp, listener);
-    
+
     numberField.addFocusListener(this);
   }
 
@@ -142,7 +144,8 @@ public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget imp
       try {
         new BigDecimal(numberField.getText());
       } catch (NumberFormatException e) {
-        return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+        return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper
+            .getDescription(getPropertyId()));
       }
     }
     return null;
@@ -150,7 +153,7 @@ public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget imp
 
   public void focusGained(FocusEvent arg0) {
     // Do nothing
-    
+
   }
 
   public void focusLost(FocusEvent arg0) {

@@ -31,9 +31,11 @@ public class FieldTypePropertyEditorWidget extends AbstractPropertyEditorWidget 
   // ~ Instance fields =================================================================================================
 
   private ComboViewer typeComboViewer;
+
   Label typeLabel;
+
   Combo type;
-  
+
   // ~ Constructors ====================================================================================================
 
   public FieldTypePropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
@@ -94,7 +96,7 @@ public class FieldTypePropertyEditorWidget extends AbstractPropertyEditorWidget 
     fdTypeLabel.left = new FormAttachment(0, 0);
     fdTypeLabel.top = new FormAttachment(type, 0, SWT.CENTER);
     typeLabel.setLayoutData(fdTypeLabel);
-    
+
     typeComboViewer.addSelectionChangedListener(this);
   }
 

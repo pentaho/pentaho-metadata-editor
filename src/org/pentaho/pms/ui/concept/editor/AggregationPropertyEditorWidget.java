@@ -32,9 +32,11 @@ public class AggregationPropertyEditorWidget extends AbstractPropertyEditorWidge
   // ~ Instance fields =================================================================================================
 
   private ComboViewer typeComboViewer;
+
   Label typeLabel;
+
   Combo type;
-  
+
   // ~ Constructors ====================================================================================================
 
   public AggregationPropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
@@ -93,7 +95,7 @@ public class AggregationPropertyEditorWidget extends AbstractPropertyEditorWidge
     fdTypeLabel.left = new FormAttachment(0, 0);
     fdTypeLabel.top = new FormAttachment(type, 0, SWT.CENTER);
     typeLabel.setLayoutData(fdTypeLabel);
-    
+
     typeComboViewer.addSelectionChangedListener(this);
   }
 

@@ -31,7 +31,16 @@ import org.eclipse.swt.widgets.Text;
 import org.pentaho.pms.schema.concept.ConceptInterface;
 import org.pentaho.pms.util.ObjectAlreadyExistsException;
 
-
+/**
+ * Dialog for editing the base sets of concepts from which all other concepts inherit.
+ * 
+ * <p>A note about <code>lastSelection</code>:</p>
+ * <p>lastSelection keeps track of the last concept to which we successfully transitioned. Why is this necessary?
+ * Because state on the screen may be invalid (e.g. user entered bogus value) then we must stop the transition, alert
+ * the user, and switch back to the offending screen. Here, "screen" is a card in a stack layout.</p> 
+ * 
+ * @author mlowery
+ */
 public class ConceptEditorDialog extends Dialog {
 
   // ~ Static fields/initializers ======================================================================================
@@ -52,7 +61,7 @@ public class ConceptEditorDialog extends Dialog {
 
   protected ConceptModelRegistry conceptModelRegistry = new ConceptModelRegistry();
 
-  protected Map<ConceptInterface,Composite> cards = new HashMap<ConceptInterface,Composite>();
+  protected Map<ConceptInterface, Composite> cards = new HashMap<ConceptInterface, Composite>();
 
   protected Control defaultCard;
 
@@ -63,11 +72,11 @@ public class ConceptEditorDialog extends Dialog {
   private ISelectionChangedListener conceptTreeSelectionChangedListener;
 
   private ConceptTreeWidget conceptTree;
-  
+
   private PropertyWidgetManager2 propertyWidgetManager;
-  
+
   private ConceptInterface lastSelection;
-  
+
   // ~ Constructors ====================================================================================================
 
   public ConceptEditorDialog(final Shell parent, final IConceptTreeModel conceptTreeModel) {
@@ -110,16 +119,15 @@ public class ConceptEditorDialog extends Dialog {
     Composite c12 = new Composite(s0, SWT.NONE);
     c12.setLayout(new FormLayout());
 
-        Composite placeholderComposite = new Composite(c12, SWT.NONE);
-        FormData fdDetailsComposite = new FormData();
-        fdDetailsComposite.top = new FormAttachment(0, 0);
-        fdDetailsComposite.left = new FormAttachment(0, 0);
-        fdDetailsComposite.right = new FormAttachment(100, -5);
-        fdDetailsComposite.bottom = new FormAttachment(100, 0);
-        placeholderComposite.setLayoutData(fdDetailsComposite);
+    Composite placeholderComposite = new Composite(c12, SWT.NONE);
+    FormData fdDetailsComposite = new FormData();
+    fdDetailsComposite.top = new FormAttachment(0, 0);
+    fdDetailsComposite.left = new FormAttachment(0, 0);
+    fdDetailsComposite.right = new FormAttachment(100, -5);
+    fdDetailsComposite.bottom = new FormAttachment(100, 0);
+    placeholderComposite.setLayoutData(fdDetailsComposite);
 
-        placeholderComposite.setLayout(new FormLayout());
-
+    placeholderComposite.setLayout(new FormLayout());
 
     conceptTree = new ConceptTreeWidget(placeholderComposite, SWT.NONE, conceptTreeModel, true);
 
@@ -132,11 +140,11 @@ public class ConceptEditorDialog extends Dialog {
 
     conceptTreeSelectionChangedListener = new ISelectionChangedListener() {
       public void selectionChanged(SelectionChangedEvent e) {
-        
-        if (lastSelection != null && lastSelection.equals(((StructuredSelection)e.getSelection()).getFirstElement())) {
+
+        if (lastSelection != null && lastSelection.equals(((StructuredSelection) e.getSelection()).getFirstElement())) {
           return;
         }
-        
+
         boolean hasErrors = popupValidationErrorDialogIfNecessary();
         if (!hasErrors) {
           if (logger.isDebugEnabled()) {
@@ -194,10 +202,10 @@ public class ConceptEditorDialog extends Dialog {
         conceptTreeModel.save();
       } catch (ObjectAlreadyExistsException e) {
         if (logger.isErrorEnabled()) {
-        	logger.error("an exception occurred", e);
+          logger.error("an exception occurred", e);
         }
         MessageDialog.openError(getShell(), "Error", "There was an error during save.");
-  
+
       }
       cleanup();
       super.okPressed();
@@ -214,7 +222,7 @@ public class ConceptEditorDialog extends Dialog {
     } else {
       if (null == cards.get(concept)) {
         IConceptModel conceptModel = conceptModelRegistry.getConceptModel(concept);
-        
+
         Composite conceptEditor = new Composite(cardComposite, SWT.NONE);
         conceptEditor.setLayout(new FillLayout());
 
@@ -225,7 +233,8 @@ public class ConceptEditorDialog extends Dialog {
         s0.SASH_WIDTH = 10;
         PropertyNavigationWidget propertyNavigationWidget = new PropertyNavigationWidget(s0, SWT.NONE);
         propertyNavigationWidget.setConceptModel(conceptModel);
-        propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, conceptTreeModel.getSchemaMeta().getSecurityReference());
+        propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, conceptTreeModel
+            .getSchemaMeta().getSecurityReference());
         propertyWidgetManager.setConceptModel(conceptModel);
         propertyNavigationWidget.addSelectionChangedListener(propertyWidgetManager);
         s0.setWeights(new int[] { 1, 2 });
@@ -285,6 +294,6 @@ public class ConceptEditorDialog extends Dialog {
       MessageDialog.openError(getShell(), "Errors", buf.toString());
       return true;
     }
-  }   
-  
+  }
+
 }

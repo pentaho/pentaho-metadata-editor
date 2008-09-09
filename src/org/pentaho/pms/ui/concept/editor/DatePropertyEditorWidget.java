@@ -35,14 +35,14 @@ public class DatePropertyEditorWidget extends AbstractPropertyEditorWidget {
 
   public String validate() {
     if (isEditable()) {
-    return String.format("%s is invalid.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+      return String.format("%s is invalid.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
     }
     return null;
   }
 
   protected void setValue(final Object value) {
   }
-  
+
   public void refresh() {
     refreshOverrideButton();
     setValue(getProperty().getValue());

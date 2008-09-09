@@ -29,7 +29,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.pentaho.pms.schema.concept.types.columnwidth.ColumnWidth;
 
-public class ColumnWidthPropertyEditorWidget extends AbstractPropertyEditorWidget implements FocusListener, ISelectionChangedListener {
+public class ColumnWidthPropertyEditorWidget extends AbstractPropertyEditorWidget implements FocusListener,
+    ISelectionChangedListener {
 
   // ~ Static fields/initializers ======================================================================================
 
@@ -40,10 +41,13 @@ public class ColumnWidthPropertyEditorWidget extends AbstractPropertyEditorWidge
   private ComboViewer typeComboViewer;
 
   private Text width;
+
   Label typeLabel;
+
   Combo type;
+
   Label widthLabel;
-  
+
   // ~ Constructors ====================================================================================================
 
   public ColumnWidthPropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
@@ -133,10 +137,10 @@ public class ColumnWidthPropertyEditorWidget extends AbstractPropertyEditorWidge
     fdWidthLabel.left = new FormAttachment(0, 0);
     fdWidthLabel.top = new FormAttachment(width, 0, SWT.CENTER);
     widthLabel.setLayoutData(fdWidthLabel);
-    
+
     typeComboViewer.addSelectionChangedListener(this);
     width.addFocusListener(this);
-}
+  }
 
   protected void widgetDisposed(final DisposeEvent e) {
   }
@@ -172,7 +176,8 @@ public class ColumnWidthPropertyEditorWidget extends AbstractPropertyEditorWidge
       try {
         new BigDecimal(width.getText());
       } catch (NumberFormatException e) {
-        return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+        return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper
+            .getDescription(getPropertyId()));
       }
     }
     return null;
@@ -191,7 +196,7 @@ public class ColumnWidthPropertyEditorWidget extends AbstractPropertyEditorWidge
 
   public void focusGained(FocusEvent arg0) {
     // TODO Auto-generated method stub
-    
+
   }
 
   public void focusLost(FocusEvent arg0) {

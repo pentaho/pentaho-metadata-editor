@@ -71,7 +71,7 @@ public class BooleanPropertyEditorWidget extends AbstractPropertyEditorWidget im
 
   public void focusGained(FocusEvent arg0) {
     // Do nothing
-    
+
   }
 
   public void focusLost(FocusEvent arg0) {
@@ -85,7 +85,7 @@ public class BooleanPropertyEditorWidget extends AbstractPropertyEditorWidget im
     button.setEnabled(isEditable());
     setValue(getProperty().getValue());
   }
-  
+
   public void cleanup() {
     button.removeFocusListener(this);
   }

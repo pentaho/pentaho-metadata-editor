@@ -26,7 +26,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.pentaho.pms.schema.concept.types.datatype.DataTypeSettings;
 
-public class DataTypePropertyEditorWidget extends AbstractPropertyEditorWidget implements FocusListener, ISelectionChangedListener {
+public class DataTypePropertyEditorWidget extends AbstractPropertyEditorWidget implements FocusListener,
+    ISelectionChangedListener {
   // ~ Static fields/initializers ======================================================================================
 
   private static final Log logger = LogFactory.getLog(DataTypePropertyEditorWidget.class);
@@ -38,11 +39,15 @@ public class DataTypePropertyEditorWidget extends AbstractPropertyEditorWidget i
   private Text length;
 
   private Text precision;
+
   Label typeLabel;
+
   Combo type;
+
   Label lengthLabel;
+
   Label precisionLabel;
-  
+
   // ~ Constructors ====================================================================================================
 
   public DataTypePropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
@@ -181,12 +186,13 @@ public class DataTypePropertyEditorWidget extends AbstractPropertyEditorWidget i
 
   public String validate() {
     if (isEditable()) {
-    try {
-      new Integer(precision.getText());
-      new Integer(length.getText());
-    } catch (NumberFormatException e) {
-      return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
-    }
+      try {
+        new Integer(precision.getText());
+        new Integer(length.getText());
+      } catch (NumberFormatException e) {
+        return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper
+            .getDescription(getPropertyId()));
+      }
     }
     return null;
   }
@@ -197,7 +203,7 @@ public class DataTypePropertyEditorWidget extends AbstractPropertyEditorWidget i
   public void focusLost(FocusEvent arg0) {
     if (!getValue().equals(getProperty().getValue())) {
       putPropertyValue();
-    }  
+    }
   }
 
   public void selectionChanged(SelectionChangedEvent arg0) {

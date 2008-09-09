@@ -71,7 +71,7 @@ public class UrlPropertyEditorWidget extends AbstractPropertyEditorWidget implem
 
     urlField = new Text(parent, SWT.BORDER);
     final ControlDecoration controlDecoration = new ControlDecoration(urlField, SWT.TOP | SWT.RIGHT);
-    
+
     final FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
     FieldDecoration fieldDecoration = registry.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
     Image decorationImage = fieldDecoration.getImage();
@@ -110,9 +110,11 @@ public class UrlPropertyEditorWidget extends AbstractPropertyEditorWidget implem
           }
           controlDecoration.show();
           if (Const.isEmpty(text)) {
-        	  controlDecoration.showHoverText(Messages.getString("UrlPropertyEditorWidget.USER_FEEDBACK_MESSAGE_URL_CANT_BE_EMPTY", text));
+            controlDecoration.showHoverText(Messages.getString(
+                "UrlPropertyEditorWidget.USER_FEEDBACK_MESSAGE_URL_CANT_BE_EMPTY", text));
           } else {
-        	  controlDecoration.showHoverText(Messages.getString("UrlPropertyEditorWidget.USER_FEEDBACK_MESSAGE_NOT_A_VALID_URL", text));
+            controlDecoration.showHoverText(Messages.getString(
+                "UrlPropertyEditorWidget.USER_FEEDBACK_MESSAGE_NOT_A_VALID_URL", text));
           }
           return;
         }
@@ -152,7 +154,8 @@ public class UrlPropertyEditorWidget extends AbstractPropertyEditorWidget implem
       try {
         new URL(urlField.getText());
       } catch (MalformedURLException e) {
-        return String.format("%s is not a valid URL.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
+        return String
+            .format("%s is not a valid URL.", PredefinedVsCustomPropertyHelper.getDescription(getPropertyId()));
       }
     }
     return null;

@@ -11,16 +11,10 @@ public interface IPropertyEditorWidget {
   Object getValue();
 
   /**
-   * Property editor widgets might simply wrap a single SWT widget or may wrap multiple SWT widgets.  This method should
-   * set the focus on one of the wrapped widgets.
-   */
-//  void focus();
-
-  /**
    * Called just before disposal. Typically used to remove listeners set on child controls.
    */
   void cleanup();
-  
+
   /**
    * Returns an error message if the widget's value is invalid or <code>null</code> if valid.
    * @return

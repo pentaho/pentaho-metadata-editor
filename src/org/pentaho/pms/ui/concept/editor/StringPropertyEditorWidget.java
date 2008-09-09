@@ -49,7 +49,6 @@ public class StringPropertyEditorWidget extends AbstractPropertyEditorWidget imp
     stringLabel = new Label(parent, SWT.NONE);
     stringLabel.setText("Value:");
 
-
     string = new Text(parent, SWT.BORDER);
 
     FormData fd1 = new FormData();
@@ -85,7 +84,6 @@ public class StringPropertyEditorWidget extends AbstractPropertyEditorWidget imp
     setValue(getProperty().getValue());
     string.addModifyListener(this);
   }
-  
 
   public String validate() {
     return null;
@@ -93,7 +91,7 @@ public class StringPropertyEditorWidget extends AbstractPropertyEditorWidget imp
 
   public void modifyText(ModifyEvent arg0) {
     putPropertyValue();
-    
+
   }
 
   public void cleanup() {

@@ -43,9 +43,9 @@ public class FontPropertyEditorWidget extends AbstractPropertyEditorWidget {
   private Text preview;
 
   Label fontStringLabel;
-  
+
   Label previewLabel;
-  
+
   // ~ Constructors ====================================================================================================
 
   public FontPropertyEditorWidget(final Composite parent, final int style, final IConceptModel conceptModel,
@@ -189,7 +189,7 @@ public class FontPropertyEditorWidget extends AbstractPropertyEditorWidget {
     previewLabel.setEnabled(isEditable());
     preview.setEnabled(isEditable());
     fontButton.setEnabled(isEditable());
-    setValue(getProperty().getValue()); 
+    setValue(getProperty().getValue());
   }
 
   public void cleanup() {

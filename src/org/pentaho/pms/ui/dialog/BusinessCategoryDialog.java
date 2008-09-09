@@ -11,8 +11,8 @@
  * the license for the specific language governing your rights and limitations.
 */
 
-
 package org.pentaho.pms.ui.dialog;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,21 +43,25 @@ import org.pentaho.pms.ui.concept.editor.PropertyNavigationWidget;
 import org.pentaho.pms.ui.concept.editor.PropertyWidgetManager2;
 import org.pentaho.pms.util.ObjectAlreadyExistsException;
 
-
 /***
  * Represents a business category
  * 
  * @since 30-aug-2006
  *
  */
-public class BusinessCategoryDialog extends Dialog
-{
+public class BusinessCategoryDialog extends Dialog {
   private static final Log logger = LogFactory.getLog(BusinessCategoryDialog.class);
-  protected Map<String,Locales> propertyEditorContext = new HashMap<String,Locales>();
+
+  protected Map<String, Locales> propertyEditorContext = new HashMap<String, Locales>();
+
   private Text wId;
+
   private IConceptModel conceptModel;
+
   private ConceptUtilityInterface conceptUtil;
+
   private SchemaMeta schemaMeta;
+
   private PropertyWidgetManager2 propertyWidgetManager;
 
   public BusinessCategoryDialog(Shell parent, ConceptUtilityInterface conceptUtil, SchemaMeta schemaMeta) {
@@ -97,7 +101,7 @@ public class BusinessCategoryDialog extends Dialog
       wId.setText(conceptUtil.getId());
       wId.selectAll();
     }
-    
+
     Group group = new Group(container, SWT.SHADOW_OUT);
     GridData gridData = new GridData(GridData.FILL_BOTH);
     gridData.horizontalSpan = 2;
@@ -108,14 +112,14 @@ public class BusinessCategoryDialog extends Dialog
     s0.SASH_WIDTH = 10;
     PropertyNavigationWidget propertyNavigationWidget = new PropertyNavigationWidget(s0, SWT.NONE);
     propertyNavigationWidget.setConceptModel(conceptModel);
-    propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, schemaMeta.getSecurityReference());
+    propertyWidgetManager = new PropertyWidgetManager2(s0, SWT.NONE, propertyEditorContext, schemaMeta
+        .getSecurityReference());
     propertyWidgetManager.setConceptModel(conceptModel);
     propertyNavigationWidget.addSelectionChangedListener(propertyWidgetManager);
     s0.setWeights(new int[] { 1, 2 });
-    
+
     return c0;
   }
-
 
   protected void okPressed() {
     boolean hasErrors = popupValidationErrorDialogIfNecessary();
@@ -130,25 +134,25 @@ public class BusinessCategoryDialog extends Dialog
             "PhysicalTableDialog.USER_ERROR_CATEGORY_ID_EXISTS", wId.getText()));
         return;
       }
-      
+
       super.okPressed();
     }
-   }
+  }
 
   /**
    * Unfortunate duplication of code. (Same method is in AbstractTableDialog.)
    */
-protected boolean popupValidationErrorDialogIfNecessary() {
-  List<String> errorMessages = propertyWidgetManager.validateWidgets();
-  if (errorMessages.isEmpty()) {
-    return false;
-  } else {
-    StringBuilder buf = new StringBuilder();
-    for (String errorMessage : errorMessages) {
-      buf.append(errorMessage + "\n");
+  protected boolean popupValidationErrorDialogIfNecessary() {
+    List<String> errorMessages = propertyWidgetManager.validateWidgets();
+    if (errorMessages.isEmpty()) {
+      return false;
+    } else {
+      StringBuilder buf = new StringBuilder();
+      for (String errorMessage : errorMessages) {
+        buf.append(errorMessage + "\n");
+      }
+      MessageDialog.openError(getShell(), "Errors", buf.toString());
+      return true;
     }
-    MessageDialog.openError(getShell(), "Errors", buf.toString());
-    return true;
   }
-}
 }
