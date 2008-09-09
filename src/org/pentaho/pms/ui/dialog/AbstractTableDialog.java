@@ -68,6 +68,16 @@ import org.pentaho.pms.ui.concept.editor.PropertyNavigationWidget;
 import org.pentaho.pms.ui.concept.editor.PropertyWidgetManager2;
 import org.pentaho.pms.ui.concept.editor.TableColumnTreeWidget;
 
+/**
+ * Parent of <code>PhysicalTableDialog</code> and <code>BusinessTableDialog</code>.
+ * 
+ * <p>A note about <code>lastSelection</code>:</p>
+ * <p>lastSelection keeps track of the last concept to which we successfully transitioned. Why is this necessary?
+ * Because state on the screen may be invalid (e.g. user entered bogus value) then we must stop the transition, alert
+ * the user, and switch back to the offending screen. Here, "screen" is a card in a stack layout.</p> 
+ * 
+ * @author mlowery
+ */
 public abstract class AbstractTableDialog extends Dialog implements ISelectionChangedListener {
 
   protected ITableModel tableModel;
