@@ -2527,6 +2527,7 @@ public class MetaEditor implements SelectionListener {
 
       try {
         businessModel.setId(newBusModel.getId());
+        businessModel.setConnection(newBusModel.getConnection());
         schemaMeta.addModel(businessModel);
         mainTreeNode.getBusinessModelsRoot().addDomainChild(businessModel);
         schemaMeta.setActiveModel(businessModel);
