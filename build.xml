@@ -36,7 +36,7 @@
 	<!-- Import the common_build.xml file which contains all the default tasks -->
 	<import file="${common.build.file}"/>
 	
-	<target name="clean-all" depends="clean-build, clean-dist, clean-javadoc, clean-distrib" />
+	<target name="clean-all" depends="clean-build, clean-jars, clean-dist, clean-javadoc, clean-distrib" />
 
 	<target name="clean-build">
 		<delete dir="${build.dir}" />
@@ -192,7 +192,7 @@
 		</zip>
 	</target>
 
-	<target name="dist" depends="jar, zip-src, zip-javadoc, distrib" />
+	<target name="dist" depends="resolve, jar, zip-src, zip-javadoc, distrib" />
 	
     <!-- =========================================================== 
           target: ftp-metadata
