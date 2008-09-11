@@ -2,7 +2,7 @@
 
 	<description>
 	      Pentaho Metadata Editor build file.
-	    </description>
+    </description>
 
 	<tstamp prefix="start" />
 
@@ -29,6 +29,13 @@
 
 	<property name="sourcezipfile" location="PentahoMetaDataEditor-src-${release.number}.zip" />
 
+	<!-- Define the default location of the common build file -->
+	<property name="common.build.file" value="./common_build.xml" 
+		description="This is the location of the standardized common_build.xml file"/>
+	
+	<!-- Import the common_build.xml file which contains all the default tasks -->
+	<import file="${common.build.file}"/>
+	
 	<target name="clean-all" depends="clean-build, clean-dist, clean-javadoc, clean-distrib" />
 
 	<target name="clean-build">

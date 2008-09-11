@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.pentaho.core.util.PublisherUtil;
+import org.pentaho.platform.util.client.PublisherUtil;
 import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.core.gui.WindowProperty;
