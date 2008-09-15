@@ -198,7 +198,12 @@
   <property name="ivy.artifact.ivypathname"
             value="${dist.dir}/ivy.xml"
             description="The full path to the IVY xml file to deploy with the artifact" />
-
+  
+  <!-- Build Mode properties -->
+  <property name="release"
+            value="false"
+            description="Set this to true if you want to generate a release artifact" />
+  
   <!-- Set the os property -->
   <condition property="isLinux">
     <os family="unix" />
@@ -404,12 +409,32 @@
         ====================================================================-->
   <target name="svn-revision"
           depends="install-svnant"
-          description="Prints and sets the SVN revision for the repository at the current dir">
+          description="Prints and sets the SVN revision for the repository at the current dir (if svn.revision is not set)">
 
     <svn javahl="${svnant.use-javahl}" svnkit="${svnant.use-svnkit}">
       <status path="." revisionProperty="svn.revision" />
     </svn>
     <echo message="Subversion repository revision: ${svn.revision}" />
+  </target>
+
+
+  <!--=======================================================================
+        set-build.id
+    
+        Sets a property build.id to the either "development" or the svn revision
+        if in release mode
+        ====================================================================-->
+  <target name="set-build.id" unless="build.id" depends="install-antcontrib">
+    <if>
+      <istrue value="${release}" />
+      <then>
+        <antcallback target="svn-revision" return="svn.revision" />
+        <property name="build.id" value="${svn.revision}" />
+      </then>
+      <else>
+        <property name="build.id" value="development" />
+      </else>
+    </if>
   </target>
 
 
@@ -915,11 +940,11 @@
 	    
 	    Creates a jar file from the bin directory
 	    ====================================================================-->
-  <target name="jar" depends="compile,svn-revision" description="Jars up the bin directory after a compile">
+  <target name="jar" depends="compile,set-build.id" description="Jars up the bin directory after a compile">
     <jar destfile="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar">
       <manifest>
         <attribute name="Implementation-Title" value="${impl.title}" />
-        <attribute name="Implementation-Version" value="${project.revision}.${svn.revision}" />
+        <attribute name="Implementation-Version" value="${project.revision}.${build.id}" />
         <attribute name="Implementation-Vendor" value="${impl.vendor}" />
         <attribute name="Implementation-ProductID" value="${impl.productID}" />
       </manifest>
