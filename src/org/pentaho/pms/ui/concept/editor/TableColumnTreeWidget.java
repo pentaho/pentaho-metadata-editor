@@ -1,7 +1,5 @@
 package org.pentaho.pms.ui.concept.editor;
 
-import java.util.Locale;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -31,6 +29,8 @@ public class TableColumnTreeWidget extends TreeViewer implements ISelectionProvi
   private boolean decorate = true;
 
   private boolean showId = false;
+  
+  private String locale = null;
 
   // ~ Constructors ====================================================================================================
 
@@ -39,13 +39,12 @@ public class TableColumnTreeWidget extends TreeViewer implements ISelectionProvi
    * changes.
    */
   public TableColumnTreeWidget(final Composite parent, final int style, final ITableModel tableModel,
-      final boolean decorate) {
+      final boolean decorate, final String locale) {
     super(new Tree(parent, style));
     this.tableModel = tableModel;
-
     this.tableModel.addTableModificationListener(this);
-
     this.decorate = decorate;
+    this.locale = locale;
     createContents();
     showId(showId);
   }
@@ -181,7 +180,8 @@ public class TableColumnTreeWidget extends TreeViewer implements ISelectionProvi
         logger.debug("getText arg is " + element);
       }
       ConceptUtilityInterface conceptHolder = (ConceptUtilityInterface) element;
-      String name = conceptHolder.getConcept().getName(Locale.getDefault().toString());
+      
+      String name = conceptHolder.getConcept().getName(locale);
       if (showId || null == name) {
         return conceptHolder.getId();
       } else {

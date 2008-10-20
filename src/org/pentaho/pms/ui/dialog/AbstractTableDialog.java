@@ -198,7 +198,7 @@ public abstract class AbstractTableDialog extends Dialog implements ISelectionCh
       }
     });
 
-    tableColumnTree = new TableColumnTreeWidget(detailsComposite, SWT.SINGLE | SWT.BORDER, tableModel, true);
+    tableColumnTree = new TableColumnTreeWidget(detailsComposite, SWT.SINGLE | SWT.BORDER, tableModel, true, schemaMeta.getActiveLocale());
     gridData = new GridData(GridData.FILL_BOTH);
     gridData.horizontalSpan = 2;
     tableColumnTree.getTree().setLayoutData(gridData);
