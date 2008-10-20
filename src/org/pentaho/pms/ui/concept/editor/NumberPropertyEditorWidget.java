@@ -3,6 +3,7 @@ package org.pentaho.pms.ui.concept.editor;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -140,14 +141,14 @@ public class NumberPropertyEditorWidget extends AbstractPropertyEditorWidget imp
 
   public String validate() {
     // only validate if this control is editable
-    if (isEditable()) {
-      try {
-        new BigDecimal(numberField.getText());
-      } catch (NumberFormatException e) {
-        return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper
-            .getDescription(getPropertyId()));
+    if (isEditable() && StringUtils.isNotBlank(numberField.getText())) { // allow blanks
+        try {
+          new BigDecimal(numberField.getText());
+        } catch (NumberFormatException e) {
+          return String.format("%s is not a valid number.", PredefinedVsCustomPropertyHelper
+              .getDescription(getPropertyId()));
+        }
       }
-    }
     return null;
   }
 
