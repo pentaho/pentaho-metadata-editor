@@ -1,5 +1,5 @@
 <!--===========================================================================
-    COMMON_BUILD.XML
+    COMMON_BUILD.XML (version 20081010)
     
     This is the build file that is used across all Pentaho projects that are
     using the "new and improved" ivy builds.
@@ -498,16 +498,43 @@
 
 
   <!--=======================================================================
+	    ivy.check-releasable
+	    
+	    Verifies that there are no SNAPSHOT dependencies defined in the ivy xml.
+	    If there are SNAPSHOTS, fail the release build.
+	    ====================================================================-->
+  <target name="ivy.check-releasable">
+    <if>
+      <istrue value="${release}" />
+      <then>
+        <ivy:artifactproperty conf="*" name="dep.[module]/[artifact]-[revision]" value="[revision]" />
+
+        <propertyselector property="violator.list" match="dep\..*SNAPSHOT.*" select="\0" casesensitive="false" />
+
+        <fail message="Release not possible, you have dependencies on non-released artifacts: ${violator.list}">
+          <condition>
+            <isset property="${violator.list}" />
+          </condition>
+        </fail>
+      </then>
+    </if>
+  </target>
+
+
+  <!--=======================================================================
 	    resolve
 	    
 	    Using ivy and the dependencies for the project (defined in the ivy.xml
 	    file), this task will retrieve the needed files and place them into 
 	    the defined directories.
 	    ====================================================================-->
-  <target name="resolve" depends="resolve-default, resolve-test" description="Retrieves all the dependent libraries" />
+  <target name="resolve"
+          depends="resolve-default, resolve-test, ivy.check-releasable"
+          description="Retrieves all the dependent libraries" />
 
   <target name="resolve-init" unless="resolve-init.skip" depends="install-ivy">
-    <!-- If this is the 1st time through resolve-init, then we need to clean up the jars -->
+    <!-- If this is the 1st time through resolve-init, then we need to clean up the jars
+-->
     <antcall target="clean-jars" />
     <property name="resolve-init.skip" value="" />
   </target>
@@ -559,6 +586,37 @@
 
 
   <!--=======================================================================
+	    ivy-clean-pentaho
+	    
+	    Completely cleans your IVY cache and local repository of pentaho-specific files.
+	    WARNING: this is a global action and will affect other IVY projects
+	    currently referencing a locally published dependency
+	    ====================================================================-->
+  <target name="ivy-clean-pentaho"
+          depends="install-ivy"
+          description="cleans the IVY cache and local repository of Pentaho-specific files">
+    <for param="dir">
+      <path>
+        <dirset dir="${ivy.local.default.root}" includes="*pentaho*" />
+        <dirset dir="${ivy.default.ivy.user.dir}/cache" includes="*pentaho*" />
+      </path>
+      <sequential>
+        <delete dir="@{dir}" includeemptydirs="true" />
+      </sequential>
+    </for>
+    <for param="file">
+      <path>
+        <fileset dir="${ivy.local.default.root}" includes="*pentaho*" />
+        <fileset dir="${ivy.default.ivy.user.dir}/cache" includes="*pentaho*" />
+      </path>
+      <sequential>
+        <delete file="@{file}" />
+      </sequential>
+    </for>
+  </target>
+
+
+  <!--=======================================================================
 	    report
 	    
 	    Allows ivy to report on the dependencies for this project 
@@ -579,7 +637,7 @@
   <target name="publish-local-nojar" depends="install-ivy" description="Publishes the jar file to the local repository">
     <ivy:resolve file="${ivy.artifact.ivyfilename}" />
     <ivy:publish resolver="local" pubrevision="${project.revision}" overwrite="true" forcedeliver="true">
-      <artifacts pattern="${dist.dir}/[artifact]-[revision].[ext]" />
+      <artifacts pattern="${dist.dir}/[artifact]-[revision](-[classifier]).[ext]" />
     </ivy:publish>
   </target>
 
@@ -1082,7 +1140,8 @@
       <classpath refid="test.classpath" />
     </javac>
 
-    <!-- Copy the non-java files from the source directory to the test classes directory -->
+    <!-- Copy the non-java files from the source directory to the test classes directory
+-->
     <copy todir="${testclasses.dir}">
       <fileset dir="${testsrc.dir}">
         <exclude name="**/*.java" />
