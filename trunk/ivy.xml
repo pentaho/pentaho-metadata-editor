@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+    <info organisation="pentaho" module="pentaho-metadata-editor" revision="${project.revision}" />
+    
+    <configurations>
+    	<conf name="default"/>
+    	<conf name="test" visibility="private"/>
+    	<conf name="source"/>
+    </configurations>
+    
+    <publications>
+	    <artifact name="pentaho-metadata-editor" type="jar" conf="default"/>
+	    <artifact name="pentaho-metadata-editor" m:classifier="sources" type="source" ext="jar" conf="source"/>
+    </publications>    
+    
+    <dependencies defaultconf="default->default">
+
+        <!--  Special Note:  This ivy file only resolves internal dependencies -->
+
+        <dependency org="jfree"          name="jcommon"                  rev="1.0.12" transitive="false"/>
+        <dependency org="pentaho"        name="libformula"               rev="0.1.18.2" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-connections"      rev="${dependency.pentaho-connections.revision}"  changing="true" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-metadata"         rev="${dependency.pentaho-metadata.revision}"  changing="true" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-mql-editor"       rev="${dependency.pentaho-mql-editor.revision}"  changing="true" transitive="false"/>
+        <dependency org="pentaho.kettle" name="kettle-engine"            rev="${dependency.kettle.revision}" transitive="false"/>
+        <dependency org="pentaho.kettle" name="kettle-ui-swt"            rev="${dependency.kettle.revision}" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-bi-platform-util" rev="${project.revision}" changing="true" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" transitive="false"/>
+    </dependencies>
+</ivy-module>
