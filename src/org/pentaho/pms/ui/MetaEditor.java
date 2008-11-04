@@ -2370,7 +2370,7 @@ public class MetaEditor implements SelectionListener {
     tiTabsLocale.setControl(metaEditorLocales);
     tiTabsLog.setControl(metaEditorLog);
 
-    toggleOlapTab();
+    // toggleOlapTab();
 
     tabfolder.setSelection(0);
 
