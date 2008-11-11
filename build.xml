@@ -167,8 +167,8 @@
 		</copy>
 		-->
 		<echo>Generating the Pentaho Metadata Editor distribution package PentahoMetaDataEditor-${release.number}.zip ...</echo>
-		<zip destfile="${dist.dir}/pme-ce-${release.number}.zip">
-			<zipfileset dir="${distrib}" prefix="metadata-editor-${release.number}" includes="**/*" excludes="**/Thumbs.db" />
+		<zip destfile="${dist.dir}/pme-ce-${project.revision}.zip">
+			<zipfileset dir="${distrib}" prefix="metadata-editor" includes="**/*" excludes="**/Thumbs.db" />
 		</zip>
 		
 		<tar destfile="${dist.dir}/pme-ce-${project.revision}.tar">
