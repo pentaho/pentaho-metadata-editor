@@ -191,6 +191,20 @@
 			<zipfileset dir="src" prefix="pentaho-metadata-editor-src-${release.number}" />
 		</zip>
 	</target>
+	
+	<!--
+	  NOTE: This task should be called before the "dist" task is called. Once PDI-1861 is resolved,
+	  then this task can be removed
+	-->
+	<target name="rescopy" description="Copies the resources - this is a temporary fix related to PMD-438">
+		<mkdir dir="${distrib}" />
+		<copy todir="${distrib}"  overwrite="true" >
+			<fileset dir="${basedir}/res"/>
+		</copy>
+	</target>
+	<!--
+	  END PDI-1861 workaround
+	-->
 
 	<target name="dist" depends="resolve, jar, zip-src, zip-javadoc, distrib" />
 	
