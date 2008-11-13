@@ -171,18 +171,15 @@
 			<zipfileset dir="${distrib}" prefix="metadata-editor" includes="**/*" excludes="**/Thumbs.db" />
 		</zip>
 		
-		<tar destfile="${dist.dir}/pme-ce-${project.revision}.tar">
+		<tar destfile="${dist.dir}/pme-ce-${project.revision}.tar.gz" compression="gzip">
 			<tarfileset dir="${distrib}" prefix="metadata-editor" mode="755">
 				<include name="**/*.sh"/>
 			</tarfileset>
 			<tarfileset dir="${distrib}" prefix="metadata-editor">
 				<include name="**/*" />
-				<exclude name="**/*.bat"/>
 				<exclude name="**/*.sh" />
 			</tarfileset>
 		</tar>
-		
-		<gzip src="${dist.dir}/pme-ce-${project.revision}.tar" zipfile="${dist.dir}/pme-ce-${project.revision}.tar.gz"/>
 	</target>
 
 	<target name="zip-src" depends="init-dist" description="generate the PentahoMetaDataEditor-src-${release.number}.zip file">
