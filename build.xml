@@ -206,7 +206,7 @@
 	  END PDI-1861 workaround
 	-->
 
-	<target name="dist" depends="resolve, jar, zip-src, zip-javadoc, distrib" />
+	<target name="dist" depends="resolve, jar, zip-src, zip-javadoc, rescopy, distrib" />
 	
     <!-- =========================================================== 
           target: ftp-metadata
