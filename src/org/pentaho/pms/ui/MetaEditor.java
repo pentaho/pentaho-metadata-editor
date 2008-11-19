@@ -355,9 +355,33 @@ public class MetaEditor implements SelectionListener {
   private void initGlobalKeyBindings() {
     defKeys = new KeyAdapter() {
       public void keyPressed(KeyEvent e) {
+
         boolean control = (e.stateMask & SWT.MOD1) != 0;
         boolean alt = (e.stateMask & SWT.ALT) != 0;
 
+        if (e.getSource() == treeViewer.getTree()) {
+          if (treeViewer.getTree().getSelection().length == 1) {
+            if (alt && (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN)) {
+              // support CTRL UP and CTRL DOWN
+              final TreeItem ti = treeViewer.getTree().getSelection()[0];  
+              final ConceptTreeNode node = (ConceptTreeNode) ti.getData();
+
+              if (node instanceof BusinessModelTreeNode ||
+                  node instanceof CategoryTreeNode ||
+                  (node instanceof BusinessColumnTreeNode && 
+                   node.getParent() instanceof CategoryTreeNode)
+              ) {
+                final ConceptTreeNode parentNode = (ConceptTreeNode) node.getParent();
+                if (e.keyCode == SWT.ARROW_UP) {
+                  parentNode.moveChildUp(node);
+                } else {
+                  parentNode.moveChildDown(node);
+                }
+              }
+            }
+          }
+        }
+        
         BusinessModel activeModel = schemaMeta.getActiveModel();
 
         // ESC --> Unselect All steps
@@ -1335,6 +1359,7 @@ public class MetaEditor implements SelectionListener {
     // Keyboard shortcuts!
     treeViewer.getTree().addKeyListener(defKeys);
     treeViewer.getTree().addKeyListener(modKeys);
+    
   }
 
   private void addDropTargetToTree(final Tree tree) {
@@ -1648,14 +1673,9 @@ public class MetaEditor implements SelectionListener {
           clearDBCache();
         }
       });
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
-        }
-      });
+      
     } else if (node instanceof BusinessModelsTreeNode) {
+      
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
       miNew.setText(Messages.getString("MetaEditor.USER_NEW_MODEL_TEXT")); //$NON-NLS-1$
       miNew.addListener(SWT.Selection, new Listener() {
@@ -1663,14 +1683,9 @@ public class MetaEditor implements SelectionListener {
             newBusinessModel();
         }
       });
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
-        }
-      });
+      
     } else if (node instanceof DatabaseMetaTreeNode) { // We clicked on a database node
+      
       final DatabaseMeta databaseMeta = ((DatabaseMetaTreeNode) node).getDatabaseMeta();
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
       miNew.setText(Messages.getString("MetaEditor.USER_NEW_TEXT")); //$NON-NLS-1$
@@ -1741,14 +1756,9 @@ public class MetaEditor implements SelectionListener {
           exploreDB();
         }
       });
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
-        }
-      });
+      
     } else if (node instanceof PhysicalTableTreeNode) { // We clicked on a physical table
+      
       final PhysicalTable physicalTable = (PhysicalTable) ((PhysicalTableTreeNode) node).getDomainObject();
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
       miNew.setText(Messages.getString("MetaEditor.USER_NEW_PHYSICAL_TABLETEXT")); //$NON-NLS-1$
@@ -1773,13 +1783,6 @@ public class MetaEditor implements SelectionListener {
           delPhysicalTable(physicalTable);
         }
       });
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
-        }
-      });
     } else if (node instanceof PhysicalColumnTreeNode) {
       final PhysicalColumn physicalColumn = (PhysicalColumn) ((PhysicalColumnTreeNode) node).getDomainObject();
       MenuItem miEdit = new MenuItem(mainMenu, SWT.PUSH);
@@ -1789,7 +1792,10 @@ public class MetaEditor implements SelectionListener {
           editPhysicalColumn(physicalColumn);
         }
       });
+      
     } else if (node instanceof BusinessModelTreeNode) {
+      final BusinessModelsTreeNode parentNode = (BusinessModelsTreeNode) node.getParent();
+      final BusinessModelTreeNode treeNode = (BusinessModelTreeNode) node;
       final BusinessModel businessModel = ((BusinessModelTreeNode) node).getBusinessModel();
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
       miNew.setText(Messages.getString("MetaEditor.USER_NEW_MODEL_INSTANCE")); //$NON-NLS-1$
@@ -1805,18 +1811,32 @@ public class MetaEditor implements SelectionListener {
             editBusinessModel(businessModel, node);
         }
       });
+      
+      new MenuItem(mainMenu, SWT.SEPARATOR);
+      
+      MenuItem miUp = new MenuItem(mainMenu, SWT.PUSH);
+      miUp.setText(Messages.getString("MetaEditor.USER_MOVE_UP")); //$NON-NLS-1$
+      miUp.addListener(SWT.Selection, new Listener() {
+        public void handleEvent(Event ev) {
+          parentNode.moveChildUp(treeNode);
+        }
+      });
+  
+      MenuItem miDown = new MenuItem(mainMenu, SWT.PUSH);
+      miDown.setText(Messages.getString("MetaEditor.USER_MOVE_DOWN")); //$NON-NLS-1$
+      miDown.addListener(SWT.Selection, new Listener() {
+        public void handleEvent(Event ev) {
+          parentNode.moveChildDown(treeNode);
+        }
+      });
+      
+      new MenuItem(mainMenu, SWT.SEPARATOR);
+      
       MenuItem miDelete = new MenuItem(mainMenu, SWT.PUSH);
       miDelete.setText(Messages.getString("MetaEditor.USER_DELETE_TEXT")); //$NON-NLS-1$
       miDelete.addListener(SWT.Selection, new Listener() {
         public void handleEvent(Event evt) {
           deleteBusinessModel(businessModel);
-        }
-      });
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
         }
       });
     } else if (node instanceof BusinessTablesTreeNode) {
@@ -1827,26 +1847,12 @@ public class MetaEditor implements SelectionListener {
           newBusinessTable(null);
         }
       });
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
-        }
-      });
     } else if (node instanceof RelationshipsTreeNode) {
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
       miNew.setText(Messages.getString("MetaEditor.USER_NEW_RELATIONSHIP")); //$NON-NLS-1$
       miNew.addListener(SWT.Selection, new Listener() {
         public void handleEvent(Event evt) {
           newRelationship();
-        }
-      });
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
         }
       });
     } else if (node instanceof BusinessViewTreeNode) {
@@ -1864,14 +1870,6 @@ public class MetaEditor implements SelectionListener {
       miCategoryEditor.addListener(SWT.Selection, new Listener() {
         public void handleEvent(Event ev) {
           editBusinessCategories();
-        }
-      });
-
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
         }
       });
     } else if (node instanceof BusinessTableTreeNode) {
@@ -1904,14 +1902,9 @@ public class MetaEditor implements SelectionListener {
           delBusinessTable(businessTable);
         }
       });
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
-        }
-      });
+      
     } else if (node instanceof BusinessColumnTreeNode) {
+      
       final BusinessColumn businessColumn = (BusinessColumn) ((BusinessColumnTreeNode) node).getDomainObject();
       MenuItem miEdit = new MenuItem(mainMenu, SWT.PUSH);
       miEdit.setText(Messages.getString("MetaEditor.USER_EDIT_TEXT")); //$NON-NLS-1$
@@ -1922,6 +1915,30 @@ public class MetaEditor implements SelectionListener {
           treeViewer.update(node, null);
         }
       });
+      
+      if (node.getParent() instanceof CategoryTreeNode) {
+        final BusinessColumnTreeNode currentTreeNode = (BusinessColumnTreeNode) node;
+        final CategoryTreeNode parentTreeNode = (CategoryTreeNode) node.getParent();
+        
+        new MenuItem(mainMenu, SWT.SEPARATOR);
+        
+        MenuItem miUp = new MenuItem(mainMenu, SWT.PUSH);
+        miUp.setText(Messages.getString("MetaEditor.USER_MOVE_UP")); //$NON-NLS-1$
+        miUp.addListener(SWT.Selection, new Listener() {
+          public void handleEvent(Event ev) {
+            parentTreeNode.moveChildUp(currentTreeNode);
+          }
+        });
+    
+        MenuItem miDown = new MenuItem(mainMenu, SWT.PUSH);
+        miDown.setText(Messages.getString("MetaEditor.USER_MOVE_DOWN")); //$NON-NLS-1$
+        miDown.addListener(SWT.Selection, new Listener() {
+          public void handleEvent(Event ev) {
+            parentTreeNode.moveChildDown(currentTreeNode);
+          }
+        });
+      }
+      
     } else if (node instanceof RelationshipTreeNode) {
       final RelationshipMeta relationshipMeta = (RelationshipMeta) ((RelationshipTreeNode) node).getDomainObject();
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
@@ -1947,7 +1964,12 @@ public class MetaEditor implements SelectionListener {
           delRelationship(relationshipMeta);
         }
       });
+      
     } else if (node instanceof CategoryTreeNode) {
+      
+      final ConceptTreeNode treeNode = (CategoryTreeNode)node;
+      final ConceptTreeNode conceptParentNode = (ConceptTreeNode)node.getParent();
+
       final BusinessModel activeModel = schemaMeta.getActiveModel();
       if (activeModel == null) {
         return;
@@ -2003,8 +2025,7 @@ public class MetaEditor implements SelectionListener {
       miUp.setText(Messages.getString("MetaEditor.USER_MOVE_UP")); //$NON-NLS-1$
       miUp.addListener(SWT.Selection, new Listener() {
         public void handleEvent(Event ev) {
-          moveBusinessCategoryUp(parentCategory, currentCategory);
-          // treeViewer.getTree().setSelection(ti);
+          conceptParentNode.moveChildUp(treeNode);
         }
       });
 
@@ -2012,29 +2033,9 @@ public class MetaEditor implements SelectionListener {
       miDown.setText(Messages.getString("MetaEditor.USER_MOVE_DOWN")); //$NON-NLS-1$
       miDown.addListener(SWT.Selection, new Listener() {
         public void handleEvent(Event ev) {
-            moveBusinessCategoryDown(parentCategory, currentCategory);
-            // treeViewer.getTree().setSelection(ti);
+          conceptParentNode.moveChildDown(treeNode);
         }
       });
-      MenuItem miSort = new MenuItem(mainMenu, SWT.PUSH);
-      miSort.setText(Messages.getString("MetaEditor.SORT_CHILDREN_ASCENDING")); //$NON-NLS-1$
-      miSort.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event evt) {
-          node.sortChildrenAscending();
-        }
-      });
-    } else if ((node instanceof BusinessColumnTreeNode)
-        && (node.getParent() instanceof CategoryTreeNode)
-        && (node.getParent() instanceof BusinessViewTreeNode)) {
-
-      MenuItem miCategoryEditor = new MenuItem(mainMenu, SWT.PUSH);
-      miCategoryEditor.setText(Messages.getString("MetaEditor.USER_CONFIGURE_CATEGORYS")); //$NON-NLS-1$
-      miCategoryEditor.addListener(SWT.Selection, new Listener() {
-        public void handleEvent(Event ev) {
-          editBusinessCategories();
-        }
-      });
-
     }
 
     final ConceptUtilityInterface[] utilityInterfaces = getSelectedConceptUtilityInterfacesInMainTree();
@@ -2165,36 +2166,9 @@ public class MetaEditor implements SelectionListener {
     if (activeModel != null) {
       CategoryEditorDialog dialog = new CategoryEditorDialog(shell, activeModel, schemaMeta);
       dialog.open();
-      if (activeModelTreeNode != null)
-        activeModelTreeNode.getBusinessViewRoot().sync();
-    }
-  }
-
-  public void moveBusinessCategoryDown(BusinessCategory parentCategory, BusinessCategory businessCategory) {
-    int index = parentCategory.indexOfBusinessCategory(businessCategory);
-    if (index < parentCategory.nrBusinessCategories() - 1) {
-      parentCategory.removeBusinessCategory(index);
-      try {
-      parentCategory.addBusinessCategory(index + 1, businessCategory);
-      } catch (ObjectAlreadyExistsException e) {
-        // Moving anything should not have any impact.
-      }
-      if (activeModelTreeNode != null)
+      if (activeModelTreeNode != null) {
         activeModelTreeNode.getBusinessViewRoot().prune();
-    }
-  }
-
-  public void moveBusinessCategoryUp(BusinessCategory parentCategory, BusinessCategory businessCategory) {
-    int index = parentCategory.indexOfBusinessCategory(businessCategory);
-    if (index > 0) {
-      parentCategory.removeBusinessCategory(index);
-      try {
-        parentCategory.addBusinessCategory(index - 1, businessCategory);
-      } catch (ObjectAlreadyExistsException e) {
-        // Moving anything should not have any impact.
       }
-      if (activeModelTreeNode != null)
-        activeModelTreeNode.getBusinessViewRoot().prune();
     }
   }
 

@@ -266,7 +266,7 @@ public class PublishDialog extends TitleAreaDialog {
         mb.open();
         dispose();
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }

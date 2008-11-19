@@ -100,6 +100,40 @@ public abstract class ConceptTreeNode extends TreeNode {
   }
 
   /**
+   * moves a specific child up one.  Call
+   * to sync() forces the model to reflect the view.
+   * 
+   * @param child child to move
+   */
+  public void moveChildUp(ITreeNode child) {
+    int index = fChildren.indexOf(child);
+    if (index != 0) {
+      fChildren.remove(index);
+      fChildren.add(index - 1, child);
+      sync();
+    }
+  }
+  
+  /**
+   * moves a specific child down one.  Call
+   * to sync() forces the model to reflect the view.
+   * 
+   * @param child child to move
+   */
+  public void moveChildDown(ITreeNode child) {
+    int index = fChildren.indexOf(child);
+    if (index != fChildren.size() - 1) {
+      fChildren.remove(index);
+      if (index != fChildren.size() - 1) {
+        fChildren.add(index + 1, child);
+      } else {
+        fChildren.add(child);
+      }
+      sync();
+    }
+  }
+  
+  /**
    * recursively sort the child nodes in ascending order, then synchronize the
    * changes
    * 

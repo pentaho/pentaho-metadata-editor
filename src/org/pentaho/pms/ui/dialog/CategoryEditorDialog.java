@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.pentaho.di.ui.core.dialog.ErrorDialog;
 import org.pentaho.di.ui.core.widget.TreeMemory;
-import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.schema.BusinessCategory;
 import org.pentaho.pms.schema.BusinessColumn;
 import org.pentaho.pms.schema.BusinessModel;
@@ -47,6 +46,7 @@ import org.pentaho.pms.ui.jface.tree.ITreeNode;
 import org.pentaho.pms.ui.jface.tree.ITreeNodeChangedListener;
 import org.pentaho.pms.ui.jface.tree.TreeContentProvider;
 import org.pentaho.pms.ui.jface.tree.TreeLabelProvider;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.ui.tree.BusinessColumnTreeNode;
 import org.pentaho.pms.ui.tree.BusinessTableTreeNode;
 import org.pentaho.pms.ui.tree.BusinessTablesTreeNode;
@@ -81,6 +81,10 @@ public class CategoryEditorDialog extends TitleAreaDialog {
 
   private BusinessViewTreeNode rootCategory;
 
+  private ToolItem wMoveUpSelection;
+  
+  private ToolItem wMoveDownSelection;
+  
   private ToolItem wAddSelection;
 
   private ToolItem wDelSelection;
@@ -180,7 +184,7 @@ public class CategoryEditorDialog extends TitleAreaDialog {
 
     wTables = new TreeViewer(parent, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     data = new GridData(GridData.FILL_BOTH);
-    data.verticalAlignment = GridData.BEGINNING;
+    data.verticalAlignment = GridData.FILL;
     data.horizontalSpan = 3;
     data.minimumHeight = 217;
     data.grabExcessHorizontalSpace = true;
@@ -207,6 +211,24 @@ public class CategoryEditorDialog extends TitleAreaDialog {
     GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
     gridData.horizontalAlignment = SWT.END;
     tb.setLayoutData(gridData);
+  
+    wMoveUpSelection = new ToolItem(tb, SWT.PUSH);
+    wMoveUpSelection.setImage(Constants.getImageRegistry(Display.getCurrent()).get("up-arrow"));
+    wMoveUpSelection.setToolTipText(Messages.getString("CategoryEditorDialog.USER_MOVE_UP")); //$NON-NLS-1$
+    wMoveUpSelection.addSelectionListener(new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent event) {
+        moveSelectionUp();
+      }
+    });
+
+    wMoveDownSelection = new ToolItem(tb, SWT.PUSH);
+    wMoveDownSelection.setImage(Constants.getImageRegistry(Display.getCurrent()).get("down-arrow"));
+    wMoveDownSelection.setToolTipText(Messages.getString("CategoryEditorDialog.USER_MOVE_DOWN")); //$NON-NLS-1$
+    wMoveDownSelection.addSelectionListener(new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent event) {
+        moveSelectionDown();
+      }
+    });
     
     wNew = new ToolItem(tb, SWT.PUSH);
     wNew.setImage(Constants.getImageRegistry(Display.getCurrent()).get("add-button"));
@@ -228,9 +250,8 @@ public class CategoryEditorDialog extends TitleAreaDialog {
 
     wCategories = new TreeViewer(parent, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     data = new GridData(GridData.FILL_BOTH);
-    data.verticalAlignment = GridData.BEGINNING;
-    data.horizontalSpan = 3;
-    data.minimumHeight = 217;
+    data.verticalAlignment = GridData.FILL;
+    data.horizontalSpan = 2;
     data.grabExcessHorizontalSpace = true;
     data.grabExcessVerticalSpace = true;
     wCategories.getTree().setLayoutData(data);
@@ -415,6 +436,38 @@ public class CategoryEditorDialog extends TitleAreaDialog {
         break;
       }
     }
+  }
+  
+  protected void moveSelectionUp() {
+    IStructuredSelection selection = (IStructuredSelection) wCategories.getSelection();
+    Object domainObject = null;
+    for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+      // only allow moving one domain object at a time
+      if (domainObject != null) {
+        return;
+      }
+      domainObject = iterator.next();
+    }
+
+    ConceptTreeNode child = (ConceptTreeNode) domainObject;
+    ConceptTreeNode parent = (ConceptTreeNode) child.getParent();
+    parent.moveChildUp(child);
+  }
+  
+  protected void moveSelectionDown() {
+    IStructuredSelection selection = (IStructuredSelection) wCategories.getSelection();
+    Object domainObject = null;
+    for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+      // only allow moving one domain object at a time
+      if (domainObject != null) {
+        return;
+      }
+      domainObject = iterator.next();
+    }
+
+    ConceptTreeNode child = (ConceptTreeNode) domainObject;
+    ConceptTreeNode parent = (ConceptTreeNode) child.getParent();
+    parent.moveChildDown(child);
   }
 
   protected void deleteSelections() {
