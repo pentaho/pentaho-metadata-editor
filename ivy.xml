@@ -27,5 +27,11 @@
         <dependency org="pentaho.kettle" name="kettle-ui-swt"            rev="${dependency.kettle.revision}" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-bi-platform-util" rev="${project.revision}" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" transitive="false"/>
+
+        <!-- pentaho-database and pentaho-xul-framework must match JARs required by kettle-ui-swt -->
+        <!-- this manual sync should go away once this project is propertly ivy-ized -->
+        <dependency org="pentaho"        name="pentaho-database"         rev="1.7.1-32701" transitive="false" />
+        <dependency org="pentaho"        name="pentaho-xul-framework"    rev="1.7.1-32194" transitive="false" />
+
     </dependencies>
 </ivy-module>
