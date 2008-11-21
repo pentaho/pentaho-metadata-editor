@@ -73,7 +73,9 @@ public class Splash
           e.gc.setBackground(new Color(e.display, new RGB(255,255,255)));
           // Updates for PMD-190 - Use version helper to display version information
           VersionHelper helper = new VersionHelper();
-          e.gc.drawString(helper.getVersionInformation(Splash.class), 355, 285);
+          e.gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY));
+          e.gc.drawString(helper.getVersionInformation(Splash.class), 353, 285);
+          e.gc.drawString(Messages.getString("MetaEditor.USER_HELP_PENTAHO_CORPORATION"), 353, 430);
 				}
 			}
 		);
