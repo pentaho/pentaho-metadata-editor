@@ -75,7 +75,7 @@ public class Splash
           VersionHelper helper = new VersionHelper();
           e.gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY));
           e.gc.drawString(helper.getVersionInformation(Splash.class), 353, 285);
-          e.gc.drawString(Messages.getString("MetaEditor.USER_HELP_PENTAHO_CORPORATION"), 353, 430);
+          e.gc.drawString(Messages.getString("MetaEditor.USER_HELP_PENTAHO_CORPORATION"), 353, 430); //$NON-NLS-1$
 				}
 			}
 		);
