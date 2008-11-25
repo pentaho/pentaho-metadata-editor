@@ -281,8 +281,14 @@ public class PropertyTreeWidget extends TreeViewer implements ISelectionProvider
     }
   }
 
+  /**
+   * Under Windows, a refresh call causes a distracting animation. To prevent unnecessary refresh calls, the code below
+   * ignores all events that cannot possibly affect the appearance of the tree. 
+   */
   public void conceptModified(final ConceptModificationEvent e) {
-    refresh(true);
-    expandAll();
+    if (!(e instanceof PropertyValueModificationEvent)) {
+      refresh(true);
+      expandAll();
+    }
   }
 }
