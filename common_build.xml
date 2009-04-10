@@ -218,6 +218,10 @@ TYPICAL TARGET SEQUENCE
   <property name="javadoc.packagenames"
             value="org.pentaho.*"
             description="This property is passed to the packagenames property of the javadoc ant task.  You should customize this for your project." />
+  <property name="javadoc.zip.filename"
+  			value="${ivy.artifact.id}-${project.revision}-javadoc.zip"/>
+  <property name="javadoc.tar.filename"
+  			value="${ivy.artifact.id}-${project.revision}-javadoc.tar.gz"/>
 
   <!-- Distribution and Assembly properties -->
   <property name="dist.dir"
@@ -229,6 +233,10 @@ TYPICAL TARGET SEQUENCE
   <property name="res.dir"
             value="${basedir}/res"
             description="Directory that holds resources not included in the source tree" />
+  <property name="source.zip.filename"
+  			value="${ivy.artifact.id}-${project.revision}-sources.zip"/>
+  <property name="source.tar.filename"
+  			value="${ivy.artifact.id}-${project.revision}-sources.tar.gz"/>
 
   <!-- Ivy properties -->
   <property name="ivy.install.version" value="2.0.0-beta2" description="Specifies the version of IVY to fetch" />
@@ -1184,7 +1192,7 @@ TYPICAL TARGET SEQUENCE
 	    Generates zip and targz distributions of the javadoc
 	    ====================================================================-->
   <target name="dist-source"
-          depends="source.jar, source.targz" />
+          depends="source.jar, source.zip, source.targz" />
 
 
   <!--=======================================================================
@@ -1196,6 +1204,14 @@ TYPICAL TARGET SEQUENCE
     <jar jarfile="${dist.dir}/${ivy.artifact.id}-${project.revision}-sources.jar" basedir="${src.dir}" />
   </target>
 
+  <!--=======================================================================
+	    source.zip
+	    
+	    Creates a zip of the project source for distribution
+	    ====================================================================-->
+  <target name="source.zip" depends="init">
+    <jar jarfile="${dist.dir}/${source.zip.filename}" basedir="${src.dir}"/>
+  </target>
 
   <!--=======================================================================
 	    source.targz
@@ -1204,7 +1220,7 @@ TYPICAL TARGET SEQUENCE
 	    ====================================================================-->
   <target name="source.targz" depends="init">
     <tar compression="gzip"
-         destfile="${dist.dir}/${ivy.artifact.id}-${project.revision}-sources.tar.gz"
+         destfile="${dist.dir}/${source.tar.filename}"
          basedir="${src.dir}" />
   </target>
 
@@ -1390,7 +1406,7 @@ TYPICAL TARGET SEQUENCE
 	    Creates a zip of the javadoc for distribution
 	    ====================================================================-->
   <target name="javadoc.zip" depends="javadoc">
-    <jar jarfile="${dist.dir}/${ivy.artifact.id}-${project.revision}-javadoc.zip"
+    <jar jarfile="${dist.dir}/${javadoc.zip.filename}"
          basedir="${javadoc.dir}"
          includes="**/*"
          excludes="**/Thumbs.db" />
@@ -1404,7 +1420,7 @@ TYPICAL TARGET SEQUENCE
 	    ====================================================================-->
   <target name="javadoc.targz" depends="javadoc">
     <tar compression="gzip"
-         destfile="${dist.dir}/${ivy.artifact.id}-${project.revision}-javadoc.tar.gz"
+         destfile="${dist.dir}/${javadoc.tar.filename}"
          basedir="${javadoc.dir}"
          includes="**/*"
          excludes="**/Thumbs.db" />
