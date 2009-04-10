@@ -9,7 +9,7 @@
   <!-- system properties to use -->
   <property file="override.properties" />
   <property file="build.properties" />
-  <property file="src/build-res/version.properties" />
+  <property file="build-res/version.properties" />
   <property name="cr" value="${line.separator}" />
 
   <!-- set global properties for this build -->
@@ -44,6 +44,8 @@
 
   <!-- Import the common_build.xml file which contains all the default tasks -->
   <import file="${common.build.file}" />
+  
+  <target name="clean-all" depends="clean-stage,clean,clean-jars" />
 
   <path id="cp-meta">
     <fileset dir="${libext}" includes="**/*.jar" />
@@ -51,8 +53,7 @@
     <fileset dir="${libswt}/win32/" includes="*.jar" />
   </path>
 
-  <target name="clean-dist" description="Removes all dist artifacts">
-    <delete dir="${dist.dir}" />
+  <target name="clean-stage">
     <delete dir="${stage.dir}" />
   </target>
 
@@ -116,37 +117,20 @@
       <fileset dir="${package.resdir}" />
     </copy>
 
-    <copy todir="${stage.dir}">
-      <fileset dir="${bin.dir}" includes="**/*" excludes="**/.vpn .project .classpath" />
-    </copy>
-
     <!-- base lib -->
     <mkdir dir="${stage.dir}/lib" />
-    <copy todir="${stage.dir}/lib" file="${dist.dir}/pentaho-metadata-editor-${project.revision}.jar" />
+    <copy todir="${stage.dir}/lib" file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" />
 
-    <!-- jdbc settings-->
-    <mkdir dir="${stage.dir}/jdbc" />
-    <copy todir="${stage.dir}/jdbc">
-      <fileset dir="${jdbc}" includes="*.*" excludes="**/.vpn" />
+    <!-- pentaho libs -->
+    <mkdir dir="${stage.dir}/libext" />
+    <copy todir="${stage.dir}/libext/pentaho">
+      <fileset dir="${lib.dir}" includes="**/*.jar" />
     </copy>
-
-    <!-- jdbc settings-->
-    <mkdir dir="${stage.dir}/simple-jndi" />
-    <copy todir="${stage.dir}/simple-jndi">
-      <fileset dir="${simple-jndi}" includes="*.*" excludes="**/.vpn" />
-    </copy>
-
-    <!-- samples settings-->
-    <mkdir dir="${stage.dir}/samples" />
-    <copy todir="${stage.dir}/samples">
-      <fileset dir="${samples}" includes="*.*" />
-    </copy>
-
+    
     <!-- external libs (jdbc etc) -->
     <mkdir dir="${stage.dir}/libext" />
     <copy todir="${stage.dir}/libext">
       <fileset dir="${libext}" includes="**/*.jar **/*.zip" excludes="**/.vpn" />
-      <fileset dir="${lib.dir}" includes="**/*.jar" />
     </copy>
 
     <!-- swt libs (jdbc etc) -->
@@ -186,18 +170,18 @@
   <!--
 	  NOTE: This task should be called before the "dist" task is called. Once PDI-1861 is resolved,
 	  then this task can be removed
-	-->
+	
   <target name="rescopy" description="Copies the resources - this is a temporary fix related to PMD-438">
     <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}" overwrite="true">
       <fileset dir="${basedir}/res" />
     </copy>
-  </target>
+  </target>-->
   <!--
 	  END PDI-1861 workaround
 	-->
 
-  <target name="package" depends="assemble,rescopy,package-zip,package-targz" />
+  <target name="package" depends="assemble,package-zip,package-targz" />
   
   <!-- override dist target so it does assembly and packaging as well -->
   <target name="dist" depends="jar, package" />
