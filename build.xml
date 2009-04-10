@@ -34,6 +34,8 @@
   			value="${package.basename}-sources.zip"/>
   <property name="source.tar.filename"
   			value="${package.basename}-sources.tar.gz"/>
+  
+  <property name="package.resdir" value="${basedir}/package-res" />
 
   <!-- Define the default location of the common build file -->
   <property name="common.build.file"
@@ -108,6 +110,10 @@
 
     <copy todir="${stage.dir}">
       <fileset dir="." includes="releasenotes.txt" excludes="**/build, **/dist" />
+    </copy>
+    
+    <copy todir="${stage.dir}" overwrite="true">
+      <fileset dir="${package.resdir}" />
     </copy>
 
     <copy todir="${stage.dir}">
