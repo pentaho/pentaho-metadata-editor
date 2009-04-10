@@ -192,5 +192,8 @@
 	-->
 
   <target name="package" depends="assemble,rescopy,package-zip,package-targz" />
+  
+  <!-- override dist target so it does assembly and packaging as well -->
+  <target name="dist" depends="jar, package" />
 
 </project>
