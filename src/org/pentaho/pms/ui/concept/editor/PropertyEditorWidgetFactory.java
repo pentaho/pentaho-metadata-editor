@@ -44,6 +44,7 @@ public class PropertyEditorWidgetFactory {
     propertyEditors.put(ConceptPropertyType.FONT, FontPropertyEditorWidget.class);
     propertyEditors.put(ConceptPropertyType.FIELDTYPE, FieldTypePropertyEditorWidget.class);
     propertyEditors.put(ConceptPropertyType.AGGREGATION, AggregationPropertyEditorWidget.class);
+    propertyEditors.put(ConceptPropertyType.AGGREGATION_LIST, AggregationListPropertyEditorWidget.class);
     propertyEditors.put(ConceptPropertyType.BOOLEAN, BooleanPropertyEditorWidget.class);
     propertyEditors.put(ConceptPropertyType.DATATYPE, DataTypePropertyEditorWidget.class);
     propertyEditors.put(ConceptPropertyType.LOCALIZED_STRING, LocalizedStringPropertyEditorWidget.class);

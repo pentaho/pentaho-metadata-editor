@@ -69,6 +69,7 @@ public class PropertyGroupHelper {
 
     // model descriptors group
     add(DefaultPropertyID.AGGREGATION.getId(), GROUP_MODEL_DESCRIPTORS);
+    add(DefaultPropertyID.AGGREGATION_LIST.getId(), GROUP_MODEL_DESCRIPTORS);
     add(DefaultPropertyID.DATA_TYPE.getId(), GROUP_MODEL_DESCRIPTORS);
     add(DefaultPropertyID.FIELD_TYPE.getId(), GROUP_MODEL_DESCRIPTORS);
     add(DefaultPropertyID.TABLE_TYPE.getId(), GROUP_MODEL_DESCRIPTORS);
