@@ -45,6 +45,7 @@ import org.pentaho.di.ui.core.widget.TreeMemory;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.mql.SQLAndTables;
 import org.pentaho.pms.mql.SQLGenerator;
+import org.pentaho.pms.mql.Selection;
 import org.pentaho.pms.schema.BusinessColumn;
 import org.pentaho.pms.schema.BusinessModel;
 import org.pentaho.pms.schema.BusinessTable;
@@ -390,7 +391,7 @@ public class MetaEditorOlap extends Composite implements DialogGetDataInterface
         props.setLook(key);
         BusinessColumn primaryKey = hierarchy.getPrimaryKey();
         DatabaseMeta databaseMeta = hierarchy.getPrimaryKey().getPhysicalColumn().getTable().getDatabaseMeta();
-        SQLAndTables sqlAndTables = SQLGenerator.getBusinessColumnSQL(metaEditor.getSchemaMeta().getActiveModel(), primaryKey, null, databaseMeta, locale);
+        SQLAndTables sqlAndTables = SQLGenerator.getBusinessColumnSQL(metaEditor.getSchemaMeta().getActiveModel(), new Selection(primaryKey), null, databaseMeta, locale);
         String columnSQL = sqlAndTables.getSql();
         key.setText(primaryKey.getDisplayName(locale)+" : "+Const.NVL(columnSQL,"?") ); //$NON-NLS-1$
         key.setToolTipText(Messages.getString("MetaEditorOlap.USER_SELECTED_PRIMARY_KEY_COLUMN")); //$NON-NLS-1$
@@ -491,7 +492,7 @@ public class MetaEditorOlap extends Composite implements DialogGetDataInterface
         final Text refColumn = new Text(compDynamic, SWT.BORDER | SWT.LEFT | SWT.SINGLE);
         props.setLook(refColumn);
         BusinessColumn referenceColumn = level.getReferenceColumn(); 
-        refColumn.setText(referenceColumn.getDisplayName(locale)+" : "+ SQLGenerator.getBusinessColumnSQL(metaEditor.getSchemaMeta().getActiveModel(), referenceColumn, null, referenceColumn.getBusinessTable().getPhysicalTable().getDatabaseMeta(), locale)); //$NON-NLS-1$
+        refColumn.setText(referenceColumn.getDisplayName(locale)+" : "+ SQLGenerator.getBusinessColumnSQL(metaEditor.getSchemaMeta().getActiveModel(), new Selection(referenceColumn), null, referenceColumn.getBusinessTable().getPhysicalTable().getDatabaseMeta(), locale)); //$NON-NLS-1$
         refColumn.setEditable(false);
         refColumn.setToolTipText(Messages.getString("MetaEditorOlap.USER_REFERENCE_COLUMN_NAME")); //$NON-NLS-1$
         FormData fdRefColumn = new FormData();
