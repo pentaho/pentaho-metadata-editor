@@ -2,6 +2,8 @@ package org.pentaho.pms.ui;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.dom4j.Document;
@@ -27,7 +29,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.pentaho.commons.mql.ui.mqldesigner.MQLQueryBuilderDialog;
+import org.pentaho.commons.metadata.mqleditor.editor.SwtMqlEditor;
+import org.pentaho.commons.metadata.mqleditor.editor.service.impl.MQLEditorServiceDeligate;
 import org.pentaho.di.core.database.Database;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.row.RowMetaInterface;
@@ -40,11 +43,12 @@ import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.mql.MQLQuery;
 import org.pentaho.pms.mql.MQLQueryImpl;
 import org.pentaho.pms.mql.MappedQuery;
+import org.pentaho.pms.mql.Selection;
 import org.pentaho.pms.schema.SchemaMeta;
 import org.pentaho.pms.ui.util.Const;
 import org.pentaho.pms.util.FileUtil;
 
-public class QueryBuilderDialog extends MQLQueryBuilderDialog {
+public class QueryBuilderDialog extends Dialog {
 
   
   class TextDialog extends Dialog {
@@ -88,19 +92,33 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
 
   String lastFileName;
   Map columnsMap = null;
+  private MQLEditorServiceImpl service;
 
+  private List<QueryBuilderDialogListener> listeners = new ArrayList<QueryBuilderDialogListener>();
+  private SwtMqlEditor editor;
+  
   public QueryBuilderDialog(Shell parentShell, SchemaMeta schemaMeta) {
-    super(parentShell, schemaMeta);
+    super(parentShell);
+    service = new MQLEditorServiceImpl(schemaMeta);
+    editor = new SwtMqlEditor(service, schemaMeta);
+    editor.hidePreview();
   }
 
   public QueryBuilderDialog(Shell parentShell, MQLQuery mqlQuery) {
-    super(parentShell, mqlQuery);
+    super(parentShell);
   }
+  
+  public void addDialogListener(QueryBuilderDialogListener listener){
+    this.listeners.add(listener);
+  }
+  
 
   protected Control createContents(Composite arg0) {
     createMenuBar();
     createToolBar();
-    return super.createContents(arg0);
+    super.createContents(arg0);
+    editor.getDialogArea().setParent((Composite) this.getDialogArea());
+    return this.getContents();
   }
 
   private ToolBar createToolBar() {
@@ -192,7 +210,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
       }
 
       public void widgetSelected(SelectionEvent arg0) {
-        setMqlQuery(null);
+        editor.setMqlQuery(null);
       }
     });
     return toolBar;
@@ -302,7 +320,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
       }
 
       public void widgetSelected(SelectionEvent arg0) {
-        setMqlQuery(null);
+        editor.setMqlQuery(null);
       }
     });
     getShell().setMenuBar(menu);
@@ -319,7 +337,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
   public void showSQL() {
     try {
     	@SuppressWarnings("unchecked")
-      MQLQuery mqlQuery = getMqlQuery();
+      MQLQuery mqlQuery = editor.getMqlQuery();
       if (mqlQuery != null) {
         
         // Here we will generate the SQL with the truncated column ids, and
@@ -330,7 +348,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
           EnterTextDialog showSQL = new EnterTextDialog(getShell(), Messages.getString("QueryDialog.USER_TITLE_GENERATED_SQL"), Messages.getString("QueryDialog.USER_GENERATED_SQL"), sql, true); //$NON-NLS-1$ //$NON-NLS-2$
           sql = showSQL.open();
           if (!Const.isEmpty(sql)) {
-            DatabaseMeta databaseMeta = mqlQuery.getSelections().get(0).getBusinessColumn().getPhysicalColumn().getTable().getDatabaseMeta();
+            DatabaseMeta databaseMeta = ((Selection) mqlQuery.getSelections().get(0)).getBusinessColumn().getPhysicalColumn().getTable().getDatabaseMeta();
             executeSQL(databaseMeta, sql);
           }
         }
@@ -388,7 +406,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
 
   private void newQuery() {
     lastFileName = null;
-    setMqlQuery(null);
+    editor.setMqlQuery(null);
   }
 
   private void openQuery() {
@@ -398,7 +416,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
     String filename = fileDialog.open();
     if (filename != null) {
       try {
-        setMqlQuery(new MQLQueryImpl(FileUtil.readAsXml(filename), null, null, null), false);
+        editor.setMqlQuery(new MQLQueryImpl(FileUtil.readAsXml(filename), null, null, null));
         
       } catch (Exception e) {
         new ErrorDialog(getShell(), Messages.getString("QueryDialog.USER_TITLE_ERROR_LOADING_QUERY"), Messages.getString("QueryDialog.USER_ERROR_LOADING_QUERY"), e); //$NON-NLS-1$ //$NON-NLS-2$
@@ -409,7 +427,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
   private void executeQuery() {
     try {
     	@SuppressWarnings("unchecked")
-      MQLQuery mqlQuery = getMqlQuery();
+      MQLQuery mqlQuery = editor.getMqlQuery();
       if (mqlQuery != null) {
         
         // This map  holds references from the truncated column ids used to the actual column ids; 
@@ -429,7 +447,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
 
   private void viewMql() {
     try {
-      MQLQuery mqlQuery = getMqlQuery();
+      MQLQuery mqlQuery = editor.getMqlQuery();
       if (mqlQuery != null) {
         Document document = DocumentHelper.parseText(mqlQuery.getXML());
         TextDialog textDialog = new TextDialog(getShell(), "MQL Query", prettyPrint(document).getRootElement().asXML()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -442,7 +460,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
 
   public void viewSql() {
     try {
-      MQLQuery mqlQuery = getMqlQuery();
+      MQLQuery mqlQuery = editor.getMqlQuery();
       if (mqlQuery != null) {
         MappedQuery q = mqlQuery.getQuery();
         String sql = q.getQuery();
@@ -462,7 +480,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
   }
 
   private void saveQuery() {
-    MQLQuery query = getMqlQuery();
+    MQLQuery query = editor.getMqlQuery();
     if (query != null) {
       if (lastFileName != null) {
         try {
@@ -477,7 +495,7 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
   }
 
   private void saveQueryAs() {
-    MQLQuery query = getMqlQuery();
+    MQLQuery query = editor.getMqlQuery();
     if (query != null) {
       FileDialog fileDialog = new FileDialog(getShell(), SWT.SAVE);
       fileDialog.setFilterExtensions(new String[] { "*.mql", "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -513,4 +531,9 @@ public class QueryBuilderDialog extends MQLQueryBuilderDialog {
     }
     return( document );
   } 
+  
+  public MQLQuery getMqlQuery(){
+    return editor.getMqlQuery();
+  }
+  
 }
