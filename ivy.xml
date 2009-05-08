@@ -17,27 +17,27 @@
 
         <!--  Special Note:  This ivy file only resolves internal dependencies -->
 
-        <dependency org="jfree"          name="jcommon"                  rev="1.0.12" transitive="false"/>
-        <dependency org="pentaho"        name="libformula"               rev="0.1.18.2" transitive="false"/>
-        <dependency org="pentaho"        name="pentaho-connections"      rev="${dependency.pentaho-connections.revision}"  changing="true" transitive="false"/>
-        <dependency org="pentaho"        name="pentaho-metadata"         rev="${dependency.pentaho-metadata.revision}"  changing="true" transitive="false"/>
-        <dependency org="pentaho"        name="pentaho-mql-editor"       rev="${dependency.pentaho-mql-editor.revision}"  changing="true" transitive="false"/>
-        <dependency org="pentaho.kettle" name="kettle-engine"            rev="${dependency.kettle.revision}" transitive="false"/>
-        <dependency org="pentaho.kettle" name="kettle-core"              rev="${dependency.kettle.revision}" transitive="false"/>
-        <dependency org="pentaho.kettle" name="kettle-ui-swt"            rev="${dependency.kettle.revision}" transitive="false"/>
+        <dependency org="jfree"          name="jcommon"                  conf="default->default" rev="1.0.12" transitive="false"/>
+        <dependency org="pentaho"        name="libformula"               conf="default->default" rev="0.1.18.2" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-connections"      rev="${dependency.pentaho-connections.revision}" conf="default->default" changing="true" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-metadata"         rev="${dependency.pentaho-metadata.revision}" conf="default->default" changing="true" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-mql-editor"       rev="${dependency.pentaho-mql-editor.revision}" conf="default->default" changing="true" transitive="false"/>
+        <dependency org="pentaho.kettle" name="kettle-engine"            rev="${dependency.kettle.revision}" conf="default->default" transitive="false"/>
+        <dependency org="pentaho.kettle" name="kettle-core"              rev="${dependency.kettle.revision}" conf="default->default" transitive="false"/>
+        <dependency org="pentaho.kettle" name="kettle-ui-swt"            rev="${dependency.kettle.revision}" conf="default->default" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-bi-platform-util" rev="${dependency.bi-platform.revision}" changing="true" transitive="false"/>
-        <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" transitive="false"/>
+        <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" conf="default->default" transitive="false"/>
 
         <!--  also pull down xstream and its dependencies -->
-        <dependency org="com.thoughtworks.xstream" name="xstream"  rev="1.3"    transitive="false"/>
-        <dependency org="xpp3"                     name="xpp3_min" rev="1.1.4c" transitive="false"/>
+        <dependency org="com.thoughtworks.xstream" name="xstream"  rev="1.3"    transitive="false" conf="default->default"/>
+        <dependency org="xpp3"                     name="xpp3_min" rev="1.1.4c" transitive="false" conf="default->default"/>
 
         <!-- pentaho-database and pentaho-xul-framework must match JARs required by kettle-ui-swt -->
         <!-- this manual sync should go away once this project is propertly ivy-ized -->
-        <dependency org="pentaho"        name="pentaho-database"         rev="${dependency.pentaho-database.revision}" transitive="false" />
+        <dependency org="pentaho"        name="pentaho-database"         rev="${dependency.pentaho-database.revision}" conf="default->default" changing="true" transitive="false" />
         
-        <dependency org="pentaho" name="pentaho-xul-core" rev="${dependency.pentaho-xul.revision}" conf="default->default"/>
-        <dependency org="pentaho" name="pentaho-xul-swt" rev="${dependency.pentaho-xul.revision}" conf="default->default"/>
+        <dependency org="pentaho" name="pentaho-xul-core" rev="${dependency.pentaho-xul.revision}" conf="default->default" changing="true" transitive="false" />
+        <dependency org="pentaho" name="pentaho-xul-swt" rev="${dependency.pentaho-xul.revision}" conf="default->default" changing="true" transitive="false" />
         
     </dependencies>
 </ivy-module>
