@@ -3723,7 +3723,7 @@ public class MetaEditor implements SelectionListener {
         if (businessModel != null) {
           query.setSchemaMeta(schemaMeta);
           query.setModel(businessModel);
-          queryBuilderDialog = new QueryBuilderDialog(shell, query);
+          queryBuilderDialog = new QueryBuilderDialog(shell, schemaMeta, query);
         } else {
           queryBuilderDialog = new QueryBuilderDialog(shell, schemaMeta);
         }

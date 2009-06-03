@@ -104,8 +104,12 @@ public class QueryBuilderDialog extends Dialog {
     editor.hidePreview();
   }
 
-  public QueryBuilderDialog(Shell parentShell, MQLQuery mqlQuery) {
+  public QueryBuilderDialog(Shell parentShell, SchemaMeta schemaMeta, MQLQuery mqlQuery) {
     super(parentShell);
+    service = new MQLEditorServiceImpl(schemaMeta);
+    editor = new SwtMqlEditor(service, schemaMeta);
+    editor.setMqlQuery(mqlQuery);
+    editor.hidePreview();
   }
   
   public void addDialogListener(QueryBuilderDialogListener listener){
