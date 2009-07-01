@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.pentaho.commons.metadata.mqleditor.editor.SwtMqlEditor;
-import org.pentaho.commons.metadata.mqleditor.editor.service.impl.MQLEditorServiceCWMImpl;
+import org.pentaho.commons.metadata.mqleditor.editor.service.MQLEditorServiceCWMImpl;
 import org.pentaho.di.core.database.Database;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.row.RowMetaInterface;
