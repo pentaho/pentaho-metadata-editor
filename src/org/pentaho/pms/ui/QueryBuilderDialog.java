@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.pentaho.commons.metadata.mqleditor.editor.SwtMqlEditor;
-import org.pentaho.commons.metadata.mqleditor.editor.service.impl.MQLEditorServiceImpl;
+import org.pentaho.commons.metadata.mqleditor.editor.service.impl.MQLEditorServiceCWMImpl;
 import org.pentaho.di.core.database.Database;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.row.RowMetaInterface;
@@ -92,21 +92,21 @@ public class QueryBuilderDialog extends Dialog {
 
   String lastFileName;
   Map columnsMap = null;
-  private MQLEditorServiceImpl service;
+  private MQLEditorServiceCWMImpl service;
 
   private List<QueryBuilderDialogListener> listeners = new ArrayList<QueryBuilderDialogListener>();
   private SwtMqlEditor editor;
   
   public QueryBuilderDialog(Shell parentShell, SchemaMeta schemaMeta) {
     super(parentShell);
-    service = new MQLEditorServiceImpl(schemaMeta);
+    service = new MQLEditorServiceCWMImpl(schemaMeta);
     editor = new SwtMqlEditor(service, schemaMeta);
     editor.hidePreview();
   }
 
   public QueryBuilderDialog(Shell parentShell, SchemaMeta schemaMeta, MQLQuery mqlQuery) {
     super(parentShell);
-    service = new MQLEditorServiceImpl(schemaMeta);
+    service = new MQLEditorServiceCWMImpl(schemaMeta);
     editor = new SwtMqlEditor(service, schemaMeta);
     editor.setMqlQuery(mqlQuery);
     editor.hidePreview();
