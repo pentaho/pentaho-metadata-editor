@@ -2478,13 +2478,14 @@ public class MetaEditor implements SelectionListener {
   }
 
   public BusinessModel newBusinessModel() {
-    int nr = schemaMeta.nrBusinessModels() + 1;
-    String id = Settings.getBusinessModelIDPrefix() + "model_" + nr; //$NON-NLS-1$
-    if (Settings.isAnIdUppercase())
-      id = id.toUpperCase();
-    BusinessModel businessModel = new BusinessModel(id);
+    String id = null;
+    // returns valid id, and semi-random number used for id generation 
+    // ...mimics old behavior as closely as possible. 
+    String[] ids = generateBusinessModelId();
+
+    BusinessModel businessModel = new BusinessModel(ids[0]);
     businessModel.addIDChangedListener(ConceptUtilityBase.createIDChangedListener(schemaMeta.getBusinessModels()));
-    businessModel.setName(schemaMeta.getActiveLocale(), "Model " + nr); //$NON-NLS-1$
+    businessModel.setName(schemaMeta.getActiveLocale(), "Model " + ids[1]); //$NON-NLS-1$
 
     BusinessModel newBusModel = (BusinessModel) businessModel.clone();
     BusinessModelDialog dialog = new BusinessModelDialog(shell, SWT.NONE, newBusModel, schemaMeta);
@@ -3957,6 +3958,39 @@ public class MetaEditor implements SelectionListener {
       updateMenusAndToolbars(e);
       setActiveBusinessModel(e);
     }
+  }
+  
+  private String[] generateBusinessModelId(){
+
+    int idNum = schemaMeta.nrBusinessModels();
+    
+    String prefix = Settings.getBusinessModelIDPrefix() + "model_";//$NON-NLS-1$
+    if (Settings.isAnIdUppercase()){
+      prefix = prefix.toUpperCase();       
+    }
+    
+    String id = null; 
+
+    boolean found = true;
+    
+    while (found){
+      
+      found = false;
+      id = prefix + (++idNum); //$NON-NLS-1$
+
+      // Can't use schemaMeta.findModel(id)... the compare fails if the case is different,
+      // but the objectexistsexception is thrown regardless of case...
+      for (int i = 0; i < schemaMeta.nrBusinessModels(); i++) {
+        BusinessModel businessModel = schemaMeta.getModel(i);
+        if (businessModel.getId().equalsIgnoreCase(id)) {
+          found = true;
+          continue;
+        }
+      }
+    }
+    
+    return new String[]{id, Integer.toString(idNum)};
+	  
   }
 
 }
