@@ -47,6 +47,9 @@ import org.pentaho.pms.schema.SchemaMeta;
  *
  */
 public class PublishDialog extends TitleAreaDialog {
+  
+  private static final String DEFAULT_SOLUTION = "steel-wheels"; //$NON-NLS-1$
+  
   private SchemaMeta schemaMeta;
   
   private LogWriter log;
@@ -112,7 +115,7 @@ public class PublishDialog extends TitleAreaDialog {
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.minimumWidth = 470;
-    tSolutionName.setText("samples"); //default 
+    tSolutionName.setText(DEFAULT_SOLUTION); 
     tSolutionName.setLayoutData (data);
 
     Label label2 = new Label (c1, SWT.NONE);
@@ -157,7 +160,7 @@ public class PublishDialog extends TitleAreaDialog {
       }
     } catch (Exception ex) {
       // No publishpassword.properties
-      ex.printStackTrace();
+      // no need to log this, it's not an error if this occurs.
     }
 
     Label label6 = new Label (c1, SWT.NONE);
