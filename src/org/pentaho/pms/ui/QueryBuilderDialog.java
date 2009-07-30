@@ -96,26 +96,31 @@ public class QueryBuilderDialog extends Dialog {
 
   private List<QueryBuilderDialogListener> listeners = new ArrayList<QueryBuilderDialogListener>();
   private SwtMqlEditor editor;
-  
+
   public QueryBuilderDialog(Shell parentShell, SchemaMeta schemaMeta) {
     super(parentShell);
+
+    setShellStyle(SWT.RESIZE);
     service = new MQLEditorServiceCWMImpl(schemaMeta);
     editor = new SwtMqlEditor(service, schemaMeta);
     editor.hidePreview();
   }
 
   public QueryBuilderDialog(Shell parentShell, SchemaMeta schemaMeta, MQLQuery mqlQuery) {
-    super(parentShell);
-    service = new MQLEditorServiceCWMImpl(schemaMeta);
-    editor = new SwtMqlEditor(service, schemaMeta);
+    this(parentShell, schemaMeta);
     editor.setMqlQuery(mqlQuery);
-    editor.hidePreview();
   }
   
   public void addDialogListener(QueryBuilderDialogListener listener){
     this.listeners.add(listener);
   }
-  
+
+
+  protected void configureShell(Shell arg0) {
+    super.configureShell(arg0);
+    arg0.setText("Query Builder");
+    arg0.setSize(850, 650);
+  }
 
   protected Control createContents(Composite arg0) {
     createMenuBar();
