@@ -1,5 +1,10 @@
 #!/bin/sh
 
+ 
+# this script must be executed inside the pme folder
+
+cd $(dirname $0)
+
 # **************************************************
 # ** Set these to the location of your mozilla
 # ** installation directory.  Use a Mozilla with
