@@ -3,6 +3,12 @@
  */
 package org.pentaho.pms.ui.security;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -89,7 +95,13 @@ public class SecurityDialog extends TitleAreaDialog {
   private SecurityService originalService;
 
   private SecurityService securityService;
+  
+  private static String defaultServiceUrl;
 
+  static {
+    defaultServiceUrl = getDefaultServiceUrl();
+  }
+  
   public SecurityDialog(Shell shell, SecurityService service) {
     super(shell);
     originalService = service;
@@ -201,7 +213,7 @@ public class SecurityDialog extends TitleAreaDialog {
 
     Label wlExampleServiceURL = new Label(wServiceComp, SWT.LEFT);
     props.setLook(wlExampleServiceURL);
-    wlExampleServiceURL.setText("Example: " + Const.DEFAULT_SERVICE_URL); //$NON-NLS-1$
+    wlExampleServiceURL.setText("Example: " + defaultServiceUrl); //$NON-NLS-1$
     FormData fdlExampleServiceURL = new FormData();
     fdlExampleServiceURL.top = new FormAttachment(wServiceURL, margin);
     fdlExampleServiceURL.left = new FormAttachment(middle, margin); 
@@ -298,6 +310,31 @@ public class SecurityDialog extends TitleAreaDialog {
 
   }
 
+  private static String getDefaultServiceUrl() {
+    String overridePropsFileString = Const.getBaseDirectory() + Const.FILE_SEPARATOR + ".pme-override-rc"; //$NON-NLS-1$
+    File overridePropsFile = new File(overridePropsFileString);
+    if (overridePropsFile.exists()) {
+      Properties overrideProps = new Properties();
+      InputStream is = null;
+      try {
+        is = new FileInputStream(overridePropsFile);
+        overrideProps.load(is);
+        String defaultServiceUrlFromOverrideProps = overrideProps.getProperty("defaultServiceUrl"); //$NON-NLS-1$
+        if (defaultServiceUrlFromOverrideProps != null) {
+          return defaultServiceUrlFromOverrideProps;
+        }
+      } catch (IOException ignored) {
+      } finally {
+        if (is != null) {
+          try {
+            is.close();
+          } catch (IOException ignored) {}
+        }
+      }
+    }
+    return Const.DEFAULT_SERVICE_URL;
+  }
+  
   private void addProxyTab() {
 
     wProxyTab = new CTabItem(wTabFolder, SWT.NONE);
