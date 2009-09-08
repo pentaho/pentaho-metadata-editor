@@ -642,7 +642,7 @@ private FormData fdlJoinType;
       return;
     }
     
-    if(relationshipMeta.getFieldFrom()==null){
+    if(!relationshipMeta.isComplex() && relationshipMeta.getFieldFrom()==null){
       MessageBox mb = new MessageBox(shell, SWT.YES | SWT.ICON_WARNING);
       mb.setMessage(Messages.getString("RelationshipDialog.USER_WARNING_FROM_FIELD_NOT_DEFINED")); //$NON-NLS-1$
       mb.setText(Messages.getString("General.USER_TITLE_WARNING")); //$NON-NLS-1$
@@ -650,7 +650,7 @@ private FormData fdlJoinType;
       return;      
     }
     
-    if(relationshipMeta.getFieldTo()==null){
+    if(!relationshipMeta.isComplex() && relationshipMeta.getFieldTo()==null){
       MessageBox mb = new MessageBox(shell, SWT.YES | SWT.ICON_WARNING);
       mb.setMessage(Messages.getString("RelationshipDialog.USER_WARNING_TO_FIELD_NOT_DEFINED")); //$NON-NLS-1$
       mb.setText(Messages.getString("General.USER_TITLE_WARNING")); //$NON-NLS-1$
