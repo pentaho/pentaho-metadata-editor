@@ -19,25 +19,34 @@ package org.pentaho.pms.ui.dialog;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.pentaho.platform.util.client.PublisherUtil;
 import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.PropsUI;
+import org.pentaho.di.ui.core.dialog.ErrorDialog;
 import org.pentaho.di.ui.core.gui.WindowProperty;
+import org.pentaho.platform.util.client.PublisherUtil;
 import org.pentaho.pms.core.CWM;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.schema.SchemaMeta;
@@ -48,8 +57,10 @@ import org.pentaho.pms.schema.SchemaMeta;
  */
 public class PublishDialog extends TitleAreaDialog {
   
+  private static final String LAST_USED_PROP = "last_used"; //$NON-NLS-1$
   private static final String DEFAULT_SOLUTION = "steel-wheels"; //$NON-NLS-1$
-  
+  private static final String URL_PROPS_FILE = "ui/publishUrls.properties"; //$NON-NLS-1$ 
+  private static final String DEFAULT_PUBLISH_URL = "http://localhost:8080/pentaho/RepositoryFilePublisher"; //$NON-NLS-1$
   private SchemaMeta schemaMeta;
   
   private LogWriter log;
@@ -63,13 +74,14 @@ public class PublishDialog extends TitleAreaDialog {
   private String userPassword;
   private String publishPassword;
   
-  private Text tServerURL;
+  private Combo tServerURL;
   private Text tSolutionName;
   
   private Text tUserId;
   private Text tUserPassword;
   private Text tPublishPassword;
   
+  private Properties publishUrls;
 
   /**
    * @param parent
@@ -125,13 +137,14 @@ public class PublishDialog extends TitleAreaDialog {
     data.minimumWidth = 470;
     label2.setLayoutData (data);
 
-    tServerURL = new Text (c1, SWT.BORDER);
+    tServerURL = new Combo(c1, SWT.DROP_DOWN);
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.minimumWidth = 470;
-    tServerURL.setText("http://localhost:8080/pentaho/RepositoryFilePublisher"); //default 
     tServerURL.setLayoutData (data);
-
+    
+    populateServerUrl();
+    
     Label label4 = new Label (c1, SWT.NONE);
     label4.setText (Messages.getString("PublishDialog.LABEL_PUBLISH_PASSWORD"));
     data = new GridData();
@@ -246,13 +259,13 @@ public class PublishDialog extends TitleAreaDialog {
       File file = new File(fileName);
       file.deleteOnExit();
       File[] files = {file};
-      int result = PublisherUtil.publish(serverURL , solutionName, files, publishPassword, userId, userPassword, false); //$NON-NLS-1$
+      int result = PublisherUtil.publish(serverURL, solutionName, files, publishPassword, userId, userPassword, false);
       if (result == PublisherUtil.FILE_EXISTS) {
         MessageBox mb = new MessageBox(getShell(), SWT.NO | SWT.YES | SWT.ICON_WARNING);
         mb.setText(Messages.getString("PublishDialog.FILE_EXISTS")); //$NON-NLS-1$
         mb.setMessage(Messages.getString("PublishDialog.FILE_OVERWRITE")); //$NON-NLS-1$
         if (mb.open() == SWT.YES) {
-          result = PublisherUtil.publish(serverURL, solutionName, files, publishPassword, userId, userPassword, true); //$NON-NLS-1$
+          result = PublisherUtil.publish(serverURL, solutionName, files, publishPassword, userId, userPassword, true);
         } else {
           return;
         }
@@ -270,11 +283,103 @@ public class PublishDialog extends TitleAreaDialog {
         dispose();
       }
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      new ErrorDialog(
+          getShell(),
+          Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("PublishDialog.ACTION_FAILED"), e); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    
+    // update the props file even if the connection fails
+    updateUrlPropsFile();
+  }
+  
+  private void updateUrlPropsFile() {
+    // update publish url file
+    boolean lastUsedChanged = false;
+    if ((publishUrls.getProperty(LAST_USED_PROP) == null) || 
+        !publishUrls.getProperty(LAST_USED_PROP).equals(serverURL)) {
+      lastUsedChanged = true;
+    }
+    publishUrls.setProperty(LAST_USED_PROP, serverURL);
+    boolean newURL = true;
+    for (Object pname : publishUrls.keySet()) {
+      String paramName = pname.toString();
+      if (!paramName.equals(LAST_USED_PROP)) {
+        if (publishUrls.getProperty(paramName).equals(serverURL)) {
+          newURL = false;
+        }
+      }
+    }
+    if (newURL) {
+      publishUrls.setProperty("url" + publishUrls.size(), serverURL); //$NON-NLS-1$
+    }
+    
+    if (newURL || lastUsedChanged) {
+      FileOutputStream fos = null;
+      try {
+        fos = new FileOutputStream(URL_PROPS_FILE);
+        publishUrls.store(fos, "Pentaho Metadata publish urls."); //$NON-NLS-1$
+      } catch (IOException e) {
+        new ErrorDialog(
+            getShell(),
+            Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("PublishDialog.ACTION_FAILED"), e); //$NON-NLS-1$ //$NON-NLS-2$
+
+      } finally {
+        try {
+          if (fos != null) {
+            fos.close();
+          }
+        } catch (Exception e) {
+          // ignore any close exceptions
+        }
+      }
     }
   }
 
+  private void populateServerUrl() {
+    String lastUsedUrl = ""; //$NON-NLS-1$
+    FileInputStream fis = null;
+    publishUrls = new Properties();
+    File file = new File(URL_PROPS_FILE);
+    if (file.exists()) {
+      try {
+        fis = new FileInputStream(file);
+        publishUrls.load(fis);
+      } catch (IOException ex) {
+        // populate the dialog with a default value
+        tServerURL.setText(DEFAULT_PUBLISH_URL);
+      } finally {
+        if (fis != null) {
+          try {
+            fis.close();
+          } catch (Exception e) {
+            // ignore any close exceptions
+          }
+        }
+      }
+      if (publishUrls.size() > 0) {
+        List<String> urls = new ArrayList<String>();
+        for (Object pname : publishUrls.keySet()) {
+          String paramName = pname.toString();
+          if (paramName.equals(LAST_USED_PROP)) {
+            lastUsedUrl = publishUrls.getProperty(paramName);
+          } else {
+            urls.add(publishUrls.getProperty(paramName));
+          }
+        }
+        tServerURL.setItems(urls.toArray(new String[0]));
+        // set the default value if available
+        if (StringUtils.isBlank(lastUsedUrl) && urls.size() > 0) {
+          lastUsedUrl = urls.get(0);
+        }
+        tServerURL.setText(lastUsedUrl);
+      } else {
+        tServerURL.setText(DEFAULT_PUBLISH_URL);
+      }
+    } else {
+      tServerURL.setText(DEFAULT_PUBLISH_URL);
+    }
+  }
+  
   /**
    * 
    */
@@ -289,8 +394,8 @@ public class PublishDialog extends TitleAreaDialog {
     solutionName = tSolutionName.getText();
     if (solutionName.indexOf(seperatorFwd) >= 0 || solutionName.indexOf(seperatorBck) >= 0) {
       MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_ERROR);
-      mb.setText(Messages.getString("PublishDialog.LOCATION_ERROR"));
-      mb.setMessage(Messages.getString("PublishDialog.LOCATION_ERROR_INFO"));
+      mb.setText(Messages.getString("PublishDialog.LOCATION_ERROR")); //$NON-NLS-1$
+      mb.setMessage(Messages.getString("PublishDialog.LOCATION_ERROR_INFO")); //$NON-NLS-1$
       mb.open();
       return false;
     }
