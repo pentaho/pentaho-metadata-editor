@@ -19,6 +19,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
@@ -28,7 +29,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.util.VersionHelper;
 
 /**
@@ -73,9 +74,17 @@ public class Splash
           e.gc.setBackground(new Color(e.display, new RGB(255,255,255)));
           // Updates for PMD-190 - Use version helper to display version information
           VersionHelper helper = new VersionHelper();
-          e.gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY));
-          e.gc.drawString(helper.getVersionInformation(Splash.class), 353, 285);
-          e.gc.drawString(Messages.getString("MetaEditor.USER_HELP_PENTAHO_CORPORATION"), 353, 430); //$NON-NLS-1$
+          e.gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+          Font font = new Font(e.display, "Sans", 10, SWT.BOLD); //$NON-NLS-1$
+          e.gc.setFont(font);
+          e.gc.setAntialias(SWT.ON);
+          e.gc.drawString(Messages.getString("Splash.VERSION_INFO", helper.getVersionInformation(Splash.class, false)), 294, 220, true);
+          font = new Font(e.display, "Sans", 8, SWT.NONE); //$NON-NLS-1$
+          e.gc.setFont(font);
+          e.gc.drawString(Messages.getString("MetaEditor.USER_HELP_PENTAHO_CORPORATION"), 294, 260, true); //$NON-NLS-1$
+          for (int i = 1; i <= 11; i++) {
+            e.gc.drawString(Messages.getString("Splash.LICENSE_LINE_" + i), 294, 270 + i*12, true); //$NON-NLS-1$
+          }
 				}
 			}
 		);
