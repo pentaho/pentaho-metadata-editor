@@ -216,6 +216,8 @@ public class MetaEditor implements SelectionListener {
   private MenuItem mFile;
 
   private Menu msFile;
+  
+  private ToolItem tiSQL;
 
   private MenuItem miFileOpen, miFileNew, miFileSave, miFileSaveAs, miFileExport, miPublish, miFileImport,
       miFileDelete, miFilePrint, miFileSep3, miFileQuit;
@@ -1258,9 +1260,10 @@ public class MetaEditor implements SelectionListener {
     tiFilePrint.addListener(SWT.Selection, lsFilePrint);
 
     new ToolItem(tBar, SWT.SEPARATOR);
-    final ToolItem tiSQL = new ToolItem(tBar, SWT.PUSH);
+    tiSQL = new ToolItem(tBar, SWT.PUSH);
     tiSQL.setImage(imSQL2);
     tiSQL.setToolTipText(Messages.getString("MetaEditor.USER_TEST_Q_AND_R")); //$NON-NLS-1$
+    tiSQL.setEnabled(false);
     tiSQL.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
         testQR();
@@ -1588,6 +1591,7 @@ public class MetaEditor implements SelectionListener {
       setActiveBusinessModel(((BusinessModelTreeNode) dataNode).getBusinessModel());
       activeModelTreeNode = (BusinessModelTreeNode) dataNode;
     }
+    updateMenusAndToolbars(e);
   }
 
   public void setActiveBusinessModel(BusinessModel businessModel) {
@@ -1646,6 +1650,9 @@ public class MetaEditor implements SelectionListener {
   private void updateMenusAndToolbars(SelectionEvent e) {
     final TreeItem ti = (TreeItem) e.item;
     final ConceptTreeNode node = (ConceptTreeNode) ti.getData();
+    if(schemaMeta != null)  {
+        tiSQL.setEnabled(schemaMeta.getActiveModel() != null);
+    }
 
     log.logDebug(APPLICATION_NAME, Messages.getString("MetaEditor.DEBUG_CLICKED_ON", ti.getText())); //$NON-NLS-1$
 
@@ -3709,6 +3716,11 @@ public class MetaEditor implements SelectionListener {
    */
   protected void testQR() {
     try {
+        
+      if(schemaMeta.getActiveModel() == null) {
+          return;
+      }
+        
       // If the domain is not the same as the previous: clear the previous query.
       // Just as a precaution.
       //
