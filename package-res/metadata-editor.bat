@@ -60,7 +60,7 @@ REM ***************
 REM ** Run...    **
 REM ***************
 
-set PENTAHO_JAVA=java
+set PENTAHO_JAVA=javaw
 call "%~dp0set-pentaho-java.bat"
 
 echo "%_PENTAHO_JAVA%"
