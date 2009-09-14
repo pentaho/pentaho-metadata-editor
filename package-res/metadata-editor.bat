@@ -60,7 +60,12 @@ REM ***************
 REM ** Run...    **
 REM ***************
 
-start javaw %OPT% org.pentaho.pms.ui.MetaEditor %1 %2 %3 %4 %5 %6 %7 %8 %9
+set PENTAHO_JAVA=java
+call "%~dp0set-pentaho-java.bat"
+
+echo "%_PENTAHO_JAVA%"
+
+start "Pentaho Metadata Editor" "%_PENTAHO_JAVA%" %OPT% org.pentaho.pms.ui.MetaEditor %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 REM *****************************************************************************
 REM If you are having trouble launching the application, comment out the 

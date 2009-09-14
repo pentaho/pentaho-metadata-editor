@@ -3,7 +3,7 @@
  
 # this script must be executed inside the pme folder
 
-cd $(dirname $0)
+cd `dirname $0`
 
 # **************************************************
 # ** Set these to the location of your mozilla
@@ -44,7 +44,14 @@ done
 # ** Platform specific libraries ...              **
 # **************************************************
 
-JAVA_BIN=java
+DIR_REL=`dirname $0`
+cd $DIR_REL
+DIR=`pwd`
+cd -
+
+. "$DIR/set-pentaho-java.sh"
+setPentahoJava
+
 LIBPATH="NONE"
 
 case `uname -s` in 
@@ -58,7 +65,7 @@ case `uname -s` in
 
 	Darwin)
 		LIBPATH=libswt/osx/
-		JAVA_BIN=libswt/osx/java_swt
+		_PENTAHO_JAVA=libswt/osx/java_swt
 		chmod +x $JAVA_BIN
 		;;
 
@@ -146,5 +153,5 @@ OPT="-Xmx256m -cp $CLASSPATH -Djava.library.path=$LIBPATH"
 # ** Run...    **
 # ***************
 
-$JAVA_BIN $OPT org.pentaho.pms.ui.MetaEditor "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
+"$_PENTAHO_JAVA" $OPT org.pentaho.pms.ui.MetaEditor "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
 
