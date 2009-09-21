@@ -3,7 +3,9 @@
  
 # this script must be executed inside the pme folder
 
-cd `dirname $0`
+DIR_REL=`dirname $0`
+cd $DIR_REL
+DIR=`pwd`
 
 # **************************************************
 # ** Set these to the location of your mozilla
@@ -44,91 +46,86 @@ done
 # ** Platform specific libraries ...              **
 # **************************************************
 
-DIR_REL=`dirname $0`
-cd $DIR_REL
-DIR=`pwd`
-cd -
-
 . "$DIR/set-pentaho-java.sh"
 setPentahoJava
 
 LIBPATH="NONE"
 
 case `uname -s` in 
-	AIX)
-		LIBPATH=libswt/aix/
-		;;
+  AIX)
+    LIBPATH=libswt/aix/
+    ;;
 
-	SunOS) 
-		LIBPATH=libswt/solaris/
-		;;
+  SunOS) 
+    LIBPATH=libswt/solaris/
+    ;;
 
-	Darwin)
-		LIBPATH=libswt/osx/
-		_PENTAHO_JAVA=libswt/osx/java_swt
-		chmod +x $JAVA_BIN
-		;;
+  Darwin)
+    LIBPATH=libswt/osx/
+    _PENTAHO_JAVA=libswt/osx/java_swt
+    chmod +x $JAVA_BIN
+    ;;
 
-	Linux)
-	    ARCH=`uname -m`
-		case $ARCH in
-			x86_64)
-				LIBPATH=libswt/linux/x86_64/
-				;;
+  Linux)
+      ARCH=`uname -m`
+    case $ARCH in
+      x86_64)
+        LIBPATH=libswt/linux/x86_64/
+        ;;
 
-			i[3-6]86)
-				LIBPATH=libswt/linux/x86/
-				;;
+      i[3-6]86)
+        LIBPATH=libswt/linux/x86/
+        ;;
 
-			ppc)
-				LIBPATH=libswt/linux/ppc/
-				;;
+      ppc)
+        LIBPATH=libswt/linux/ppc/
+        ;;
 
-			*)	
-				echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
-				exit
-				;;
-		esac
-		;;
+      *)  
+        echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
+        exit
+        ;;
+    esac
+    ;;
 
-	FreeBSD)
-	    ARCH=`uname -m`
-		case $ARCH in
-			x86_64)
-				LIBPATH=libswt/freebsd/x86_64/
-				echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
-				exit
-				;;
+  FreeBSD)
+      ARCH=`uname -m`
+    case $ARCH in
+      x86_64)
+        LIBPATH=libswt/freebsd/x86_64/
+        echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
+        exit
+        ;;
 
-			i[3-6]86)
-				LIBPATH=libswt/freebsd/x86/
-				;;
+      i[3-6]86)
+        LIBPATH=libswt/freebsd/x86/
+        ;;
 
-			ppc)
-				LIBPATH=libswt/freebsd/ppc/
-				echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
-				exit
-				;;
+      ppc)
+        LIBPATH=libswt/freebsd/ppc/
+        echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
+        exit
+        ;;
 
-			*)	
-				echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
-				exit
-				;;
-		esac
-		;;
+      *)  
+        echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
+        exit
+        ;;
+    esac
+    ;;
 
-	HP-UX) 
-		LIBPATH=libswt/hpux/
-		;;
-	CYGWIN*)
-		./MetaEditor.bat
-		# exit
-		;;
+  HP-UX) 
+    LIBPATH=libswt/hpux/
+    ;;
+  CYGWIN*)
+    ./MetaEditor.bat
+    # exit
+    ;;
 
-	*) 
-		echo The Metadata Editor is not supported on this hosttype : `uname -s`
-		exit
-		;;
+  *) 
+    echo The Metadata Editor is not supported on this hosttype : `uname -s`
+    exit
+    ;;
 esac 
 
 export LIBPATH
@@ -154,4 +151,4 @@ OPT="-Xmx256m -cp $CLASSPATH -Djava.library.path=$LIBPATH"
 # ***************
 
 "$_PENTAHO_JAVA" $OPT org.pentaho.pms.ui.MetaEditor "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
-
+cd -
