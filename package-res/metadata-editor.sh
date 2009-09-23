@@ -63,7 +63,7 @@ case `uname -s` in
   Darwin)
     LIBPATH=libswt/osx/
     _PENTAHO_JAVA=libswt/osx/java_swt
-    chmod +x $JAVA_BIN
+    chmod +x $_PENTAHO_JAVA
     ;;
 
   Linux)
