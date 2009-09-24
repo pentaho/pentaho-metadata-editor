@@ -116,7 +116,7 @@ public class QueryBuilderDialog extends Dialog {
   public QueryBuilderDialog(Shell parentShell, SchemaMeta schemaMeta) {
     super(parentShell);
 
-    setShellStyle(SWT.RESIZE);
+    setShellStyle(SWT.DIALOG_TRIM | SWT.RESIZE);
     service = new MQLEditorServiceCWMImpl(schemaMeta);
     editor = new SwtMqlEditor(service, schemaMeta);
     editor.hidePreview();
