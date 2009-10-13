@@ -25,6 +25,8 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
@@ -68,6 +70,20 @@ public class BooleanPropertyEditorWidget extends AbstractPropertyEditorWidget im
     button.setLayoutData(fdCheck);
 
     button.addFocusListener(this);
+    // PMD-573
+    // We need to add this selection listener because on Macs the above focusListener
+    // won't trigger when the panel loses focus (seems to be an swt on mac issue)
+    // the code here just forces the change when the checkbox is selected/deselected.
+    String osName = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
+    boolean isMacOs = osName.startsWith("mac os"); //$NON-NLS-1$
+    if (isMacOs) {
+      button.addSelectionListener( new SelectionListener() {
+        public void widgetDefaultSelected(SelectionEvent e) {}
+        public void widgetSelected(SelectionEvent e) {
+          focusLost(null);
+        }    
+      });
+    }
   }
 
   protected void widgetDisposed(final DisposeEvent e) {
