@@ -27,7 +27,6 @@
 	<classpathentry kind="lib" path="libext/JDBC/jt400.jar"/>
 	<classpathentry kind="lib" path="libext/JDBC/jtds-1.2.jar"/>
 	<classpathentry kind="lib" path="libext/JDBC/mysql-connector-java-3.1.14-bin.jar"/>
-	<classpathentry kind="lib" path="libext/JDBC/postgresql-8.1-407.jdbc3.jar"/>
 	<classpathentry kind="lib" path="libext/JDBC/rdbthin.jar"/>
 	<classpathentry kind="lib" path="libext/JDBC/sapdbc.jar"/>
 	<classpathentry kind="lib" path="libext/JDBC/sqlitejdbc-v032-nested.jar"/>
@@ -69,5 +68,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?ivyXmlPath=ivy.xml&amp;confs=*&amp;ivySettingsPath=file%3A.%2Fivysettings.xml&amp;buildPropertyFiles=build.properties&amp;acceptedTypes=jar&amp;sourceTypes=source&amp;javadocTypes=javadoc&amp;sourceSuffixes=-source%2C-sources%2C-src&amp;javadocSuffixes=-javadoc%2C-javadocs%2C-doc%2C-docs&amp;doRetrieve=false&amp;retrievePattern=lib%2F%5Bconf%5D%2F%5Bartifact%5D.%5Bext%5D&amp;alphaOrder=true"/>
 	<classpathentry kind="lib" path="libswt/linux/x86_64/swt.jar"/>
+	<classpathentry kind="lib" path="libext/JDBC/postgresql-8.4-701.jdbc3.jar"/>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
