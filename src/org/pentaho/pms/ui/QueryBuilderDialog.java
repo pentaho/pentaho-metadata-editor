@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.pentaho.commons.metadata.mqleditor.editor.SwtMqlEditor;
+import org.pentaho.commons.metadata.mqleditor.editor.OldSwtMqlEditor;
 import org.pentaho.commons.metadata.mqleditor.editor.service.MQLEditorServiceCWMImpl;
 import org.pentaho.di.core.database.Database;
 import org.pentaho.di.core.database.DatabaseMeta;
@@ -111,14 +111,14 @@ public class QueryBuilderDialog extends Dialog {
   private MQLEditorServiceCWMImpl service;
 
   private List<QueryBuilderDialogListener> listeners = new ArrayList<QueryBuilderDialogListener>();
-  private SwtMqlEditor editor;
+  private OldSwtMqlEditor editor;
 
   public QueryBuilderDialog(Shell parentShell, SchemaMeta schemaMeta) {
     super(parentShell);
 
     setShellStyle(SWT.DIALOG_TRIM | SWT.RESIZE);
     service = new MQLEditorServiceCWMImpl(schemaMeta);
-    editor = new SwtMqlEditor(service, schemaMeta);
+    editor = new OldSwtMqlEditor(service, schemaMeta);
     editor.hidePreview();
   }
 
