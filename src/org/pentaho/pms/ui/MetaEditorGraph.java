@@ -55,6 +55,8 @@ import org.pentaho.di.core.dnd.XMLTransfer;
 import org.pentaho.di.core.gui.Point;
 import org.pentaho.di.core.gui.Redrawable;
 import org.pentaho.di.core.gui.SnapAllignDistribute;
+import org.pentaho.di.core.logging.LogChannel;
+import org.pentaho.di.core.logging.LogChannelInterface;
 import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.core.dialog.EnterTextDialog;
@@ -79,7 +81,7 @@ public class MetaEditorGraph extends Canvas implements Redrawable {
 
   private MetaEditorGraph metaEditorGraph;
 
-  private LogWriter log;
+  private LogChannelInterface log;
 
   private int iconsize;
 
@@ -123,7 +125,7 @@ public class MetaEditorGraph extends Canvas implements Redrawable {
   public MetaEditorGraph(Composite par, int style, MetaEditor pm) {
     super(par, style);
     shell = par.getShell();
-    log = LogWriter.getInstance();
+    log = new LogChannel(toString());
     this.metaEditor = pm;
     metaEditorGraph = this;
 
@@ -1335,7 +1337,7 @@ public class MetaEditorGraph extends Canvas implements Redrawable {
 
   private void editRelationship(RelationshipMeta hopinfo) {
     String name = hopinfo.toString();
-    log.logDebug(toString(), Messages.getString("MetaEditorGraph.DEBUG_EDITING_RELATIONSHIP", name)); //$NON-NLS-1$
+    log.logDebug(Messages.getString("MetaEditorGraph.DEBUG_EDITING_RELATIONSHIP", name)); //$NON-NLS-1$
     metaEditor.editRelationship(hopinfo);
   }
 

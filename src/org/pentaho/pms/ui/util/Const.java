@@ -986,26 +986,6 @@ public class Const
     }
 
 	/**
-	 * Find a database with a certain ID in an arraylist of databases.
-	 * @param databases The ArrayList of databases
-	 * @param id The id of the database connection
-	 * @return The database object if one was found, null otherwise.
-	 */
-	public static final DatabaseMeta findDatabase(List databases, long id)
-	{
-		if (databases == null)
-			return null;
-
-		for (int i = 0; i < databases.size(); i++)
-		{
-			DatabaseMeta ci = (DatabaseMeta) databases.get(i);
-			if (ci.getID() == id)
-				return ci;
-		}
-		return null;
-	}
-
-	/**
 	 * Select the SAP R/3 databases in the List of databases.
 	 * @param databases All the databases
 	 * @return SAP R/3 databases in a List of databases.

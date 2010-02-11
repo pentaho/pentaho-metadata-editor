@@ -24,6 +24,8 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.pentaho.di.core.ProgressMonitorAdapter;
+import org.pentaho.di.core.logging.LogChannel;
+import org.pentaho.di.core.logging.LogChannelInterface;
 import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.dialog.ErrorDialog;
 import org.pentaho.pms.core.CWM;
@@ -49,6 +51,8 @@ public class SchemaSaveProgressDialog {
 
   private String domainName;
 
+  private LogChannelInterface log;
+  
   private SchemaMeta schemaMeta;
 
   /**
@@ -58,6 +62,7 @@ public class SchemaSaveProgressDialog {
     this.shell = shell;
     this.domainName = domainName;
     this.schemaMeta = schemaMeta;
+    this.log = new LogChannel(MetaEditor.APPLICATION_NAME);
   }
 
   public CWM open() {
@@ -85,9 +90,9 @@ public class SchemaSaveProgressDialog {
         try {
           container.cwm.removeDomain();
         } catch (Exception e) {
-          LogWriter.getInstance().logError(MetaEditor.APPLICATION_NAME,
+          log.logError(
               Messages.getString("SchemaSaveProgressDialog.ERROR_0001_ERROR_REMOVING_DOMAIN", e.toString())); //$NON-NLS-1$
-          LogWriter.getInstance().logError(MetaEditor.APPLICATION_NAME, Const.getStackTracker(e));
+          log.logError(Const.getStackTracker(e));
         }
         monitor.worked(10);
 
@@ -113,9 +118,8 @@ public class SchemaSaveProgressDialog {
                 container.cwm.importFromXMI(Const.getDomainRecoveryFile() + domainName + ".xmi");
               }
             } catch (Exception ex) {
-              LogWriter.getInstance().logError(
-                      Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("MetaEditor.USER_ERROR_IMPORTING_XMI")); //$NON-NLS-1$ //$NON-NLS-2$
-              LogWriter.getInstance().logError(MetaEditor.APPLICATION_NAME, Const.getStackTracker(e));
+              log.logError(Messages.getString("MetaEditor.USER_ERROR_IMPORTING_XMI")); //$NON-NLS-1$
+              log.logError(Const.getStackTracker(e));
             }
           }
 
@@ -139,9 +143,9 @@ public class SchemaSaveProgressDialog {
             container.cwm.exportToXMI(Const.getDomainRecoveryFile() + domainName + ".xmi");
           } catch (Exception e) {
             // Not a core function of save, so proceed even on failure    
-            LogWriter.getInstance().logError(
-                    Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("MetaEditor.USER_ERROR_EXPORTING_XMI")); //$NON-NLS-1$ //$NON-NLS-2$
-            LogWriter.getInstance().logError(MetaEditor.APPLICATION_NAME, Const.getStackTracker(e));
+            log.logError(
+                    Messages.getString("MetaEditor.USER_ERROR_EXPORTING_XMI")); //$NON-NLS-1$ //$NON-NLS-2$
+            log.logError(Const.getStackTracker(e));
           }
         }
         monitor.done();

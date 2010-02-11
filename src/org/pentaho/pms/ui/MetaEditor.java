@@ -88,6 +88,8 @@ import org.pentaho.di.core.dnd.DragAndDropContainer;
 import org.pentaho.di.core.dnd.XMLTransfer;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.gui.Point;
+import org.pentaho.di.core.logging.LogChannel;
+import org.pentaho.di.core.logging.LogChannelInterface;
 import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.core.row.ValueMetaInterface;
@@ -183,7 +185,7 @@ import org.pentaho.pms.util.logging.Log4jPMELayout;
 public class MetaEditor implements SelectionListener {
   private CWM cwm;
 
-  private LogWriter log;
+  private LogChannelInterface log;
 
   private Display disp;
 
@@ -292,11 +294,11 @@ public class MetaEditor implements SelectionListener {
 
   private Menu mainMenu;
 
-  public MetaEditor(LogWriter log) {
+  public MetaEditor(LogChannelInterface log) {
     this(log, null);
   }
 
-  public MetaEditor(LogWriter log, Display display) {
+  public MetaEditor(LogChannelInterface log, Display display) {
     this.log = log;
 
     if (display != null) {
@@ -1647,7 +1649,7 @@ public class MetaEditor implements SelectionListener {
     final TreeItem ti = (TreeItem) e.item;
     final ConceptTreeNode node = (ConceptTreeNode) ti.getData();
 
-    log.logDebug(APPLICATION_NAME, Messages.getString("MetaEditor.DEBUG_CLICKED_ON", ti.getText())); //$NON-NLS-1$
+    log.logDebug(Messages.getString("MetaEditor.DEBUG_CLICKED_ON", ti.getText())); //$NON-NLS-1$
 
     if (mainMenu == null) {
       mainMenu = new Menu(shell, SWT.POP_UP);
@@ -2657,7 +2659,7 @@ public class MetaEditor implements SelectionListener {
       try {
       oldColumn.setId(newColumn.getId());
       } catch (ObjectAlreadyExistsException e) {
-        log.logDebug(APPLICATION_NAME,
+        log.logDebug(
         "This should not happen as this exception would already have been caught earlier..."); //$NON-NLS-1$
       }
       ConceptInterface originalInt = oldColumn.getConcept();
@@ -2683,7 +2685,7 @@ public class MetaEditor implements SelectionListener {
 
   public void dupePhysicalTable(PhysicalTable physicalTable) {
     if (physicalTable != null) {
-      log.logDebug(APPLICATION_NAME, Messages.getString("MetaEditor.DEBUG_DUPLICATE_TABLE", physicalTable.getId())); //$NON-NLS-1$
+      log.logDebug(Messages.getString("MetaEditor.DEBUG_DUPLICATE_TABLE", physicalTable.getId())); //$NON-NLS-1$
 
       PhysicalTable newTable = (PhysicalTable) physicalTable.clone();
       if (newTable != null) {
@@ -2716,7 +2718,6 @@ public class MetaEditor implements SelectionListener {
   public void delPhysicalTable(PhysicalTable physicalTable) {
     log
         .logDebug(
-            APPLICATION_NAME,
             Messages
                 .getString(
                     "MetaEditor.DEBUG_DELETE_TABLE", physicalTable == null ? "null" : physicalTable.getName(schemaMeta.getActiveLocale()))); //$NON-NLS-1$ //$NON-NLS-2$
@@ -2730,7 +2731,7 @@ public class MetaEditor implements SelectionListener {
       mainTreeNode.sync();
       refreshGraph();
     } else {
-      log.logDebug(APPLICATION_NAME, Messages.getString("MetaEditor.DEBUG_CANT_FIND_TABLE", "null")); //$NON-NLS-1$ //$NON-NLS-2$
+      log.logDebug(Messages.getString("MetaEditor.DEBUG_CANT_FIND_TABLE", "null")); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -2876,7 +2877,7 @@ public class MetaEditor implements SelectionListener {
   public boolean quitFile() {
     boolean retval = true;
 
-    log.logDetailed(APPLICATION_NAME, Messages.getString("MetaEditor.INFO_QUIT_APPLICATION")); //$NON-NLS-1$
+    log.logDetailed(Messages.getString("MetaEditor.INFO_QUIT_APPLICATION")); //$NON-NLS-1$
     saveSettings();
     if (schemaMeta.hasChanged()) {
       MessageBox mb = new MessageBox(shell, SWT.YES | SWT.NO | SWT.CANCEL | SWT.ICON_WARNING);
@@ -2903,7 +2904,7 @@ public class MetaEditor implements SelectionListener {
   }
 
   public boolean saveFile() {
-    log.logDetailed(APPLICATION_NAME, Messages.getString("MetaEditor.INFO_SAVE_FILE")); //$NON-NLS-1$
+    log.logDetailed(Messages.getString("MetaEditor.INFO_SAVE_FILE")); //$NON-NLS-1$
     if (schemaMeta.domainName != null) {
       return save(schemaMeta.domainName);
     } else {
@@ -2913,7 +2914,7 @@ public class MetaEditor implements SelectionListener {
 
   public boolean saveFileAs() {
     try {
-      log.logBasic(APPLICATION_NAME, Messages.getString("MetaEditor.INFO_SAVE_FILE_AS")); //$NON-NLS-1$
+      log.logBasic(Messages.getString("MetaEditor.INFO_SAVE_FILE_AS")); //$NON-NLS-1$
 
       EnterStringDialog dialog = new EnterStringDialog(
           shell,
@@ -2955,7 +2956,7 @@ public class MetaEditor implements SelectionListener {
       
       schemaMeta.clearChanged();
       setShellText();
-      log.logDebug(APPLICATION_NAME, Messages.getString("MetaEditor.DEBUG_FILE_WRITTEN_TO_REPOSITORY", domainName)); //$NON-NLS-1$
+      log.logDebug(Messages.getString("MetaEditor.DEBUG_FILE_WRITTEN_TO_REPOSITORY", domainName)); //$NON-NLS-1$
       return true;
     } catch (Exception e) {
       new ErrorDialog(shell,
@@ -3241,13 +3242,13 @@ public class MetaEditor implements SelectionListener {
   public void saveSettings() {
     WindowProperty winprop = new WindowProperty(shell);
     props.setScreen(winprop);
-    props.setLogLevel(log.getLogLevelDesc());
+    props.setLogLevel(LogWriter.getInstance().getLogLevelDesc());
     props.setSashWeights(sashform.getWeights());
     props.saveProps();
   }
 
   public void loadSettings() {
-    log.setLogLevel(props.getLogLevel());
+    LogWriter.getInstance().setLogLevel(props.getLogLevel());
 
     GUIResource.getInstance().reload();
 
@@ -3285,7 +3286,7 @@ public class MetaEditor implements SelectionListener {
   public void importTables(DatabaseMeta databaseMeta) {
     if (databaseMeta != null) {
       DatabaseExplorerDialog std = new DatabaseExplorerDialog(shell, SWT.NONE, databaseMeta, schemaMeta.databases
-          .getList(), false, true);
+          .getList(), false);
       if (std.open() != null) {
         String schemaName = std.getSchemaName();
         String tableName = std.getTableName();
@@ -3518,8 +3519,9 @@ public class MetaEditor implements SelectionListener {
     System.setProperty("java.naming.factory.initial", "org.osjava.sj.SimpleContextFactory"); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty("org.osjava.sj.root", "simple-jndi"); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty("org.osjava.sj.delimiter", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+    LogWriter logwriter = LogWriter.getInstance(Const.META_EDITOR_LOG_FILE, false, LogWriter.LOG_LEVEL_BASIC);
 
-    LogWriter log = LogWriter.getInstance(Const.META_EDITOR_LOG_FILE, false, LogWriter.LOG_LEVEL_BASIC);
+    LogChannel log = new LogChannel(APPLICATION_NAME);
     LogWriter.setLayout(new Log4jPMELayout(true));
 
     Display display = new Display();
@@ -3563,9 +3565,9 @@ public class MetaEditor implements SelectionListener {
               win.newFile();
             }
           } catch (Exception e) {
-            log.logError(APPLICATION_NAME, Messages.getString(
+            log.logError(Messages.getString(
                 "MetaEditor.ERROR_0001_CANT_CHECK_DOMAIN_EXISTENCE", e.toString())); //$NON-NLS-1$
-            log.logError(APPLICATION_NAME, Const.getStackTracker(e));
+            log.logError(Const.getStackTracker(e));
           }
         } else {
           win.newFile();
@@ -3585,7 +3587,7 @@ public class MetaEditor implements SelectionListener {
     win.dispose();
 
     // Close the logfile...
-    log.close();
+    logwriter.close();
   }
 
   /**
@@ -3644,7 +3646,7 @@ public class MetaEditor implements SelectionListener {
       origBusinessTable.addBusinessColumn(column);
       } catch (ObjectAlreadyExistsException e) {
         e.printStackTrace();
-        log.logDebug(APPLICATION_NAME,
+        log.logDebug(
             "This should not happen as this exception would already have been caught earlier..."); //$NON-NLS-1$
       }
     }
@@ -3675,7 +3677,7 @@ public class MetaEditor implements SelectionListener {
 
   public void dupeBusinessTable(BusinessTable businessTable) {
     if (businessTable != null) {
-      log.logDebug(APPLICATION_NAME, Messages.getString("MetaEditor.DEBUG_DUPLICATE_TABLE", businessTable.getId())); //$NON-NLS-1$
+      log.logDebug(Messages.getString("MetaEditor.DEBUG_DUPLICATE_TABLE", businessTable.getId())); //$NON-NLS-1$
 
       BusinessModel activeModel = schemaMeta.getActiveModel();
 
@@ -3771,8 +3773,8 @@ public class MetaEditor implements SelectionListener {
         FileUtil.saveAsXml(Const.getQueryFile(), query.getXML());
       }
     } catch (Exception e) {
-      log.logError(APPLICATION_NAME, Messages.getString("MetaEditor.ERROR_0002_CANT_SAVE_QUERY") + e.toString()); //$NON-NLS-1$
-      log.logError(APPLICATION_NAME, Const.getStackTracker(e));
+      log.logError(Messages.getString("MetaEditor.ERROR_0002_CANT_SAVE_QUERY") + e.toString()); //$NON-NLS-1$
+      log.logError(Const.getStackTracker(e));
     }
   }
 
@@ -3787,7 +3789,7 @@ public class MetaEditor implements SelectionListener {
       query = MQLQueryFactory.getMQLQuery(new String(bytes, Const.XML_ENCODING), null, Const.XML_ENCODING,
           cwmSchemaFactory);
     } catch (Exception e) {
-      log.logError(APPLICATION_NAME, Messages.getString("MetaEditor.ERROR_0003_CANT_LOAD_QUERY", e.toString())); //$NON-NLS-1$
+      log.logError(Messages.getString("MetaEditor.ERROR_0003_CANT_LOAD_QUERY", e.toString())); //$NON-NLS-1$
     }
   }
 

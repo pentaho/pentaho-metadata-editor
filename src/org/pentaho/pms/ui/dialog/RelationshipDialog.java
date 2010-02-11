@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.pentaho.di.core.logging.LogChannelInterface;
 import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.core.gui.WindowProperty;
@@ -125,7 +126,7 @@ public class RelationshipDialog extends Dialog {
 
 private FormData fdlJoinType;
 
-  public RelationshipDialog(Shell parent, int style, LogWriter l, RelationshipMeta relationshipMeta,
+  public RelationshipDialog(Shell parent, int style, LogChannelInterface l, RelationshipMeta relationshipMeta,
       BusinessModel businessModel) {
     super(parent, style);
     this.relationshipMeta = relationshipMeta;
