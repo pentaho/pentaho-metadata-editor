@@ -986,39 +986,6 @@ public class Const
     }
 
 	/**
-	 * Select the SAP R/3 databases in the List of databases.
-	 * @param databases All the databases
-	 * @return SAP R/3 databases in a List of databases.
-	 */
-	public static final List selectSAPR3Databases(List databases)
-	{
-		List<DatabaseMeta> sap = new ArrayList<DatabaseMeta>();
-
-		Iterator it = databases.iterator();
-		while (it.hasNext())
-		{
-			DatabaseMeta db = (DatabaseMeta) it.next();
-			if (db.getDatabaseType() == DatabaseMeta.TYPE_DATABASE_SAPR3)
-			{
-				sap.add(db);
-			}
-		}
-
-		return sap;
-	}
-
-	/**
-	 * Select the SAP R/3 databases in the List of databases.
-	 * @param databases All the databases
-	 * @return SAP R/3 databases in a List of databases.
-	 * @deprecated
-	 */
-	public static final ArrayList selectSAPR3Databases(ArrayList databases)
-	{
-		return (ArrayList)selectSAPR3Databases((List)databases);
-	}
-
-	/**
 	 * Gets the value of a commandline option 
 	 * @param args The command line arguments
 	 * @param option The option to look for
