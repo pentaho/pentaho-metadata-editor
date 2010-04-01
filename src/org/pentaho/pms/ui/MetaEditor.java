@@ -80,6 +80,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.pentaho.di.core.DBCache;
+import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.LastUsedFile;
 import org.pentaho.di.core.Props;
 import org.pentaho.di.core.database.Database;
@@ -3516,6 +3517,9 @@ public class MetaEditor implements SelectionListener {
   }
 
   public static void main(String[] args) throws Exception {
+    
+    KettleEnvironment.init(false);
+    
     System.setProperty("java.naming.factory.initial", "org.osjava.sj.SimpleContextFactory"); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty("org.osjava.sj.root", "simple-jndi"); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty("org.osjava.sj.delimiter", "/"); //$NON-NLS-1$ //$NON-NLS-2$
