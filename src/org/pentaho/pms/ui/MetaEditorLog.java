@@ -222,7 +222,7 @@ public class MetaEditorLog extends Composite
 	
 	private void setLog()
 	{
-		LogSettingsDialog lsd = new LogSettingsDialog(shell, SWT.NONE, log, props);
+		LogSettingsDialog lsd = new LogSettingsDialog(shell, SWT.NONE, props);
 		lsd.open();
 		
 	}

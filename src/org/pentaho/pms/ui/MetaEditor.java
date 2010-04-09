@@ -91,6 +91,7 @@ import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.gui.Point;
 import org.pentaho.di.core.logging.LogChannel;
 import org.pentaho.di.core.logging.LogChannelInterface;
+import org.pentaho.di.core.logging.LogLevel;
 import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.core.row.ValueMetaInterface;
@@ -3243,13 +3244,13 @@ public class MetaEditor implements SelectionListener {
   public void saveSettings() {
     WindowProperty winprop = new WindowProperty(shell);
     props.setScreen(winprop);
-    props.setLogLevel(LogWriter.getInstance().getLogLevelDesc());
+    props.setLogLevel(log.getLogLevel().getCode());
     props.setSashWeights(sashform.getWeights());
     props.saveProps();
   }
 
   public void loadSettings() {
-    LogWriter.getInstance().setLogLevel(props.getLogLevel());
+    log.setLogLevel(LogLevel.getLogLevelForCode(props.getLogLevel()));
 
     GUIResource.getInstance().reload();
 
@@ -3523,7 +3524,7 @@ public class MetaEditor implements SelectionListener {
     System.setProperty("java.naming.factory.initial", "org.osjava.sj.SimpleContextFactory"); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty("org.osjava.sj.root", "simple-jndi"); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty("org.osjava.sj.delimiter", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-    LogWriter logwriter = LogWriter.getInstance(Const.META_EDITOR_LOG_FILE, false, LogWriter.LOG_LEVEL_BASIC);
+    LogWriter logwriter = LogWriter.getInstance(Const.META_EDITOR_LOG_FILE, false);
 
     LogChannel log = new LogChannel(APPLICATION_NAME);
     LogWriter.setLayout(new Log4jPMELayout(true));
