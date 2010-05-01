@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.pentaho.di.core.dnd.DragAndDropContainer;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.schema.BusinessCategory;
 import org.pentaho.pms.schema.concept.ConceptInterface;
 import org.pentaho.pms.ui.jface.tree.ITreeNode;

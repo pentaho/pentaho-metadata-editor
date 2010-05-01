@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.schema.BusinessModel;
 import org.pentaho.pms.schema.SchemaMeta;
 import org.pentaho.pms.ui.jface.tree.ITreeNode;

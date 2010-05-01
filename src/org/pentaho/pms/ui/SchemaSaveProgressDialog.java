@@ -26,13 +26,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.pentaho.di.core.ProgressMonitorAdapter;
 import org.pentaho.di.core.logging.LogChannel;
 import org.pentaho.di.core.logging.LogChannelInterface;
-import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.dialog.ErrorDialog;
 import org.pentaho.pms.core.CWM;
 import org.pentaho.pms.factory.CwmSchemaFactoryInterface;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.schema.SchemaMeta;
-import org.pentaho.pms.ui.MetaEditor;
 import org.pentaho.pms.ui.util.Const;
 import org.pentaho.pms.util.Settings;
 

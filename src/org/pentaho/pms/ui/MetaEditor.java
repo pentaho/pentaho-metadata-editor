@@ -111,7 +111,7 @@ import org.pentaho.pms.core.exception.CWMException;
 import org.pentaho.pms.factory.CwmSchemaFactoryInterface;
 import org.pentaho.pms.locale.LocaleInterface;
 import org.pentaho.pms.locale.Locales;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.mql.MQLQuery;
 import org.pentaho.pms.mql.MQLQueryFactory;
 import org.pentaho.pms.schema.BusinessCategory;

@@ -57,19 +57,18 @@ import org.pentaho.di.core.gui.Redrawable;
 import org.pentaho.di.core.gui.SnapAllignDistribute;
 import org.pentaho.di.core.logging.LogChannel;
 import org.pentaho.di.core.logging.LogChannelInterface;
-import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.core.dialog.EnterTextDialog;
 import org.pentaho.di.ui.core.dialog.ErrorDialog;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.schema.BusinessModel;
 import org.pentaho.pms.schema.BusinessTable;
 import org.pentaho.pms.schema.PhysicalTable;
 import org.pentaho.pms.schema.RelationshipMeta;
 import org.pentaho.pms.schema.concept.ConceptInterface;
 import org.pentaho.pms.schema.concept.ConceptUtilityInterface;
-import org.pentaho.pms.ui.util.Const;
 import org.pentaho.pms.ui.concept.editor.Constants;
+import org.pentaho.pms.ui.util.Const;
 import org.pentaho.pms.ui.util.GUIResource;
 
 public class MetaEditorGraph extends Canvas implements Redrawable {

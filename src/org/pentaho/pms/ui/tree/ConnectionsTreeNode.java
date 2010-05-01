@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.pentaho.di.core.database.DatabaseMeta;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.schema.SchemaMeta;
 import org.pentaho.pms.ui.jface.tree.ITreeNode;
 import org.pentaho.pms.ui.util.GUIResource;

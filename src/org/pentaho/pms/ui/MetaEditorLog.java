@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.spoon.dialog.LogSettingsDialog;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.ui.util.Const;
 import org.pentaho.pms.ui.util.GUIResource;
 

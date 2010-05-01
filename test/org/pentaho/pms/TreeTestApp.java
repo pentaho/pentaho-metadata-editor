@@ -31,7 +31,7 @@ import org.pentaho.di.core.DBCache;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.pms.core.CWM;
 import org.pentaho.pms.factory.CwmSchemaFactoryInterface;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.schema.BusinessModel;
 import org.pentaho.pms.schema.SchemaMeta;
 import org.pentaho.pms.ui.jface.tree.ITreeNodeChangedListener;

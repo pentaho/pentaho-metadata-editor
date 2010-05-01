@@ -36,7 +36,7 @@ import org.pentaho.di.ui.trans.step.BaseStepDialog;
 import org.pentaho.pms.locale.LocaleInterface;
 import org.pentaho.pms.locale.LocaleMeta;
 import org.pentaho.pms.locale.Locales;
-import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.ui.util.Const;
 
 public class MetaEditorLocales extends Composite
