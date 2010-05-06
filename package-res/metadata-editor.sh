@@ -61,10 +61,12 @@ case `uname -s` in
     ;;
 
   Darwin)
-    LIBPATH=libswt/osx/
-    _PENTAHO_JAVA=libswt/osx/java_swt
-    chmod +x $_PENTAHO_JAVA
-    ;;
+	echo "Starting Metadata Editor using 'metadata-editor.sh' from OS X is not supported."
+	echo "Please start using 'Metadata Editor 32-bit' or"
+	echo "'Metadata Editor 64-bit' as appropriate."
+	exit
+	;;
+
 
   Linux)
       ARCH=`uname -m`
