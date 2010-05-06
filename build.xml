@@ -13,7 +13,7 @@
   <property name="cr" value="${line.separator}" />
 
   <!-- set global properties for this build -->
-
+  <property name="launcher" location="launcher" />
   <property name="libext" location="libext" />
   <property name="libswt" location="libswt" />
   <property name="stage.dir" location="stage" />
@@ -116,7 +116,7 @@
     <copy todir="${stage.dir}" overwrite="true">
       <fileset dir="${package.resdir}" />
     </copy>
-
+    
     <!-- base lib -->
     <mkdir dir="${stage.dir}/lib" />
     <copy todir="${stage.dir}/lib" file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" />
@@ -139,6 +139,12 @@
       <fileset dir="${libswt}" includes="**/*" excludes="**/.vpn **/sapjco*.dll" />
     </copy>
 
+    <!--  launcher libs -->
+    <mkdir dir="${stage.dir}/launcher" />
+    <copy todir="${stage.dir}/launcher" >
+      <fileset dir="${launcher}" includes="**/*" />
+    </copy>
+    
     <!-- documentation -->
     <!--
 		<mkdir dir="${stage.dir}/docs" />
@@ -159,10 +165,12 @@
     <tar destfile="${dist.dir}/${package.basename}.tar.gz" compression="gzip">
       <tarfileset dir="${stage.dir}" prefix="metadata-editor" mode="755">
         <include name="**/*.sh" />
+        <include name="**/JavaApplicationStub" />
       </tarfileset>
       <tarfileset dir="${stage.dir}" prefix="metadata-editor">
         <include name="**/*" />
         <exclude name="**/*.sh" />
+        <exclude name="**/JavaApplicationStub" />
       </tarfileset>
     </tar>
   </target>
