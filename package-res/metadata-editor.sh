@@ -72,7 +72,12 @@ case `uname -s` in
       ARCH=`uname -m`
     case $ARCH in
       x86_64)
-        LIBPATH=libswt/linux/x86_64/
+        if $(java -version 2>&1 | grep "64-Bit")
+        then
+          LIBPATH=libswt/linux/x86_64/
+        else
+          LIBPATH=libswt/linux/x86/
+        fi
         ;;
 
       i[3-6]86)

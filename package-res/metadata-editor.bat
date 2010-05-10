@@ -47,14 +47,42 @@ set CLASSPATH=%CLASSPATH%;libswt\runtime.jar
 set CLASSPATH=%CLASSPATH%;libswt\jface.jar
 set CLASSPATH=%CLASSPATH%;libswt\common.jar
 set CLASSPATH=%CLASSPATH%;libswt\commands.jar
-set CLASSPATH=%CLASSPATH%;libswt\win32\swt.jar
+
+REM **************************************************
+REM   Platform Specific SWT       **
+REM **************************************************
+
+REM The following line is predicated on the 64-bit Sun
+REM java output from -version which
+REM looks like this (at the time of this writing):
+REM
+REM java version "1.6.0_17"
+REM Java(TM) SE Runtime Environment (build 1.6.0_17-b04)
+REM Java HotSpot(TM) 64-Bit Server VM (build 14.3-b01, mixed mode)
+REM
+FOR /F %%a IN ('java -version 2^>^&1^|find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)
+IF %IS64BITJAVA% == 1 GOTO :USE64
+:USE32
+REM ===========================================
+REM Using 32bit Java, so include 32bit SWT Jar
+REM ===========================================
+set LIBSPATH=libswt\win32
+GOTO :CONTINUE
+:USE64
+REM ===========================================
+REM Using 64bit java, so include 64bit SWT Jar
+REM ===========================================
+set LIBSPATH=libswt\win64
+:CONTINUE
+
+set CLASSPATH=%CLASSPATH%;%LIBSPATH%\swt.jar
 
 REM ******************************************************************
 REM ** Set java runtime options                                     **
 REM ** Change 128m to higher values in case you run out of memory.  **
 REM ******************************************************************
 
-set OPT=-Xmx256m -cp %CLASSPATH% -Djava.library.path=libswt\win32\
+set OPT=-Xmx256m -cp %CLASSPATH% -Djava.library.path=%LIBSPATH%
 
 REM ***************
 REM ** Run...    **
@@ -69,10 +97,10 @@ start "Pentaho Metadata Editor" "%_PENTAHO_JAVA%" %OPT% org.pentaho.pms.ui.MetaE
 
 REM *****************************************************************************
 REM If you are having trouble launching the application, comment out the 
-REM "start javaw..."  line above, and uncomment the next 2 lines below . 
+REM "start..."  line above, and uncomment the next 2 lines below . 
 REM This will allow you to see any exceptions that may be preventing the 
 REM application from starting successfully ...
 
-REM java %OPT% org.pentaho.pms.ui.MetaEditor %1 %2 %3 %4 %5 %6 %7 %8 %9
+REM "%_PENTAHO_JAVA%" %OPT% org.pentaho.pms.ui.MetaEditor %1 %2 %3 %4 %5 %6 %7 %8 %9
 REM pause
 REM ******************************************************************************
