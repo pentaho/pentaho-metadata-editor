@@ -72,7 +72,7 @@ case `uname -s` in
       ARCH=`uname -m`
     case $ARCH in
       x86_64)
-        if $(java -version 2>&1 | grep "64-Bit" > /dev/null )
+        if $($_PENTAHO_JAVA -version 2>&1 | grep "64-Bit" > /dev/null )
         then
           LIBPATH=libswt/linux/x86_64/
         else

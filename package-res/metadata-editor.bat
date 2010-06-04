@@ -52,6 +52,11 @@ REM **************************************************
 REM   Platform Specific SWT       **
 REM **************************************************
 
+set PENTAHO_JAVA=javaw
+call "%~dp0set-pentaho-java.bat"
+
+echo "%_PENTAHO_JAVA%"
+
 REM The following line is predicated on the 64-bit Sun
 REM java output from -version which
 REM looks like this (at the time of this writing):
@@ -60,7 +65,7 @@ REM java version "1.6.0_17"
 REM Java(TM) SE Runtime Environment (build 1.6.0_17-b04)
 REM Java HotSpot(TM) 64-Bit Server VM (build 14.3-b01, mixed mode)
 REM
-FOR /F %%a IN ('java -version 2^>^&1^|find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)
+FOR /F %%a IN ('%_PENTAHO_JAVA% -version 2^>^&1^|find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)
 IF %IS64BITJAVA% == 1 GOTO :USE64
 :USE32
 REM ===========================================
@@ -87,11 +92,6 @@ set OPT=-Xmx256m -cp %CLASSPATH% -Djava.library.path=%LIBSPATH%
 REM ***************
 REM ** Run...    **
 REM ***************
-
-set PENTAHO_JAVA=javaw
-call "%~dp0set-pentaho-java.bat"
-
-echo "%_PENTAHO_JAVA%"
 
 start "Pentaho Metadata Editor" "%_PENTAHO_JAVA%" %OPT% org.pentaho.pms.ui.MetaEditor %1 %2 %3 %4 %5 %6 %7 %8 %9
 
