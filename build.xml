@@ -39,10 +39,10 @@
 
   <!-- Define the default location of the common build file -->
   <property name="common.build.file"
-            value="./common_build.xml"
-            description="This is the location of the standardized common_build.xml file" />
+            value="./build-res/subfloor.xml"
+            description="This is the location of the standardized build-res/subfloor.xml file" />
 
-  <!-- Import the common_build.xml file which contains all the default tasks -->
+  <!-- Import the build-res/subfloor.xml file which contains all the default tasks -->
   <import file="${common.build.file}" />
   
   <target name="clean-all" depends="clean-stage,clean,clean-jars" />
