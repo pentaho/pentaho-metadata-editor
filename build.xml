@@ -34,7 +34,9 @@
   			value="${package.basename}-sources.zip"/>
   <property name="source.tar.filename"
   			value="${package.basename}-sources.tar.gz"/>
-  
+  <property name="javadoc.packagenames"
+	        value="org.pentaho.*"/>
+	
   <property name="package.resdir" value="${basedir}/package-res" />
 
   <!-- Define the default location of the common build file -->
