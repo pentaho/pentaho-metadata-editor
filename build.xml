@@ -126,7 +126,7 @@
     <!-- pentaho libs -->
     <mkdir dir="${stage.dir}/libext" />
     <copy todir="${stage.dir}/libext/pentaho">
-      <fileset dir="${lib.dir}" includes="**/*.jar" />
+      <fileset dir="${lib.dir}" includes="**/*.jar" excludes="**/*hive-jdbc*" />
     </copy>
     
     <!-- external libs (jdbc etc) -->
@@ -135,6 +135,12 @@
       <fileset dir="${libext}" includes="**/*.jar **/*.zip" excludes="**/.vpn" />
     </copy>
 
+    <!-- Move the hive-jdbc driver into the appropriate directory.  It is resolved with the default
+         config so transitives end up in libext -->
+    <move todir="${stage.dir}/libext/JDBC">
+      <fileset dir="${lib.dir}" includes="**/*hive-jdbc*.jar" />
+    </move>
+    
     <!-- swt libs (jdbc etc) -->
     <mkdir dir="${stage.dir}/libswt" />
     <copy todir="${stage.dir}/libswt">
