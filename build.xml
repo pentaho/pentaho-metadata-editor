@@ -1,4 +1,4 @@
-<project name="Pentaho Metadata Editor" default="dist">
+<project name="Pentaho Metadata Editor" default="dist" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <description>
 	      Pentaho Metadata Editor build file.
@@ -21,6 +21,7 @@
   <property name="jdbc" location="jdbc" />
   <property name="simple-jndi" location="simple-jndi" />
   <property name="samples" location="samples" />
+  <property name="driver-lib.dir" location="${libext}/JDBC" />
 
   <property name="productId" value="pme" />
   <property name="releaseType" value="ce" />
@@ -105,6 +106,15 @@
     </javadoc>
   </target>
 
+  <!-- Resolve all default items plus JDBC drivers -->
+  <target name="resolve" depends="resolve-drivers,subfloor.resolve"/>
+  
+  <!-- Resolve JDBC Drivers into libext/JDBC -->
+  <target name="resolve-drivers" depends="resolve-init" description="Retrieves runtime configuration dependencies">
+      <ivy:resolve file="${ivy.artifact.ivyfilename}" conf="default"/>
+      <ivy:retrieve conf="drivers" pattern="${driver-lib.dir}/[module]-[revision](-[classifier]).[ext]"/>
+  </target>
+  
   <target name="assemble" depends="jar" description="copy jar file to distribution directory">
     <echo>Construct the distribution package...</echo>
 
@@ -130,16 +140,16 @@
     </copy>
     
     <!-- external libs (jdbc etc) -->
-    <mkdir dir="${stage.dir}/libext" />
+    <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}/libext">
       <fileset dir="${libext}" includes="**/*.jar **/*.zip" excludes="**/.vpn" />
     </copy>
 
     <!-- Move the hive-jdbc driver into the appropriate directory.  It is resolved with the default
          config so transitives end up in libext -->
-    <move todir="${stage.dir}/libext/JDBC">
+    <copy todir="${stage.dir}/libext/JDBC">
       <fileset dir="${lib.dir}" includes="**/*hive-jdbc*.jar" />
-    </move>
+    </copy>
     
     <!-- swt libs (jdbc etc) -->
     <mkdir dir="${stage.dir}/libswt" />

@@ -6,6 +6,7 @@
     	<conf name="default"/>
     	<conf name="test" visibility="private"/>
     	<conf name="source"/>
+      <conf name="drivers"/>
     </configurations>
     
     <publications>
@@ -30,7 +31,17 @@
         <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" conf="default->default" transitive="false"/>
         <dependency org="commons-io"         name="commons-io"         rev="1.4"/>
         <dependency org="pentaho"        name="pentaho-vfs-browser"      rev="${dependency.vfs-browser.revision}" conf="default->default" transitive="false" changing="true" />
-        <dependency org="org.apache.hadoop.hive" name="hive-jdbc"        rev="${dependency.hive-jdbc.revision}" conf="default->default" changing="true"/>
+
+        <!-- driver dependencies -->
+        <dependency org="hsqldb" name="hsqldb" rev="1.8.0" transitive="false" conf="drivers->default" />
+        <dependency org="com.h2database" name="h2" rev="1.0.20070617" transitive="false" conf="drivers->default" />
+        <dependency org="mysql" name="mysql-connector-java" rev="5.1.10" transitive="false" conf="drivers->default" />
+        <dependency org="org.apache.hadoop.hive" name="hive-jdbc" rev="${dependency.hive-jdbc.revision}" conf="drivers->default">
+          <!-- Do not include commons logging or log4j here. They are already fetched with the default configuration. -->
+          <exclude org="commons-logging" />
+          <exclude org="log4j" />
+        </dependency>
+        
 
         <!--  also pull down xstream and its dependencies -->
         <dependency org="com.thoughtworks.xstream" name="xstream"  rev="1.3"    transitive="false" conf="default->default"/>
