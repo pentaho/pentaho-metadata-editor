@@ -115,28 +115,13 @@
       <ivy:retrieve conf="drivers" pattern="${driver-lib.dir}/[module]-[revision](-[classifier]).[ext]"/>
   </target>
   
-  <target name="assemble" depends="jar" description="copy jar file to distribution directory">
-    <echo>Construct the distribution package...</echo>
-
-    <!-- root directory -->
-    <mkdir dir="${stage.dir}" />
-
+  <target name="assemble" depends="jar,-init-assemble,-stage-dist-lib,-stage-pentaho-libs" description="copy jar file to distribution directory">
     <copy todir="${stage.dir}">
       <fileset dir="." includes="releasenotes.txt" excludes="**/build, **/dist" />
     </copy>
     
     <copy todir="${stage.dir}" overwrite="true">
       <fileset dir="${package.resdir}" />
-    </copy>
-    
-    <!-- base lib -->
-    <mkdir dir="${stage.dir}/lib" />
-    <copy todir="${stage.dir}/lib" file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" />
-
-    <!-- pentaho libs -->
-    <mkdir dir="${stage.dir}/libext" />
-    <copy todir="${stage.dir}/libext/pentaho">
-      <fileset dir="${lib.dir}" includes="**/*.jar" excludes="**/*hive-jdbc*" />
     </copy>
     
     <!-- external libs (jdbc etc) -->
@@ -171,6 +156,27 @@
 			<fileset dir="${docs}" includes="**/*.pdf **/*.htm **/*.html **/*.png **/*.PNG **/*.swf **/cn_ZN.zip" excludes="**/*.dot **/*.doc **/*.sxw **/*.odt **/*.vpn **/*feature list*" />
 		</copy>
 		-->
+  </target>
+
+  <target name="-init-assemble">
+    <echo>Construct the distribution package...</echo>
+
+    <!-- root directory -->
+    <mkdir dir="${stage.dir}" />
+  </target>
+
+  <target name="-stage-dist-lib">
+    <!-- base lib -->
+    <mkdir dir="${stage.dir}/lib" />
+    <copy todir="${stage.dir}/lib" file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" />
+  </target>
+  
+  <target name="-stage-pentaho-libs">
+    <!-- pentaho libs -->
+    <mkdir dir="${stage.dir}/libext" />
+    <copy todir="${stage.dir}/libext/pentaho">
+      <fileset dir="${lib.dir}" includes="**/*.jar" excludes="**/*hive-jdbc*" />
+    </copy>
   </target>
 
   <target name="package-zip">
