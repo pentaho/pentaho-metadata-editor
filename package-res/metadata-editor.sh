@@ -46,8 +46,8 @@ done
 # ** Platform specific libraries ...              **
 # **************************************************
 
-. "$DIR/set-pentaho-java.sh"
-setPentahoJava
+. "$DIR/set-pentaho-env.sh"
+setPentahoEnv
 
 LIBPATH="NONE"
 
@@ -152,6 +152,9 @@ fi
 # ******************************************************************
 
 OPT="-Xmx256m -cp $CLASSPATH -Djava.library.path=$LIBPATH"
+if [ -n "$PENTAHO_INSTALLED_LICENSE_PATH" ]; then
+   export OPT="$OPT -Dpentaho.installed.licenses.file=$PENTAHO_INSTALLED_LICENSE_PATH"
+fi
 
 # ***************
 # ** Run...    **

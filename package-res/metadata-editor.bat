@@ -52,8 +52,8 @@ REM **************************************************
 REM   Platform Specific SWT       **
 REM **************************************************
 
-set PENTAHO_JAVA=javaw
-call "%~dp0set-pentaho-java.bat"
+set PENTAHO_JAVA=java
+call "%~dp0set-pentaho-env.bat"
 
 echo "%_PENTAHO_JAVA%"
 
@@ -65,8 +65,7 @@ REM java version "1.6.0_17"
 REM Java(TM) SE Runtime Environment (build 1.6.0_17-b04)
 REM Java HotSpot(TM) 64-Bit Server VM (build 14.3-b01, mixed mode)
 REM
-FOR /F %%a IN ('java -version 2^>^&1^|find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)
-IF %IS64BITJAVA% == 1 GOTO :USE64
+FOR /F %%a IN ('""%_PENTAHO_JAVA%" -version" 2^>^&1^|find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)IF %IS64BITJAVA% == 1 GOTO :USE64
 :USE32
 REM ===========================================
 REM Using 32bit Java, so include 32bit SWT Jar
@@ -79,6 +78,8 @@ REM Using 64bit java, so include 64bit SWT Jar
 REM ===========================================
 set LIBSPATH=libswt\win64
 :CONTINUE
+set PENTAHO_JAVA=javaw
+call "%~dp0set-pentaho-env.bat"
 
 set CLASSPATH=%CLASSPATH%;%LIBSPATH%\swt.jar
 
@@ -88,6 +89,12 @@ REM ** Change 128m to higher values in case you run out of memory.  **
 REM ******************************************************************
 
 set OPT=-Xmx256m -cp %CLASSPATH% -Djava.library.path=%LIBSPATH%
+
+if not "%PENTAHO_INSTALLED_LICENSE_PATH%" == "" goto setLicenseParameter
+goto skipToStartup
+:setLicenseParameter
+set OPT=-Dpentaho.installed.licenses.file="%PENTAHO_INSTALLED_LICENSE_PATH%" %OPT%
+:skipToStartup
 
 REM ***************
 REM ** Run...    **
