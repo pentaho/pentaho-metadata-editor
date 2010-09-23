@@ -65,7 +65,7 @@ REM java version "1.6.0_17"
 REM Java(TM) SE Runtime Environment (build 1.6.0_17-b04)
 REM Java HotSpot(TM) 64-Bit Server VM (build 14.3-b01, mixed mode)
 REM
-FOR /F %%a IN ('""%_PENTAHO_JAVA%" -version" 2^>^&1^|find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)IF %IS64BITJAVA% == 1 GOTO :USE64
+FOR /F %%a IN ('java -version 2^>^&1^|find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)IF %IS64BITJAVA% == 1 GOTO :USE64
 :USE32
 REM ===========================================
 REM Using 32bit Java, so include 32bit SWT Jar
