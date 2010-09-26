@@ -152,9 +152,6 @@ fi
 # ******************************************************************
 
 OPT="-Xmx256m -cp $CLASSPATH -Djava.library.path=$LIBPATH"
-if [ -n "$PENTAHO_INSTALLED_LICENSE_PATH" ]; then
-   export OPT="$OPT -Dpentaho.installed.licenses.file=$PENTAHO_INSTALLED_LICENSE_PATH"
-fi
 
 # ***************
 # ** Run...    **
