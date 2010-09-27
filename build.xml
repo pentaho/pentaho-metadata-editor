@@ -1,4 +1,4 @@
-<project name="Pentaho_Metadata_Editor" default="dist" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="Pentaho Metadata Editor" default="dist" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <description>
 	      Pentaho Metadata Editor build file.
