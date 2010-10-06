@@ -5,6 +5,8 @@ REM ** Make sure we use the correct J2SE version!   **
 REM ** Uncomment the PATH line in case of trouble   **
 REM **************************************************
 
+cd /D %~dp0
+
 REM set PATH=C:\j2sdk1.4.2_01\bin;.;%PATH%
 
 set CLASSPATH=.
