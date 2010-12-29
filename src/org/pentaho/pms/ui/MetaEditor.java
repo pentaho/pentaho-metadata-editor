@@ -3289,7 +3289,7 @@ public class MetaEditor implements SelectionListener {
     if (databaseMeta != null) {
       DatabaseExplorerDialog std = new DatabaseExplorerDialog(shell, SWT.NONE, databaseMeta, schemaMeta.databases
           .getList(), false);
-      if (std.open() != null) {
+      if (std.open()) {
         String schemaName = std.getSchemaName();
         String tableName = std.getTableName();
 
