@@ -18,11 +18,14 @@ package org.pentaho.pms.ui;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -111,7 +114,6 @@ import org.pentaho.pms.core.exception.CWMException;
 import org.pentaho.pms.factory.CwmSchemaFactoryInterface;
 import org.pentaho.pms.locale.LocaleInterface;
 import org.pentaho.pms.locale.Locales;
-import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.mql.MQLQuery;
 import org.pentaho.pms.mql.MQLQueryFactory;
 import org.pentaho.pms.schema.BusinessCategory;
@@ -147,6 +149,7 @@ import org.pentaho.pms.ui.dialog.RelationshipDialog;
 import org.pentaho.pms.ui.jface.tree.ITreeNode;
 import org.pentaho.pms.ui.jface.tree.ITreeNodeChangedListener;
 import org.pentaho.pms.ui.jface.tree.TreeContentProvider;
+import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.ui.security.SecurityDialog;
 import org.pentaho.pms.ui.tree.BusinessColumnTreeNode;
 import org.pentaho.pms.ui.tree.BusinessModelTreeNode;
@@ -171,6 +174,7 @@ import org.pentaho.pms.ui.util.GUIResource;
 import org.pentaho.pms.ui.util.ListSelectionDialog;
 import org.pentaho.pms.ui.util.Splash;
 import org.pentaho.pms.util.FileUtil;
+import org.pentaho.pms.util.LegacyLocalizationUtil;
 import org.pentaho.pms.util.ObjectAlreadyExistsException;
 import org.pentaho.pms.util.Settings;
 import org.pentaho.pms.util.UniqueArrayList;
@@ -208,6 +212,8 @@ public class MetaEditor implements SelectionListener {
   private CTabFolder tabfolder;
 
   private SchemaMeta schemaMeta;
+  
+  private LegacyLocalizationUtil localizationUtility;
 
   private MQLQuery query;
 
@@ -359,6 +365,8 @@ public class MetaEditor implements SelectionListener {
         }
       }
     });
+    
+    localizationUtility = new LegacyLocalizationUtil();
   }
 
   private void initGlobalKeyBindings() {
@@ -4003,6 +4011,45 @@ public class MetaEditor implements SelectionListener {
     
     return new String[]{id, Integer.toString(idNum)};
 	  
+  }
+  
+  public void exportLocale(String locale) throws Exception {
+    FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+    dialog.setFilterExtensions(new String[] { "*.properties", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    dialog.setFilterNames(new String[] { Messages.getString("MetaEditor.USER_PROPERTIES_FILES"), Messages.getString("MetaEditor.USER_ALL_FILES") }); //$NON-NLS-1$ //$NON-NLS-2$
+    dialog.setFileName(locale + ".properties"); //$NON-NLS-1$
+    String filename = dialog.open();
+    
+    if(filename != null) {
+      File file = new File(filename);
+      
+      boolean writeToFile = true;
+      
+      if(file.exists()) {
+        int result = SWT.NO;
+          MessageBox mb = new MessageBox(shell, SWT.NO | SWT.YES | SWT.ICON_WARNING);
+          mb.setMessage(Messages.getString("MetaEditor.USER_PROPERTIES_FILE_EXISTS_OVERWRITE")); //$NON-NLS-1$
+          mb.setText(Messages.getString("MetaEditor.USER_TITLE_PROPERTIES_FILE_EXISTS")); //$NON-NLS-1$
+          result = mb.open();
+        if (result == SWT.NO) {
+          writeToFile = false;
+        }        
+      }
+      
+      if(writeToFile) {
+        Properties props = localizationUtility.exportLocalizedProperties(schemaMeta, locale);
+        
+        FileOutputStream fos = new FileOutputStream(filename);
+        OutputStreamWriter osw = new OutputStreamWriter(fos);
+        props.store(osw, null);
+        
+        osw.flush();
+        osw.close();
+        
+        fos.flush();
+        fos.close();
+      }
+    }
   }
 
 }

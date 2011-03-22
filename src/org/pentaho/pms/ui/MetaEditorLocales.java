@@ -16,6 +16,8 @@
  */
 package org.pentaho.pms.ui;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -27,9 +29,12 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.TableItem;
+import org.hsqldb.lib.StringUtil;
 import org.pentaho.di.core.variables.Variables;
 import org.pentaho.di.ui.core.PropsUI;
+import org.pentaho.di.ui.core.dialog.ErrorDialog;
 import org.pentaho.di.ui.core.widget.ColumnInfo;
 import org.pentaho.di.ui.core.widget.TableView;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
@@ -38,6 +43,7 @@ import org.pentaho.pms.locale.LocaleMeta;
 import org.pentaho.pms.locale.Locales;
 import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.ui.util.Const;
+import org.safehaus.uuid.Logger;
 
 public class MetaEditorLocales extends Composite
 {
@@ -46,8 +52,9 @@ public class MetaEditorLocales extends Composite
 	private TableView wLocales;
 	private Button wRefresh;
 	private Button wApply;
+	private Button wExportLocale;
 
-	private SelectionListener lsRefresh, lsApply;
+	private SelectionListener lsRefresh, lsApply, lsExportLocale;
     private MetaEditor metaEditor;
 
 	public MetaEditorLocales(Composite parent, int style, MetaEditor metaEditor)
@@ -72,15 +79,19 @@ public class MetaEditorLocales extends Composite
         wApply = new Button(this, SWT.PUSH);
         wApply.setText(Messages.getString("MetaEditorLocales.USER_APPLY_CHANGES")); //$NON-NLS-1$
         wApply.setEnabled(false);
+        
+        wExportLocale = new Button(this, SWT.PUSH);
+        wExportLocale.setText(Messages.getString("MetaEditorLocales.USER_EXPORT_LOCALE")); //$NON-NLS-1$
+        wExportLocale.setEnabled(false);
 
-        BaseStepDialog.positionBottomButtons(this, new Button[] { wApply, wRefresh }, Const.MARGIN, null);
+        BaseStepDialog.positionBottomButtons(this, new Button[] { wApply, wRefresh, wExportLocale }, Const.MARGIN, null);
 
         ModifyListener lsMod = new ModifyListener()
         {
-            public void modifyText(ModifyEvent arg0)
-            {
-                wApply.setEnabled(true);
-            }
+          public void modifyText(ModifyEvent arg0)
+          {
+              wApply.setEnabled(true);
+          }
         };
 
         // Show the parent properties in a grid...
@@ -107,6 +118,51 @@ public class MetaEditorLocales extends Composite
         fdLocales.top    = new FormAttachment(wlLocales, Const.MARGIN);
         fdLocales.bottom = new FormAttachment(wApply, -Const.MARGIN);
         wLocales.setLayoutData(fdLocales);
+        
+        /* Enable ExportLocale button when a new row is created
+           Note: This does not get triggered if the user does not select a text box
+           we therefore need the SelectionListener as well
+        */
+        wLocales.getTable().addFocusListener(new FocusListener() {
+          protected void enableExportLocale() {
+            int selectedLocaleIndex = wLocales.getSelectionIndex();
+            // See 'ColumnInfo[] colLocales = new ColumnInfo[]' in constructor for order of creation
+            String localeCode = wLocales.getItem(selectedLocaleIndex >= 0 ? selectedLocaleIndex : 0, 1);
+            
+            wExportLocale.setEnabled(!StringUtil.isEmpty(localeCode));
+          }
+          
+          @Override
+          public void focusGained(FocusEvent arg0) {
+          }
+
+          @Override
+          public void focusLost(FocusEvent arg0) {
+            enableExportLocale();
+          }
+        });
+        
+        // Enable ExportLocale button when an existing row is selected
+        wLocales.getTable().addSelectionListener(new SelectionListener() {
+          protected void enableExportLocale() {
+            int selectedLocaleIndex = wLocales.getSelectionIndex();
+            // See 'ColumnInfo[] colLocales = new ColumnInfo[]' in constructor for order of creation
+            String localeCode = wLocales.getItem(selectedLocaleIndex >= 0 ? selectedLocaleIndex : 0, 1);
+            
+            wExportLocale.setEnabled(!StringUtil.isEmpty(localeCode));
+          }
+          
+          @Override
+          public void widgetDefaultSelected(SelectionEvent arg0) {
+            enableExportLocale();
+          }
+
+          @Override
+          public void widgetSelected(SelectionEvent arg0) {
+            enableExportLocale();
+          }
+          
+        });
 
 		lsRefresh = new SelectionAdapter() 
 		{
@@ -124,8 +180,17 @@ public class MetaEditorLocales extends Composite
 			}
 		};
 		
+		lsExportLocale = new SelectionAdapter()
+		{
+		  public void widgetSelected(SelectionEvent e)
+		  {
+		    exportLocale();
+		  }
+		};
+		
 		wRefresh.addSelectionListener(lsRefresh);
 		wApply.addSelectionListener(lsApply);
+		wExportLocale.addSelectionListener(lsExportLocale);
 
         getData();
 	}
@@ -177,4 +242,23 @@ public class MetaEditorLocales extends Composite
         refreshScreen();
         wApply.setEnabled(false);
     }
+    
+    public void exportLocale()
+    {
+      int selectedLocaleIndex = wLocales.getSelectionIndex();
+      // See 'ColumnInfo[] colLocales = new ColumnInfo[]' in constructor for order of creation
+      String localeCode = wLocales.getItem(selectedLocaleIndex, 1);
+      String localeDescription = wLocales.getItem(selectedLocaleIndex, 2);
+      try {
+        metaEditor.exportLocale(localeCode);
+      } catch (Exception e) {
+        new ErrorDialog(
+            getShell(),
+            Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("MetaEditor.USER_ERROR_EXPORTING_LOCALE_MESSAGE"), e); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        Logger.logError(Messages.getString("MetaEditorLocales.USER_EXPORT_FAILED")); //$NON-NLS-1$
+        Logger.logError(e.getMessage());
+      }
+    }
+    
 }
