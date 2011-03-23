@@ -4017,7 +4017,7 @@ public class MetaEditor implements SelectionListener {
     FileDialog dialog = new FileDialog(shell, SWT.SAVE);
     dialog.setFilterExtensions(new String[] { "*.properties", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     dialog.setFilterNames(new String[] { Messages.getString("MetaEditor.USER_PROPERTIES_FILES"), Messages.getString("MetaEditor.USER_ALL_FILES") }); //$NON-NLS-1$ //$NON-NLS-2$
-    dialog.setFileName(locale + ".properties"); //$NON-NLS-1$
+    dialog.setFileName("metadata_" + locale + ".properties"); //$NON-NLS-1$
     String filename = dialog.open();
     
     if(filename != null) {
