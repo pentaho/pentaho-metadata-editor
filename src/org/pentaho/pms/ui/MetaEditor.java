@@ -18,14 +18,11 @@ package org.pentaho.pms.ui;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -174,7 +171,6 @@ import org.pentaho.pms.ui.util.GUIResource;
 import org.pentaho.pms.ui.util.ListSelectionDialog;
 import org.pentaho.pms.ui.util.Splash;
 import org.pentaho.pms.util.FileUtil;
-import org.pentaho.pms.util.LegacyLocalizationUtil;
 import org.pentaho.pms.util.ObjectAlreadyExistsException;
 import org.pentaho.pms.util.Settings;
 import org.pentaho.pms.util.UniqueArrayList;
@@ -212,8 +208,6 @@ public class MetaEditor implements SelectionListener {
   private CTabFolder tabfolder;
 
   private SchemaMeta schemaMeta;
-  
-  private LegacyLocalizationUtil localizationUtility;
 
   private MQLQuery query;
 
@@ -365,8 +359,6 @@ public class MetaEditor implements SelectionListener {
         }
       }
     });
-    
-    localizationUtility = new LegacyLocalizationUtil();
   }
 
   private void initGlobalKeyBindings() {
@@ -4037,17 +4029,8 @@ public class MetaEditor implements SelectionListener {
       }
       
       if(writeToFile) {
-        Properties props = localizationUtility.exportLocalizedProperties(schemaMeta, locale);
-        
-        FileOutputStream fos = new FileOutputStream(filename);
-        OutputStreamWriter osw = new OutputStreamWriter(fos);
-        props.store(osw, null);
-        
-        osw.flush();
-        osw.close();
-        
-        fos.flush();
-        fos.close();
+        LocaleExportProgressDialog progDialog = new LocaleExportProgressDialog(shell, schemaMeta, locale, filename);
+        progDialog.open();
       }
     }
   }
