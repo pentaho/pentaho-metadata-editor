@@ -23,11 +23,11 @@
         <dependency org="pentaho"        name="pentaho-connections"      rev="${dependency.pentaho-connections.revision}" conf="default->default" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-metadata"         rev="${dependency.pentaho-metadata.revision}" conf="default->default" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-mql-editor"       rev="${dependency.pentaho-mql-editor.revision}" conf="default->default" changing="true" transitive="false"/>
-        <dependency org="pentaho.kettle" name="kettle-engine"            rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
-        <dependency org="pentaho.kettle" name="kettle-core"              rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
-        <dependency org="pentaho.kettle" name="kettle-db"                rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
-        <dependency org="pentaho.kettle" name="kettle-dbdialog"          rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
-        <dependency org="pentaho.kettle" name="kettle-ui-swt"            rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
+        <dependency org="pentaho-kettle" name="kettle-engine"            rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
+        <dependency org="pentaho-kettle" name="kettle-core"              rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
+        <dependency org="pentaho-kettle" name="kettle-db"                rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
+        <dependency org="pentaho-kettle" name="kettle-dbdialog"          rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
+        <dependency org="pentaho-kettle" name="kettle-ui-swt"            rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
         <dependency org="pentaho"        name="pentaho-bi-platform-util" rev="${dependency.bi-platform.revision}" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" conf="default->default" transitive="false"/>
         <dependency org="commons-io"         name="commons-io"         rev="1.4"/>
