@@ -36,7 +36,7 @@
         <!-- driver dependencies -->
         <dependency org="hsqldb" name="hsqldb" rev="1.8.0" transitive="false" conf="drivers->default" />
         <dependency org="com.h2database" name="h2" rev="1.0.20070617" transitive="false" conf="drivers->default" />
-        <dependency org="mysql" name="mysql-connector-java" rev="5.1.10" transitive="false" conf="drivers->default" />
+        <dependency org="mysql" name="mysql-connector-java" rev="5.1.17" transitive="false" conf="drivers->default" />
         <dependency org="org.apache.hadoop.hive" name="hive-jdbc" rev="${dependency.hive-jdbc.revision}" conf="drivers->default">
           <!-- Do not include commons logging or log4j here. They are already fetched with the default configuration. -->
           <exclude org="commons-logging" />
