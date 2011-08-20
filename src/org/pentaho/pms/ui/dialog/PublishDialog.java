@@ -56,10 +56,15 @@ import org.pentaho.pms.schema.SchemaMeta;
  */
 public class PublishDialog extends TitleAreaDialog {
   
+  private static final String LAST_USED_METADATA_FILE = "metadata.xmi";
   private static final String LAST_USED_PROP = "last_used"; //$NON-NLS-1$
   private static final String DEFAULT_SOLUTION = "steel-wheels"; //$NON-NLS-1$
   private static final String URL_PROPS_FILE = "ui/publishUrls.properties"; //$NON-NLS-1$ 
+  private static final String METADATA_FILES_FILE ="ui/publishMdFiles.properties"; 
+  private static final String SOLUTIONS_PROPS_FILE = "ui/publishSolutions.properties";
+  private static final String DEFAULT_METADATA_FILE= "metadata.xmi"; 
   private static final String DEFAULT_PUBLISH_URL = "http://localhost:8080/pentaho/RepositoryFilePublisher"; //$NON-NLS-1$
+  private static final String DEFAULT_FILENAME = "metadata.xmi";
   private SchemaMeta schemaMeta;
   
   private LogWriter log;
@@ -67,20 +72,23 @@ public class PublishDialog extends TitleAreaDialog {
   
   private String serverURL;
   private String solutionName;
-  private String fileName = "metadata.xmi"; //$NON-NLS-1$
+  private String fileName; //$NON-NLS-1$
   
   private String userId;
   private String userPassword;
   private String publishPassword;
   
   private Combo tServerURL;
-  private Text tSolutionName;
+  private Combo tSolutionName;
+  private Combo tMdFileName;
   
   private Text tUserId;
   private Text tUserPassword;
   private Text tPublishPassword;
   
   private Properties publishUrls;
+  private Properties solutionFolders;
+  private Properties mdFiles; 
 
   /**
    * @param parent
@@ -113,16 +121,36 @@ public class PublishDialog extends TitleAreaDialog {
     GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.minimumWidth = 470;
-    
+
+    Label fnLabel = new Label (c1, SWT.NONE);
+    fnLabel.setText (Messages.getString("PublishDialog.LABEL_FILENAME"));
+    //fnLabel.setText("Solution File Name");
+    data = new GridData();
+    data.grabExcessHorizontalSpace = true;
+    data.minimumWidth = 470;
+    fnLabel.setLayoutData (data);
+
+    c0.setBackground(fnLabel.getBackground());
+    c1.setBackground(fnLabel.getBackground());
+
+    tMdFileName = new Combo (c1, SWT.BORDER);
+    data = new GridData();
+    data.grabExcessHorizontalSpace = true;
+    data.minimumWidth = 470;
+    tMdFileName.setText(DEFAULT_FILENAME); 
+    tMdFileName.setLayoutData (data);
 
     Label label0 = new Label (c1, SWT.NONE);
     label0.setText (Messages.getString("PublishDialog.LABEL_SOLUTION"));
+    data = new GridData();
+    data.grabExcessHorizontalSpace = true;
+    data.minimumWidth = 470;
     label0.setLayoutData (data);
     
-    c0.setBackground(label0.getBackground());
-    c1.setBackground(label0.getBackground());
+/*    c0.setBackground(label0.getBackground());
+    c1.setBackground(label0.getBackground());*/
 
-    tSolutionName = new Text (c1, SWT.BORDER);
+    tSolutionName = new Combo (c1, SWT.BORDER);
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.minimumWidth = 470;
@@ -143,6 +171,8 @@ public class PublishDialog extends TitleAreaDialog {
     tServerURL.setLayoutData (data);
     
     populateServerUrl();
+    populateSolutionFolders();
+    populateMetadataFiles();
     
     Label label4 = new Label (c1, SWT.NONE);
     label4.setText (Messages.getString("PublishDialog.LABEL_PUBLISH_PASSWORD"));
@@ -288,7 +318,9 @@ public class PublishDialog extends TitleAreaDialog {
     }
     
     // update the props file even if the connection fails
+    updateSolutionsPropsFile();
     updateUrlPropsFile();
+    updateMetadataFilesPropsFile();
   }
   
   private void updateUrlPropsFile() {
@@ -334,6 +366,94 @@ public class PublishDialog extends TitleAreaDialog {
     }
   }
 
+  private void updateSolutionsPropsFile() {
+	    // update solution folders file
+	    boolean lastUsedChanged = false;
+	    if ((solutionFolders.getProperty(LAST_USED_PROP) == null) || 
+	        !solutionFolders.getProperty(LAST_USED_PROP).equals(solutionName)) {
+	      lastUsedChanged = true;
+	    }
+	    solutionFolders.setProperty(LAST_USED_PROP, solutionName);
+	    boolean newSolution = true;
+	    for (Object pname : solutionFolders.keySet()) {
+	      String paramName = pname.toString();
+	      if (!paramName.equals(LAST_USED_PROP)) {
+	        if (solutionFolders.getProperty(paramName).equals(solutionName)) {
+	          newSolution = false;
+	        }
+	      }
+	    }
+	    if (newSolution) {
+	      solutionFolders.setProperty("file" + solutionFolders.size(), solutionName); //$NON-NLS-1$
+	    }
+	    
+	    if (newSolution || lastUsedChanged) {
+	      FileOutputStream fos = null;
+	      try {
+	        fos = new FileOutputStream(SOLUTIONS_PROPS_FILE);
+	        solutionFolders.store(fos, "Pentaho Metadata Solution Folders."); //$NON-NLS-1$
+	      } catch (IOException e) {
+	        new ErrorDialog(
+	            getShell(),
+	            Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("PublishDialog.ACTION_FAILED"), e); //$NON-NLS-1$ //$NON-NLS-2$
+
+	      } finally {
+	        try {
+	          if (fos != null) {
+	            fos.close();
+	          }
+	        } catch (Exception e) {
+	          // ignore any close exceptions
+	        }
+	      }
+	    }
+	  }
+  
+  
+  private void updateMetadataFilesPropsFile() {
+	    // update metadata files file
+	    boolean lastUsedChanged = false;
+	    if ((mdFiles.getProperty(LAST_USED_METADATA_FILE) == null) || 
+	        !mdFiles.getProperty(LAST_USED_METADATA_FILE).equals(fileName)) {
+	      lastUsedChanged = true;
+	    }
+	    mdFiles.setProperty(LAST_USED_METADATA_FILE, fileName);
+	    boolean newFile = true;
+	    for (Object pname : mdFiles.keySet()) {
+	      String paramName = pname.toString();
+	      if (!paramName.equals(LAST_USED_METADATA_FILE)) {
+	        if (mdFiles.getProperty(paramName).equals(fileName)) {
+	          newFile = false;
+	        }
+	      }
+	    }
+	    if (newFile) {
+	      mdFiles.setProperty("file" + mdFiles.size(), fileName); //$NON-NLS-1$
+	    }
+	    
+	    if (newFile || lastUsedChanged) {
+	      FileOutputStream fos = null;
+	      try {
+	        fos = new FileOutputStream(METADATA_FILES_FILE);
+	        mdFiles.store(fos, "Pentaho Metadata Files."); //$NON-NLS-1$
+	      } catch (IOException e) {
+	        new ErrorDialog(
+	            getShell(),
+	            Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("PublishDialog.ACTION_FAILED"), e); //$NON-NLS-1$ //$NON-NLS-2$
+
+	      } finally {
+	        try {
+	          if (fos != null) {
+	            fos.close();
+	          }
+	        } catch (Exception e) {
+	          // ignore any close exceptions
+	        }
+	      }
+	    }
+	  }
+  
+  
   private void populateServerUrl() {
     String lastUsedUrl = ""; //$NON-NLS-1$
     FileInputStream fis = null;
@@ -379,6 +499,97 @@ public class PublishDialog extends TitleAreaDialog {
     }
   }
   
+  private void populateSolutionFolders() {
+	    String lastUsedSolution = ""; //$NON-NLS-1$
+	    FileInputStream fis = null;
+	    solutionFolders = new Properties();
+	    File file = new File(SOLUTIONS_PROPS_FILE);
+	    if (file.exists()) {
+	      try {
+	        fis = new FileInputStream(file);
+	        solutionFolders.load(fis);
+	      } catch (IOException ex) {
+	        // populate the dialog with a default value
+	        tSolutionName.setText(DEFAULT_SOLUTION);
+	      } finally {
+	        if (fis != null) {
+	          try {
+	            fis.close();
+	          } catch (Exception e) {
+	            // ignore any close exceptions
+	          }
+	        }
+	      }
+	      if (solutionFolders.size() > 0) {
+	        List<String> folders = new ArrayList<String>();
+	        for (Object pname : solutionFolders.keySet()) {
+	          String paramName = pname.toString();
+	          if (paramName.equals(LAST_USED_PROP)) {
+	            lastUsedSolution = solutionFolders.getProperty(paramName);
+	          } else {
+	            folders.add(solutionFolders.getProperty(paramName));
+	          }
+	        }
+	        tSolutionName.setItems(folders.toArray(new String[0]));
+	        // set the default value if available
+	        if (StringUtils.isBlank(lastUsedSolution) && folders.size() > 0) {
+	          lastUsedSolution = folders.get(0);
+	        }
+	        tSolutionName.setText(lastUsedSolution);
+	      } else {
+	    	  tSolutionName.setText(DEFAULT_SOLUTION);
+	      }
+	    } else {
+	    	tSolutionName.setText(DEFAULT_SOLUTION);
+	    }
+	  }
+	  
+  private void populateMetadataFiles() {
+	    String lastUsedMdFile = ""; //$NON-NLS-1$
+	    FileInputStream fis = null;
+	    mdFiles = new Properties();
+	    File file = new File(METADATA_FILES_FILE);
+	    if (file.exists()) {
+	      try {
+	        fis = new FileInputStream(file);
+	        mdFiles.load(fis);
+	      } catch (IOException ex) {
+	        // populate the dialog with a default value
+	        tMdFileName.setText(DEFAULT_METADATA_FILE);
+	      } finally {
+	        if (fis != null) {
+	          try {
+	            fis.close();
+	          } catch (Exception e) {
+	            // ignore any close exceptions
+	          }
+	        }
+	      }
+	      if (mdFiles.size() > 0) {
+	        List<String> files = new ArrayList<String>();
+	        for (Object pname : mdFiles.keySet()) {
+	          String paramName = pname.toString();
+	          if (paramName.equals(LAST_USED_METADATA_FILE)) {
+	            lastUsedMdFile = mdFiles.getProperty(paramName);
+	          } else {
+	            files.add(mdFiles.getProperty(paramName));
+	          }
+	        }
+	        tMdFileName.setItems(files.toArray(new String[0]));
+	        // set the default value if available
+	        if (StringUtils.isBlank(lastUsedMdFile) && files.size() > 0) {
+	          lastUsedMdFile = files.get(0);
+	        }
+	        tMdFileName.setText(lastUsedMdFile);
+	      } else {
+	    	  tMdFileName.setText(DEFAULT_METADATA_FILE);
+	      }
+	    } else {
+	    	tMdFileName.setText(DEFAULT_METADATA_FILE);
+	    }
+	  }
+
+  
   /**
    * 
    */
@@ -391,6 +602,7 @@ public class PublishDialog extends TitleAreaDialog {
 //      serverURL += seperatorFwd;
 //    }
     solutionName = tSolutionName.getText();
+    fileName = tMdFileName.getText();
     if (solutionName.indexOf(seperatorFwd) >= 0 || solutionName.indexOf(seperatorBck) >= 0) {
       MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_ERROR);
       mb.setText(Messages.getString("PublishDialog.LOCATION_ERROR")); //$NON-NLS-1$
