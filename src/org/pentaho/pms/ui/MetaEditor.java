@@ -3614,17 +3614,23 @@ public class MetaEditor implements SelectionListener {
   }
 
   private void editBusinessColumn(BusinessColumn businessColumn, BusinessColumnTreeNode node) {
-    if (businessColumn != null) {
-      BusinessTableDialog td = new BusinessTableDialog(shell, businessColumn, schemaMeta);
-      int res = td.open();
-      if (Window.OK == res) {
-        if (node != null) {
-          node.sync();
-        } else {
-          synchronize(businessColumn);
+    try {
+      if (businessColumn != null) {
+        BusinessTableDialog td = new BusinessTableDialog(shell, businessColumn, schemaMeta);
+        int res = td.open();
+        if (Window.OK == res) {
+          if (node != null) {
+            node.sync();
+          } else {
+            synchronize(businessColumn);
+          }
+          refreshAll();
         }
-        refreshAll();
       }
+    } catch (Exception e) {
+      new ErrorDialog(
+          shell,
+          Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("MetaEditor.USER_TITLE_DEMO_ERROR"), e); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -3660,23 +3666,27 @@ public class MetaEditor implements SelectionListener {
    * TODO mlowery move this business save logic to a method for reuse
    */
   private void editBusinessTable(BusinessTable businessTable, ConceptTreeNode node) {
-
-    if (businessTable != null) {
-
-      BusinessTableDialog td = new BusinessTableDialog(shell, businessTable, schemaMeta);
-      int res = td.open();
-
-      if (Window.OK == res) {
-        if (node != null) {
-          node.sync();
-        } else {
-          synchronize(businessTable);
+    try {
+      if (businessTable != null) {
+  
+        BusinessTableDialog td = new BusinessTableDialog(shell, businessTable, schemaMeta);
+        int res = td.open();
+  
+        if (Window.OK == res) {
+          if (node != null) {
+            node.sync();
+          } else {
+            synchronize(businessTable);
+          }
+          refreshAll();
+  
         }
-        refreshAll();
-
       }
+    } catch (Exception e) {
+      new ErrorDialog(
+          shell,
+          Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("MetaEditor.USER_TITLE_DEMO_ERROR"), e); //$NON-NLS-1$ //$NON-NLS-2$
     }
-
   }
 
   public void dupeBusinessTable(BusinessTable businessTable) {
