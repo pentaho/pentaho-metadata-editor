@@ -260,23 +260,24 @@ public class PublishDialog extends TitleAreaDialog {
   }
 
   protected void buttonPressed(int buttonId) {
-
     switch (buttonId) {
       case IDialogConstants.OK_ID:
-        ok();
+        if (ok()) {
+          setReturnCode(buttonId);
+          close();
+        }
         break;
       case IDialogConstants.CANCEL_ID:
         cancel();
+        setReturnCode(buttonId);
+        close();
         break;
     }
-
-    setReturnCode(buttonId);
-    close();
   }
   
-  private void ok() {
+  private boolean ok() {
     if (!populateStrings()) {
-      return;
+      return false;
     }
     
     CWM cwmInstance = CWM.getInstance(schemaMeta.getDomainName());
@@ -296,7 +297,7 @@ public class PublishDialog extends TitleAreaDialog {
         if (mb.open() == SWT.YES) {
           result = PublisherUtil.publish(serverURL, solutionName, files, publishPassword, userId, userPassword, true);
         } else {
-          return;
+          return false;
         }
       }
       if (result != PublisherUtil.FILE_ADD_SUCCESSFUL) {
@@ -304,23 +305,27 @@ public class PublishDialog extends TitleAreaDialog {
         mb.setText(Messages.getString("PublishDialog.ACTION_FAILED")); //$NON-NLS-1$
         mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", fileName)); //$NON-NLS-1$
         mb.open();
+        return false;
       } else {  // We did it!
         MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_INFORMATION);
         mb.setText(Messages.getString("PublishDialog.ACTION_SUCCEEDED")); //$NON-NLS-1$
         mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_SUCCEEDED", fileName)); //$NON-NLS-1$
         mb.open();
         dispose();
+        return true;
       }
     } catch (Exception e) {
       new ErrorDialog(
           getShell(),
           Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("PublishDialog.ACTION_FAILED"), e); //$NON-NLS-1$ //$NON-NLS-2$
-    }
+      return false;
+    } finally {
     
-    // update the props file even if the connection fails
-    updateSolutionsPropsFile();
-    updateUrlPropsFile();
-    updateMetadataFilesPropsFile();
+      // update the props file even if the connection fails
+      updateSolutionsPropsFile();
+      updateUrlPropsFile();
+      updateMetadataFilesPropsFile();
+    }
   }
   
   private void updateUrlPropsFile() {
