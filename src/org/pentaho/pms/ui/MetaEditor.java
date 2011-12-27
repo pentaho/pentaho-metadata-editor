@@ -2249,8 +2249,7 @@ public class MetaEditor implements SelectionListener {
         BusinessColumn businessColumn = new BusinessColumn(physicalColumn.getId(), physicalColumn, businessTable);
 
         // Add a unique ID enforcer...
-        businessColumn.addIDChangedListener(ConceptUtilityBase.createIDChangedListener(businessTable
-            .getBusinessColumns()));
+        businessColumn.addIDChangedListener(ConceptUtilityBase.createIDChangedListener(activeModel.getAllBusinessColumns()));
 
         // We're done, add the business column.
         try {
@@ -3681,31 +3680,38 @@ public class MetaEditor implements SelectionListener {
   }
 
   public void dupeBusinessTable(BusinessTable businessTable) {
-    if (businessTable != null) {
-      log.logDebug(Messages.getString("MetaEditor.DEBUG_DUPLICATE_TABLE", businessTable.getId())); //$NON-NLS-1$
-
-      BusinessModel activeModel = schemaMeta.getActiveModel();
-
-      // This should be a unique clone of the business table AND it's columns...
-      BusinessTable newTable = businessTable.cloneUnique(schemaMeta.getActiveLocale(), activeModel.getBusinessTables(),
-          activeModel.getAllBusinessColumns());
-
-      try {
-
-        activeModel.addBusinessTable(newTable);
-
-      } catch (ObjectAlreadyExistsException e) {
-
-        new ErrorDialog(
-            shell,
-            Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("MetaEditor.USER_BUSINESS_TABLE_NAME_EXISTS"), e); //$NON-NLS-1$ //$NON-NLS-2$
-
+    try {
+      if (businessTable != null) {
+        log.logDebug(Messages.getString("MetaEditor.DEBUG_DUPLICATE_TABLE", businessTable.getId())); //$NON-NLS-1$
+  
+        BusinessModel activeModel = schemaMeta.getActiveModel();
+  
+        // This should be a unique clone of the business table AND it's columns...
+        BusinessTable newTable = businessTable.cloneUnique(schemaMeta.getActiveLocale(), activeModel.getBusinessTables(),
+            activeModel.getAllBusinessColumns());
+  
+        try {
+  
+          activeModel.addBusinessTable(newTable);
+  
+        } catch (ObjectAlreadyExistsException e) {
+  
+          new ErrorDialog(
+              shell,
+              Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("MetaEditor.USER_BUSINESS_TABLE_NAME_EXISTS"), e); //$NON-NLS-1$ //$NON-NLS-2$
+  
+        }
+  
+        if (activeModelTreeNode != null)
+          activeModelTreeNode.getBusinessTablesRoot().addDomainChild(newTable);
+  
+        refreshGraph();
+  
       }
-
-      if (activeModelTreeNode != null)
-        activeModelTreeNode.getBusinessTablesRoot().addDomainChild(newTable);
-
-      refreshGraph();
+    } catch (Exception e) {
+      new ErrorDialog(
+          shell,
+          Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("MetaEditor.USER_BUSINESS_TABLE_NAME_EXISTS"), e); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
   }

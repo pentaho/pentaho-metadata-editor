@@ -142,7 +142,7 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
           logger.error("an exception occurred", e);
         }
         MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
-            "BusinessTableDialog.USER_ERROR_PHYSICAL_TABLE_ID_EXISTS", conceptIdText.getText()));
+            "BusinessTableDialog.USER_ERROR_BUSINESS_TABLE_ID_EXISTS", conceptIdText.getText()));
       }
     }
   }

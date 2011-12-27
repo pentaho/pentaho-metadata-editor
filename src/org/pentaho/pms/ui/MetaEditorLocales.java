@@ -15,6 +15,7 @@
  * Copyright (c) 2006 - 2009 Pentaho Corporation..  All rights reserved.
  */
 package org.pentaho.pms.ui;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -31,7 +32,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.TableItem;
-import org.hsqldb.lib.StringUtil;
 import org.pentaho.di.core.variables.Variables;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.core.dialog.ErrorDialog;
@@ -129,7 +129,7 @@ public class MetaEditorLocales extends Composite
             // See 'ColumnInfo[] colLocales = new ColumnInfo[]' in constructor for order of creation
             String localeCode = wLocales.getItem(selectedLocaleIndex >= 0 ? selectedLocaleIndex : 0, 1);
             
-            wExportLocale.setEnabled(!StringUtil.isEmpty(localeCode));
+            wExportLocale.setEnabled(!StringUtils.isEmpty(localeCode));
           }
           
           @Override
@@ -149,7 +149,7 @@ public class MetaEditorLocales extends Composite
             // See 'ColumnInfo[] colLocales = new ColumnInfo[]' in constructor for order of creation
             String localeCode = wLocales.getItem(selectedLocaleIndex >= 0 ? selectedLocaleIndex : 0, 1);
             
-            wExportLocale.setEnabled(!StringUtil.isEmpty(localeCode));
+            wExportLocale.setEnabled(!StringUtils.isEmpty(localeCode));
           }
           
           @Override
