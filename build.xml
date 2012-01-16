@@ -39,6 +39,9 @@
 	        value="org.pentaho.*"/>
 	
   <property name="package.resdir" value="${basedir}/package-res" />
+	
+	<!-- Plugin resolve dir -->
+	<property name="resolve-plugins.dir" value="plugins" />
 
   <!-- Define the default location of the common build file -->
   <property name="common.build.file"
@@ -105,16 +108,22 @@
       <classpath refid="cp-meta" />
     </javadoc>
   </target>
-
+	
   <!-- Resolve all default items plus JDBC drivers -->
-  <target name="resolve" depends="resolve-drivers,subfloor.resolve"/>
+  <target name="resolve" depends="resolve-drivers,resolve-plugins,subfloor.resolve"/>
   
   <!-- Resolve JDBC Drivers into libext/JDBC -->
   <target name="resolve-drivers" depends="resolve-init" description="Retrieves runtime configuration dependencies">
       <ivy:resolve file="${ivy.artifact.ivyfilename}" conf="default"/>
       <ivy:retrieve conf="drivers" pattern="${driver-lib.dir}/[module]-[revision](-[classifier]).[ext]"/>
   </target>
-  
+
+  <!-- Resolve plugin configuration into ${plugins.dir} -->
+  <target name="resolve-plugins" depends="install-ivy">
+    <ivy:resolve file="${ivyfile}" conf="plugin" />
+    <ivy:retrieve conf="plugin" pattern="${resolve-plugins.dir}/[module]-[revision](-[classifier]).[ext]" />
+  </target>
+
   <target name="assemble" depends="jar,-init-assemble,-stage-dist-lib,-stage-pentaho-libs" description="copy jar file to distribution directory">
     <copy todir="${stage.dir}">
       <fileset dir="." includes="releasenotes.txt" excludes="**/build, **/dist" />
@@ -135,6 +144,13 @@
     <copy todir="${stage.dir}/libext/JDBC">
       <fileset dir="${lib.dir}" includes="**/*hive-jdbc*.jar" />
     </copy>
+
+  	<!-- Install Kettle plugins -->
+  	<property name="stage.plugins.dir" value="${stage.dir}/plugins" />
+  	<mkdir dir="${stage.plugins.dir}" />
+  	<unzip dest="${stage.plugins.dir}" overwrite="true">
+        <fileset file="${resolve-plugins.dir}/*.zip" />
+  	</unzip>
     
     <!-- swt libs (jdbc etc) -->
     <mkdir dir="${stage.dir}/libswt" />
