@@ -46,11 +46,13 @@ import org.pentaho.pms.schema.BusinessColumn;
 import org.pentaho.pms.schema.BusinessTable;
 import org.pentaho.pms.schema.PhysicalTable;
 import org.pentaho.pms.schema.SchemaMeta;
+import org.pentaho.pms.schema.concept.ConceptUtilityBase;
 import org.pentaho.pms.schema.concept.ConceptUtilityInterface;
 import org.pentaho.pms.ui.concept.editor.BusinessTableModel;
 import org.pentaho.pms.ui.concept.editor.PropertyNavigationWidget;
 import org.pentaho.pms.ui.concept.editor.PropertyWidgetManager2;
 import org.pentaho.pms.util.ObjectAlreadyExistsException;
+import org.pentaho.pms.util.UniqueList;
 
 public class BusinessTableDialog extends AbstractTableDialog implements SelectionListener {
 
@@ -129,6 +131,18 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
             conceptIdText.forceFocus();
             conceptIdText.selectAll();
           } else {
+            // if selection is business column, also verify current column ids aren't being used
+            if (lastSelection instanceof BusinessColumn) {
+              UniqueList bizCols = businessTable.getBusinessColumns();
+              for (int i =0; i < bizCols.size(); i++) {
+                ConceptUtilityBase base = (ConceptUtilityBase) bizCols.get(i);
+                if (base != lastSelection && base.getId().equals(conceptIdText.getText())) {
+                  // This is a problem...
+                  throw new ObjectAlreadyExistsException(Messages.getString(
+                      "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText())); //$NON-NLS-1$
+                }
+              }
+            }
             lastSelection.setId(conceptIdText.getText());
             updateOriginalBusinessTable();
             super.okPressed();
@@ -142,7 +156,7 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
           logger.error("an exception occurred", e);
         }
         MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
-            "BusinessTableDialog.USER_ERROR_PHYSICAL_TABLE_ID_EXISTS", conceptIdText.getText()));
+            "BusinessTableDialog.USER_ERROR_BUSINESS_TABLE_ID_EXISTS", conceptIdText.getText()));
       }
     }
   }
@@ -164,6 +178,18 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
             conceptIdText.forceFocus();
             conceptIdText.selectAll();
           } else {
+            // if selection is business column, also verify current column ids aren't being used
+            if (lastSelection instanceof BusinessColumn) {
+              UniqueList bizCols = businessTable.getBusinessColumns();
+              for (int i =0; i < bizCols.size(); i++) {
+                ConceptUtilityBase base = (ConceptUtilityBase) bizCols.get(i);
+                if (base != lastSelection && base.getId().equals(conceptIdText.getText())) {
+                  // This is a problem...
+                  throw new ObjectAlreadyExistsException(Messages.getString(
+                      "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText())); //$NON-NLS-1$
+                }
+              }
+            }
             lastSelection.setId(conceptIdText.getText());
             super.selectionChanged(e);
           }
