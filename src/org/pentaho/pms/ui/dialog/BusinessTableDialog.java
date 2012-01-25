@@ -211,7 +211,7 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
     List<BusinessColumn> columns = new ArrayList<BusinessColumn>();
     for (int i = 0; i < schemaMeta.getActiveModel().nrBusinessTables(); i++) {
       BusinessTable businessTable = schemaMeta.getActiveModel().getBusinessTable(i);
-      if (table != businessTable) {
+      if (!table.equals(businessTable)) {
         for (int j = 0; j < businessTable.nrBusinessColumns(); j++) {
           columns.add(businessTable.getBusinessColumn(j));
         }
