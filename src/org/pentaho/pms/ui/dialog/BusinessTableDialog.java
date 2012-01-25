@@ -63,6 +63,8 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
   private Label physicalTableLabel;
 
   private BusinessTable businessTable;
+  
+  private List<BusinessColumn> otherBusinessColumns = new ArrayList<BusinessColumn>();
 
   HashMap<Object, Object> modificationsMap = new HashMap<Object, Object>();
 
@@ -78,6 +80,8 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
     BusinessTableModel tableModel = new BusinessTableModel(businessTable, schemaMeta.getActiveModel());
     initModificationsMap(originalBusinessTable, businessTable);
     init(tableModel, schemaMeta, businessColumn);
+    otherBusinessColumns = getOtherBusinessColumns(originalBusinessTable);
+
   }
 
   public BusinessTableDialog(Shell parent, BusinessTable originalBusinessTable, SchemaMeta schemaMeta) {
@@ -86,6 +90,8 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
     BusinessTableModel tableModel = new BusinessTableModel(businessTable, schemaMeta.getActiveModel());
     initModificationsMap(originalBusinessTable, businessTable);
     init(tableModel, schemaMeta, businessTable);
+    otherBusinessColumns = getOtherBusinessColumns(originalBusinessTable);
+
   }
 
   private void initModificationsMap(BusinessTable origBusinessTable, BusinessTable workingBusinessTable) {
@@ -133,15 +139,7 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
           } else {
             // if selection is business column, also verify current column ids aren't being used
             if (lastSelection instanceof BusinessColumn) {
-              UniqueList bizCols = businessTable.getBusinessColumns();
-              for (int i =0; i < bizCols.size(); i++) {
-                ConceptUtilityBase base = (ConceptUtilityBase) bizCols.get(i);
-                if (base != lastSelection && base.getId().equals(conceptIdText.getText())) {
-                  // This is a problem...
-                  throw new ObjectAlreadyExistsException(Messages.getString(
-                      "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText())); //$NON-NLS-1$
-                }
-              }
+              validateBusinessColumnUniqueness();
             }
             lastSelection.setId(conceptIdText.getText());
             updateOriginalBusinessTable();
@@ -156,7 +154,7 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
           logger.error("an exception occurred", e);
         }
         MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
-            "BusinessTableDialog.USER_ERROR_BUSINESS_TABLE_ID_EXISTS", conceptIdText.getText()));
+            "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText()));
       }
     }
   }
@@ -180,15 +178,7 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
           } else {
             // if selection is business column, also verify current column ids aren't being used
             if (lastSelection instanceof BusinessColumn) {
-              UniqueList bizCols = businessTable.getBusinessColumns();
-              for (int i =0; i < bizCols.size(); i++) {
-                ConceptUtilityBase base = (ConceptUtilityBase) bizCols.get(i);
-                if (base != lastSelection && base.getId().equals(conceptIdText.getText())) {
-                  // This is a problem...
-                  throw new ObjectAlreadyExistsException(Messages.getString(
-                      "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText())); //$NON-NLS-1$
-                }
-              }
+              validateBusinessColumnUniqueness();
             }
             lastSelection.setId(conceptIdText.getText());
             super.selectionChanged(e);
@@ -198,7 +188,7 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
             logger.error("an exception occurred", e1);
           }
           MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
-              "BusinessTableDialog.USER_ERROR_BUSINESS_TABLE_ID_EXISTS", conceptIdText.getText()));
+              "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText()));
         }
       } else {
         super.selectionChanged(e);
@@ -210,6 +200,44 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
       }
     }
 
+  }
+  
+  /**
+   * Returns all business columns
+   *
+   * @return a UniqueList of all business columns in this model
+   */
+  public List<BusinessColumn> getOtherBusinessColumns(BusinessTable table) {
+    List<BusinessColumn> columns = new ArrayList<BusinessColumn>();
+    for (int i = 0; i < schemaMeta.getActiveModel().nrBusinessTables(); i++) {
+      BusinessTable businessTable = schemaMeta.getActiveModel().getBusinessTable(i);
+      if (table != businessTable) {
+        for (int j = 0; j < businessTable.nrBusinessColumns(); j++) {
+          columns.add(businessTable.getBusinessColumn(j));
+        }
+      }
+    }
+    return columns;
+  }
+  
+  private void validateBusinessColumnUniqueness() throws ObjectAlreadyExistsException {
+    for (int i =0; i < otherBusinessColumns.size(); i++) {
+      ConceptUtilityBase base = (ConceptUtilityBase) otherBusinessColumns.get(i);
+      if (base != lastSelection && base.getId().equals(conceptIdText.getText())) {
+        // This is a problem...
+        throw new ObjectAlreadyExistsException(Messages.getString(
+            "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText())); //$NON-NLS-1$
+      }
+    }
+    UniqueList bizCols = businessTable.getBusinessColumns();
+    for (int i =0; i < bizCols.size(); i++) {
+      ConceptUtilityBase base = (ConceptUtilityBase) bizCols.get(i);
+      if (base != lastSelection && base.getId().equals(conceptIdText.getText())) {
+        // This is a problem...
+        throw new ObjectAlreadyExistsException(Messages.getString(
+            "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText())); //$NON-NLS-1$
+      }
+    }
   }
 
   private void updateOriginalBusinessTable() {
