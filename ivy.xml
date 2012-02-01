@@ -16,6 +16,10 @@
     </publications>    
     
     <dependencies defaultconf="default->default">
+        <!-- Commons -->
+        <dependency org="commons-lang"    name="commons-lang"     rev="2.2" transitive="false" />
+        <dependency org="commons-logging" name="commons-logging"  rev="1.1" transitive="false" />
+
         <dependency org="pentaho-library"        name="libformula"               conf="default->default" rev="${dependency.libformula.revision}" transitive="false"/>
         <dependency org="pentaho-library"        name="libbase"               conf="default->default" rev="${dependency.libbase.revision}" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-connections"      rev="${dependency.pentaho-connections.revision}" conf="default->default" changing="true" transitive="false"/>
