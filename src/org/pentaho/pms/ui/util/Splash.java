@@ -16,6 +16,8 @@
  */
 package org.pentaho.pms.ui.util;
 
+import java.util.Date;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -84,7 +86,7 @@ public class Splash
           e.gc.drawString(Messages.getString("Splash.VERSION_INFO", helper.getVersionInformation(Splash.class, false)), 294, 220, true);
           font = new Font(e.display, "Sans", 8, SWT.NONE); //$NON-NLS-1$
           e.gc.setFont(font);
-          e.gc.drawString(Messages.getString("MetaEditor.USER_HELP_PENTAHO_CORPORATION"), 294, 260, true); //$NON-NLS-1$
+          e.gc.drawString(Messages.getString("MetaEditor.USER_HELP_PENTAHO_CORPORATION", ""+((new Date()).getYear()+1900)), 294, 260, true); //$NON-NLS-1$
           for (int i = 1; i <= 11; i++) {
             e.gc.drawString(Messages.getString("Splash.LICENSE_LINE_" + i), 294, 270 + i*12, true); //$NON-NLS-1$
           }

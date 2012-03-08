@@ -19,6 +19,7 @@ package org.pentaho.pms.ui;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -3011,10 +3012,10 @@ public class MetaEditor implements SelectionListener {
     message.append(verHelper.getVersionInformation(MetaEditor.class)).append(Const.CR).append(Const.CR); //$NON-NLS-1$
     // .append(Messages.getString("MetaEditor.USER_HELP_METADATA_EDITOR")).append(Const.VERSION).append(Const.CR).append(Const.CR);
     // //$NON-NLS-1$
-    message.append(Messages.getString("MetaEditor.USER_HELP_PENTAHO_CORPORATION")).append(Const.CR); //$NON-NLS-1$
+    message.append(Messages.getString("MetaEditor.USER_HELP_PENTAHO_CORPORATION", ""+((new Date()).getYear()+1900))).append(Const.CR); //$NON-NLS-1$
     message.append(Messages.getString("MetaEditor.USER_HELP_PENTAHO_URL")).append(Const.CR); //$NON-NLS-1$
 
-    message.append(Messages.getString("MetaEditor.USER_HELP_PENTAHO_COPYRIGHT")) //$NON-NLS-1$
+    message.append(Messages.getString("MetaEditor.USER_HELP_PENTAHO_COPYRIGHT", ""+((new Date()).getYear()+1900))) //$NON-NLS-1$
         .append(Const.CR).append(Const.CR).append(Messages.getString("MetaEditor.USER_HELP_PENTAHO_MESSAGE")) //$NON-NLS-1$
         .append(Const.CR).append(Const.CR).append(Messages.getString("MetaEditor.USER_HELP_PENTAHO_MESSAGE2")); //$NON-NLS-1$
 
