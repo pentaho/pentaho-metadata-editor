@@ -33,7 +33,7 @@
         <dependency org="pentaho"        name="pentaho-bi-platform-util" rev="${dependency.bi-platform.revision}" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" conf="default->default" transitive="false"/>
         <dependency org="commons-io"         name="commons-io"         rev="1.4"/>
-        <dependency org="pentaho"        name="pentaho-vfs-browser"      rev="${dependency.vfs-browser.revision}" conf="default->default" transitive="false" changing="true" />
+        <dependency org="pentaho"        name="pentaho-vfs-browser"      rev="${dependency.pentaho-vfs-browser.revision}" conf="default->default" transitive="false" changing="true" />
 
         <!-- driver dependencies -->
         <dependency org="hsqldb" name="hsqldb" rev="1.8.0" transitive="false" conf="drivers->default" />
