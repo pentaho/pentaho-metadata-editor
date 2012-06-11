@@ -47,7 +47,7 @@
         
 
         <!--  also pull down xstream and its dependencies -->
-        <dependency org="com.thoughtworks.xstream" name="xstream"  rev="1.4.2"    transitive="false" conf="default->default"/>
+        <dependency org="com.thoughtworks.xstream" name="xstream"  rev="${dependency.xstream.revision}" transitive="false" conf="default->default"/>
         <dependency org="xpp3"                     name="xpp3_min" rev="1.1.4c" transitive="false" conf="default->default"/>
 
         <!-- pentaho-xul-framework must match JARs required by kettle-ui-swt -->
