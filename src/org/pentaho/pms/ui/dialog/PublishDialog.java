@@ -46,7 +46,6 @@ import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.core.dialog.ErrorDialog;
 import org.pentaho.di.ui.core.gui.WindowProperty;
-import org.pentaho.platform.util.client.PublisherUtil;
 import org.pentaho.pms.core.CWM;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.schema.SchemaMeta;
@@ -233,7 +232,7 @@ public class PublishDialog extends TitleAreaDialog {
       File file = new File(DEFAULT_METADATA_FILE);
       file.deleteOnExit();
       InputStream stream = new FileInputStream(file);
-      FormDataMultiPart part = new FormDataMultiPart().field("domainId", domainId, MediaType.TEXT_PLAIN_TYPE).field("metadataFile", stream, MediaType.APPLICATION_XML_TYPE);
+      FormDataMultiPart part = new FormDataMultiPart().field("domainId", domainId + ".xmi", MediaType.TEXT_PLAIN_TYPE).field("metadataFile", stream, MediaType.APPLICATION_XML_TYPE);
       Client client = Client.create();
       client.addFilter(new HTTPBasicAuthFilter(userId, userPassword));
       WebResource resource = client.resource(serverURL);
