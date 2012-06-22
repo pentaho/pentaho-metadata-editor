@@ -82,10 +82,12 @@ public class PublishDialog extends TitleAreaDialog {
   
   private Text tUserId;
   private Text tUserPassword;
+  private Text domainName;
   
   private Properties publishUrls;
   private Properties solutionFolders;
-  private Properties mdFiles; 
+  private Properties mdFiles;
+  private String userDomain;
 
   /**
    * @param parent
@@ -174,6 +176,24 @@ public class PublishDialog extends TitleAreaDialog {
     data.minimumWidth = 300;
     tUserPassword.setLayoutData (data);
 
+
+    Label label9 = new Label (c1, SWT.NONE);
+    label9.setText (Messages.getString("PublishDialog.LABEL_DOMAIN"));
+    data = new GridData();
+    data.grabExcessHorizontalSpace = true;
+    data.minimumWidth = 300;
+    label9.setLayoutData (data);
+
+    domainName = new Text (c1, SWT.BORDER);
+    String schemaDomainName = schemaMeta.getDomainName();
+    if(schemaDomainName != null){
+      domainName.setText(schemaDomainName);
+    }
+    data = new GridData();
+    data.grabExcessHorizontalSpace = true;
+    data.minimumWidth = 300;
+    domainName.setLayoutData (data);
+
     return c0;
 
   }
@@ -222,8 +242,8 @@ public class PublishDialog extends TitleAreaDialog {
     if (!populateStrings()) {
       return false;
     }
-    String domainId = schemaMeta.getDomainName();
-    CWM cwmInstance = CWM.getInstance(domainId);
+    String schemaDomainName = schemaMeta.getDomainName();
+    CWM cwmInstance = CWM.getInstance(schemaDomainName);
     try {
       String xmi = cwmInstance.getXMI();
       BufferedWriter out = new BufferedWriter(new FileWriter(DEFAULT_METADATA_FILE));
@@ -232,7 +252,7 @@ public class PublishDialog extends TitleAreaDialog {
       File file = new File(DEFAULT_METADATA_FILE);
       file.deleteOnExit();
       InputStream stream = new FileInputStream(file);
-      FormDataMultiPart part = new FormDataMultiPart().field("domainId", domainId, MediaType.TEXT_PLAIN_TYPE).field("metadataFile", stream, MediaType.APPLICATION_XML_TYPE);
+      FormDataMultiPart part = new FormDataMultiPart().field("domainId", userDomain, MediaType.TEXT_PLAIN_TYPE).field("metadataFile", stream, MediaType.APPLICATION_XML_TYPE);
       Client client = Client.create();
       client.addFilter(new HTTPBasicAuthFilter(userId, userPassword));
       WebResource resource = client.resource(serverURL);
@@ -240,14 +260,14 @@ public class PublishDialog extends TitleAreaDialog {
       if(result.equals("SUCCESS")) {
     	  MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_INFORMATION);
           mb.setText(Messages.getString("PublishDialog.ACTION_SUCCEEDED")); //$NON-NLS-1$
-          mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_SUCCEEDED", domainId)); //$NON-NLS-1$
+          mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_SUCCEEDED", userDomain)); //$NON-NLS-1$
           mb.open();
           dispose();
           return true;
       } else {
     	  MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_ERROR);
           mb.setText(Messages.getString("PublishDialog.ACTION_FAILED")); //$NON-NLS-1$
-          mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", domainId)); //$NON-NLS-1$
+          mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", userDomain)); //$NON-NLS-1$
           mb.open();
           return false;
     	  
@@ -436,6 +456,7 @@ public class PublishDialog extends TitleAreaDialog {
     serverURL = tServerURL.getText();
     userId = tUserId.getText();
     userPassword = tUserPassword.getText();
+    userDomain = domainName.getText();
     return !StringUtils.isEmpty(serverURL) && !StringUtils.isEmpty(userId) && !StringUtils.isEmpty(userPassword);
   }
 
