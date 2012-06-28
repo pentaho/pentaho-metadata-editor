@@ -124,27 +124,12 @@ public class SecurityPropertyEditorWidget extends AbstractPropertyEditorWidget {
         }
       });
 
-      label = new Label(parent, SWT.NONE);
-      label.setText("Permissions");
-
       securityTableViewer = new SecurityTableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
       gridData = new GridData(GridData.FILL_HORIZONTAL);
-      gridData.heightHint = 100;
+      gridData.heightHint = 200;
+      gridData.widthHint = 590;
       gridData.horizontalSpan = 2;
       securityTableViewer.getTable().setLayoutData(gridData);
-      gridData = new GridData(GridData.FILL_HORIZONTAL);
-      gridData.verticalAlignment = SWT.FILL;
-      gridData.heightHint = 100;
-
-      securityTablePermEditor = new SecurityTablePermEditor(parent, SWT.BORDER, securityTableViewer);
-      try {
-        securityTablePermEditor.setSecurityReference(securityReference);
-      } catch (Exception ignored) {
-        if (logger.isErrorEnabled()) {
-          logger.error("an exception occurred; ignoring");
-        }
-      }
-      securityTablePermEditor.setLayoutData(gridData);
     }
     contentsCreated = true;
   }
@@ -190,7 +175,6 @@ public class SecurityPropertyEditorWidget extends AbstractPropertyEditorWidget {
       addPermsToolItem.setEnabled(isEditable());
       removePermsToolItem.setEnabled(isEditable());
       securityTableViewer.setSelection(new StructuredSelection());
-      securityTablePermEditor.setAllowEditing(isEditable());
       securityTableViewer.getTable().setEnabled(isEditable());
       setValue(getProperty().getValue());
     }
