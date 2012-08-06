@@ -39,12 +39,7 @@
         <dependency org="hsqldb" name="hsqldb" rev="1.8.0" transitive="false" conf="drivers->default" />
         <dependency org="com.h2database" name="h2" rev="1.0.20070617" transitive="false" conf="drivers->default" />
         <dependency org="mysql" name="mysql-connector-java" rev="5.1.17" transitive="false" conf="drivers->default" />
-        <dependency org="org.apache.hadoop.hive" name="hive-jdbc" rev="${dependency.hive-jdbc.revision}" conf="drivers->default">
-          <!-- Do not include commons logging or log4j here. They are already fetched with the default configuration. -->
-          <exclude org="commons-logging" />
-          <exclude org="log4j" />
-        </dependency>
-        
+        <dependency org="pentaho" name="pentaho-hadoop-hive-jdbc-shim" rev="${dependency.pentaho-hadoop-hive-jdbc-shim.revision}" conf="drivers->default" />
 
         <!--  also pull down xstream and its dependencies -->
         <dependency org="com.thoughtworks.xstream" name="xstream"  rev="1.3"    transitive="false" conf="default->default"/>
@@ -63,5 +58,6 @@
             <artifact name="pentaho-big-data-plugin" type="zip" />
         </dependency>
         
+        <dependency org="junit"     name="junit"        rev="4.4"   conf="test->default"/>
     </dependencies>
 </ivy-module>

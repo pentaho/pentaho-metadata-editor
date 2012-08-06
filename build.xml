@@ -61,6 +61,7 @@
 
   <target name="clean-stage">
     <delete dir="${stage.dir}" />
+    <delete dir="${resolve-plugins.dir}" />
   </target>
 
   <!-- override compile.compile to include custom classpath and do resource copying -->
@@ -118,7 +119,7 @@
       <ivy:retrieve conf="drivers" pattern="${driver-lib.dir}/[module]-[revision](-[classifier]).[ext]"/>
   </target>
 
-  <!-- Resolve plugin configuration into ${plugins.dir} -->
+  <!-- Resolve plugin configuration into ${resolve-plugins.dir} -->
   <target name="resolve-plugins" depends="install-ivy">
     <ivy:resolve file="${ivyfile}" conf="plugin" />
     <ivy:retrieve conf="plugin" pattern="${resolve-plugins.dir}/[module]-[revision](-[classifier]).[ext]" />
