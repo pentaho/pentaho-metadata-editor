@@ -20,8 +20,8 @@
         <dependency org="commons-lang"    name="commons-lang"     rev="2.2" transitive="false" />
         <dependency org="commons-logging" name="commons-logging"  rev="1.1" transitive="false" />
 
-        <dependency org="pentaho-library"        name="libformula"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
-        <dependency org="pentaho-library"        name="libbase"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
+        <dependency org="pentaho-library"        name="libformula"               conf="default->default" rev="${dependency.libformula.revision}" transitive="false"/>
+        <dependency org="pentaho-library"        name="libbase"               conf="default->default" rev="${dependency.libbase.revision}" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-connections"      rev="${dependency.pentaho-connections.revision}" conf="default->default" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-metadata"         rev="${dependency.pentaho-metadata.revision}" conf="default->default" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-mql-editor"       rev="${dependency.pentaho-mql-editor.revision}" conf="default->default" changing="true" transitive="false"/>
@@ -34,20 +34,6 @@
         <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" conf="default->default" transitive="false"/>
         <dependency org="commons-io"         name="commons-io"         rev="1.4"/>
         <dependency org="pentaho"        name="pentaho-vfs-browser"      rev="${dependency.pentaho-vfs-browser.revision}" conf="default->default" transitive="false" changing="true" />
-        
-        
-        
-    	<!-- jersey -->
-    	<dependency org="com.sun.jersey.contribs" name="jersey-multipart" rev="1.11"/>
-    	<dependency org="com.sun.jersey.contribs" name="jersey-apache-client" rev="1.11" transitive="false"/>
-    	<dependency org="com.sun.jersey.contribs" name="jersey-spring" rev="1.11" transitive="false"/>
-
-    	<dependency org="com.sun.jersey" name="jersey-core" rev="1.11" transitive="false"/>
-    	<dependency org="com.sun.jersey" name="jersey-json" rev="1.11" transitive="false"/>
-    	<dependency org="com.sun.jersey" name="jersey-client" rev="1.11" transitive="false"/>
-    	<dependency org="com.sun.jersey" name="jersey-server" rev="1.11" transitive="false"/>
-    	<dependency org="com.sun.jersey" name="jersey-servlet" rev="1.11" transitive="false"/>
-        
 
         <!-- driver dependencies -->
         <dependency org="hsqldb" name="hsqldb" rev="1.8.0" transitive="false" conf="drivers->default" />
@@ -55,7 +41,7 @@
         <dependency org="pentaho" name="pentaho-hadoop-hive-jdbc-shim" rev="${dependency.pentaho-hadoop-hive-jdbc-shim.revision}" conf="drivers->default" />
 
         <!--  also pull down xstream and its dependencies -->
-        <dependency org="com.thoughtworks.xstream" name="xstream"  rev="${dependency.xstream.revision}" transitive="false" conf="default->default"/>
+        <dependency org="com.thoughtworks.xstream" name="xstream"  rev="1.3"    transitive="false" conf="default->default"/>
         <dependency org="xpp3"                     name="xpp3_min" rev="1.1.4c" transitive="false" conf="default->default"/>
 
         <!-- pentaho-xul-framework must match JARs required by kettle-ui-swt -->
@@ -70,6 +56,7 @@
         <dependency org="pentaho" name="pentaho-big-data-plugin" rev="${dependency.pentaho-big-data-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-big-data-plugin" type="zip" />
         </dependency>
-		<dependency org="junit"     name="junit"        rev="4.4"   conf="test->default"/>
-      </dependencies>
+        
+        <dependency org="junit"     name="junit"        rev="4.4"   conf="test->default"/>
+    </dependencies>
 </ivy-module>
