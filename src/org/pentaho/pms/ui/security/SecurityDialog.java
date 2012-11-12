@@ -584,7 +584,7 @@ public class SecurityDialog extends TitleAreaDialog {
       msg.append(Messages.getString("SecurityDialog.USER_CONNECTION_INFO")); //$NON-NLS-1$
          
       if (securityService.hasService()){
-        msg.append(Messages.getString("SecurityDialog.USER_FROM_SERVER_URL", securityService.getURL(securityService.getDetailServiceType() == SecurityService.SERVICE_TYPE_ALL ? null : securityService.getServiceTypeCode()))); //$NON-NLS-1$
+        msg.append(Messages.getString("SecurityDialog.USER_FROM_SERVER_URL", securityService.getURL())); //$NON-NLS-1$
       }else{
         msg.append(Messages.getString("SecurityDialog.USER_FROM_FILE", securityService.getFilename())); //$NON-NLS-1$
       }
@@ -602,7 +602,7 @@ public class SecurityDialog extends TitleAreaDialog {
       new ErrorDialog(
           getShell(),
           Messages.getString("General.USER_TITLE_ERROR"), //$NON-NLS-1$
-          Messages.getString("SecurityDialog.USER_ERROR_CANT_GET_SECURITY_INFO", securityService.getURL(null)), e); //$NON-NLS-1$ 
+          Messages.getString("SecurityDialog.USER_ERROR_CANT_GET_SECURITY_INFO", securityService.getURL()), e); //$NON-NLS-1$ 
     }
   }
 }

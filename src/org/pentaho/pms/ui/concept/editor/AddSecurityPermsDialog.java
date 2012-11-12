@@ -65,6 +65,7 @@ public class AddSecurityPermsDialog extends Dialog {
     label.setText("Assigned Users/Roles");
     availSecurityOwnersTable = new AvailSecurityOwnersTableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL, securityReference, security.getOwners());
     GridData gridData = new GridData(GridData.FILL_BOTH);
+    gridData.verticalSpan = 3;
     availSecurityOwnersTable.getTable().setLayoutData(gridData);
     
     Composite btnComposite = new Composite(composite, SWT.NONE);
@@ -99,6 +100,19 @@ public class AddSecurityPermsDialog extends Dialog {
     gridData = new GridData(GridData.FILL_BOTH);
     gridData.heightHint = 200;
     securityTableViewer.getTable().setLayoutData(gridData);
+    
+    new Label(composite, SWT.NONE);
+    label = new Label(composite, SWT.NONE);
+    label.setText("Assigned Permissions");
+    new Label(composite, SWT.NONE);
+    
+    securityTablePermEditor = new SecurityTablePermEditor(composite, SWT.BORDER, securityTableViewer);
+    gridData = new GridData(GridData.FILL_BOTH);
+    gridData.heightHint = 150;
+    securityTablePermEditor.setLayoutData(gridData);
+    
+//    availSecurityOwnersTable.setSecuritySettings(security);
+    securityTablePermEditor.setSecurityReference(securityReference);
     return composite;
   }
   
@@ -132,7 +146,10 @@ public class AddSecurityPermsDialog extends Dialog {
     Security newSecurity = new Security();
     for (Iterator iterator = securityTableViewer.getSecuritySettings().getOwners().iterator(); iterator.hasNext();) {
       SecurityOwner securityOwner = (SecurityOwner)iterator.next();
-      newSecurity.putOwnerRights(securityOwner, 1); // 1 is EXECUTE right.
+      int rights = securityTableViewer.getSecuritySettings().getOwnerRights(securityOwner);
+      if ( rights != 0) {
+        newSecurity.putOwnerRights(securityOwner, rights);
+      }
     }
     security = newSecurity;
     super.okPressed();
