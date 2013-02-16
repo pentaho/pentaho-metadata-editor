@@ -51,8 +51,10 @@ import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.schema.SchemaMeta;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataMultiPart;
 
 /**
@@ -68,6 +70,7 @@ public class PublishDialog extends TitleAreaDialog {
   private static final String SOLUTIONS_PROPS_FILE = "ui/publishSolutions.properties";
   private static final String DEFAULT_PUBLISH_URL = "http://localhost:8080/pentaho/plugin/data-access/api/metadata/import"; //$NON-NLS-1$
   private static final String DEFAULT_METADATA_FILE= "metadata.xmi";
+  private static final Object SUCCESS = "SUCCESS";
   private SchemaMeta schemaMeta;
   
   private LogWriter log;
@@ -239,12 +242,66 @@ public class PublishDialog extends TitleAreaDialog {
   }
   
   private boolean ok() {
-    if (!populateStrings()) {
-      return false;
+    boolean responseValue = false;
+    if (populateStrings()) {
+      try {
+        InputStream fileStream = this.createInputStream();
+        FormDataMultiPart part = new FormDataMultiPart()
+            .field("domainId", userDomain, MediaType.MULTIPART_FORM_DATA_TYPE)
+            .field("metadataFile", fileStream, MediaType.MULTIPART_FORM_DATA_TYPE);
+        part.getField("metadataFile").setContentDisposition(
+            FormDataContentDisposition.name("metadataFile")
+            .fileName(userDomain).build());
+        Client client = Client.create();
+        client.addFilter(new HTTPBasicAuthFilter(userId, userPassword));
+        System.out.println(serverURL + " ");
+        WebResource resource = client.resource(serverURL);
+     
+      
+        ClientResponse resp = resource
+            .type(MediaType.MULTIPART_FORM_DATA_TYPE)
+            .put(ClientResponse.class, part);
+        System.out.println(resp);
+        if(resp != null && SUCCESS.equals(resp.getEntity(String.class))){
+          //test for overwrite here resp.getEntity(String.class) == 8
+          responseValue = true;
+        }
+        responseValue = displayMessageBox(responseValue);
+        
+      } catch (Exception e) {
+        e.printStackTrace();
+        responseValue = displayErrorDialog(e);
+       } finally {
+        updateUrlPropsFile();
+      }
     }
-    String schemaDomainName = schemaMeta.getDomainName();
+    return responseValue;
+  }
+  
+  private boolean displayMessageBox(boolean returnValue){
+    MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_INFORMATION);
+    if(returnValue){
+      mb.setText(Messages.getString("PublishDialog.ACTION_SUCCEEDED")); //$NON-NLS-1$
+      mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_SUCCEEDED", userDomain)); //$NON-NLS-1$
+    } else {
+      mb.setText(Messages.getString("PublishDialog.ACTION_FAILED")); //$NON-NLS-1$
+      mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", userDomain)); //$NON-NLS-1$
+    }
+    mb.open();
+    dispose();
+    return returnValue;
+  }
+  
+  private boolean displayErrorDialog(Exception e){
+    new ErrorDialog( getShell(),
+        Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("PublishDialog.ACTION_FAILED"), e); //$NON-NLS-1$ //$NON-NLS-2$
+    return false;
+  }
+  
+  private InputStream createInputStream() throws Exception{
+    String schemaDomainName = schemaMeta.getDomainName();  
     CWM cwmInstance = CWM.getInstance(schemaDomainName);
-    try {
+  
       String xmi = cwmInstance.getXMI();
       BufferedWriter out = new BufferedWriter(new FileWriter(DEFAULT_METADATA_FILE));
       out.write(xmi);
@@ -252,36 +309,8 @@ public class PublishDialog extends TitleAreaDialog {
       File file = new File(DEFAULT_METADATA_FILE);
       file.deleteOnExit();
       InputStream stream = new FileInputStream(file);
-      FormDataMultiPart part = new FormDataMultiPart().field("domainId", userDomain, MediaType.TEXT_PLAIN_TYPE).field("metadataFile", stream, MediaType.APPLICATION_XML_TYPE);
-      Client client = Client.create();
-      client.addFilter(new HTTPBasicAuthFilter(userId, userPassword));
-      WebResource resource = client.resource(serverURL);
-      String result = resource.type(MediaType.MULTIPART_FORM_DATA_TYPE).put(String.class, part);
-      if(result.equals("SUCCESS")) {
-    	  MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_INFORMATION);
-          mb.setText(Messages.getString("PublishDialog.ACTION_SUCCEEDED")); //$NON-NLS-1$
-          mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_SUCCEEDED", userDomain)); //$NON-NLS-1$
-          mb.open();
-          dispose();
-          return true;
-      } else {
-    	  MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_ERROR);
-          mb.setText(Messages.getString("PublishDialog.ACTION_FAILED")); //$NON-NLS-1$
-          mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", userDomain)); //$NON-NLS-1$
-          mb.open();
-          return false;
-    	  
-      }
-    } catch (Exception e) {
-      new ErrorDialog(
-          getShell(),
-          Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("PublishDialog.ACTION_FAILED"), e); //$NON-NLS-1$ //$NON-NLS-2$
-      return false;
-    } finally {
-      updateUrlPropsFile();
-    }
+      return stream;
   }
-  
   private void updateUrlPropsFile() {
     // update publish url file
     boolean lastUsedChanged = false;
