@@ -177,7 +177,6 @@ import org.pentaho.pms.util.Settings;
 import org.pentaho.pms.util.UniqueArrayList;
 import org.pentaho.pms.util.UniqueList;
 import org.pentaho.pms.util.VersionHelper;
-import org.pentaho.pms.util.logging.Log4jPMELayout;
 
 /**
  * Class to edit the metadata domain (Schema Metadata), load/store into the
@@ -3527,7 +3526,6 @@ public class MetaEditor implements SelectionListener {
     LogWriter logwriter = LogWriter.getInstance(Const.META_EDITOR_LOG_FILE, false);
 
     LogChannel log = new LogChannel(APPLICATION_NAME);
-    LogWriter.setLayout(new Log4jPMELayout(true));
 
     Display display = new Display();
 
