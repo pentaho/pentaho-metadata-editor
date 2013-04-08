@@ -198,39 +198,20 @@
 
   <target name="package-zip">
     <zip destfile="${dist.dir}/${package.basename}.zip">
-      <zipfileset dir="${stage.dir}" prefix="metadata-editor" includes="**/*" excludes="**/Thumbs.db" />
-    </zip>
-  </target>
-
-  <target name="package-targz">
-    <tar destfile="${dist.dir}/${package.basename}.tar.gz" compression="gzip">
-      <tarfileset dir="${stage.dir}" prefix="metadata-editor" mode="755">
+      <zipfileset dir="${stage.dir}" prefix="metadata-editor" filemode="755">
         <include name="**/*.sh" />
         <include name="**/JavaApplicationStub" />
-      </tarfileset>
-      <tarfileset dir="${stage.dir}" prefix="metadata-editor">
+      </zipfileset>
+      <zipfileset dir="${stage.dir}" prefix="metadata-editor">
         <include name="**/*" />
         <exclude name="**/*.sh" />
         <exclude name="**/JavaApplicationStub" />
-      </tarfileset>
-    </tar>
+        <exclude name="**/Thumbs.db" />
+      </zipfileset>
+    </zip>
   </target>
 
-  <!--
-	  NOTE: This task should be called before the "dist" task is called. Once PDI-1861 is resolved,
-	  then this task can be removed
-	
-  <target name="rescopy" description="Copies the resources - this is a temporary fix related to PMD-438">
-    <mkdir dir="${stage.dir}" />
-    <copy todir="${stage.dir}" overwrite="true">
-      <fileset dir="${basedir}/res" />
-    </copy>
-  </target>-->
-  <!--
-	  END PDI-1861 workaround
-	-->
-
-  <target name="package" depends="assemble,package-zip,package-targz" />
+  <target name="package" depends="assemble,package-zip" />
   
   <!-- override dist target so it does assembly and packaging as well -->
   <target name="dist" depends="jar, package" />
