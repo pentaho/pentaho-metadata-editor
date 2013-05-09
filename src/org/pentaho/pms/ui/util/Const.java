@@ -241,7 +241,7 @@ public class Const
   /**
    * Default server web service URL for retrieving security information
    */
-  public static final String DEFAULT_SERVICE_URL = "http://localhost:8080/pentaho/api/userrole"; //$NON-NLS-1$
+  public static final String DEFAULT_SERVICE_URL = "http://localhost:8080/pentaho/api/userrolelist"; //$NON-NLS-1$
 
   /**
    * Name of the service to retrieve security information
