@@ -284,7 +284,7 @@ public class PublishDialog extends TitleAreaDialog {
       mb.setText(Messages.getString("PublishDialog.ACTION_SUCCEEDED")); //$NON-NLS-1$
       mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_SUCCEEDED", userDomain)); //$NON-NLS-1$
     } else {
-      mb.setText(Messages.getString("PublishDialog.ACTION_FAILED")); //$NON-NLS-1$
+      mb.setText(Messages.getString("PublishDialog.PUBLISH_FAILED_DIALOG_TITLE")); //$NON-NLS-1$
       mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", userDomain)); //$NON-NLS-1$
     }
     mb.open();
