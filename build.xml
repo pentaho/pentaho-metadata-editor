@@ -71,7 +71,8 @@
            deprecation="${javac.deprecation}"
            fork="true"
            source="${javac.source}"
-           target="${javac.target}">
+           target="${javac.target}"
+    	encoding="iso-8859-1">
       <classpath>
         <path refid="classpath" />
         <path refid="cp-meta" />
