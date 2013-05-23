@@ -32,6 +32,7 @@
       <dependency org="org.netbeans" name="nbmdr"        rev="200507110943-custom" transitive="false" conf="default" />
       <dependency org="org.safehaus.jug" name="jug-lgpl" rev="2.0.0" transitive="false" />
       <dependency org="dom4j"            name="dom4j"    rev="1.6.1" transitive="true" />
+	  <dependency org="jaxen"            name="jaxen"    rev="1.1.1" transitive="false" />
       <dependency org="org.netbeans"     name="jmi"      rev="200507110943" transitive="false" />
 
         <dependency org="pentaho-library"        name="libformula"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
