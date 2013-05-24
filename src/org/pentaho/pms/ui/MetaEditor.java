@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -3318,7 +3319,18 @@ public class MetaEditor implements SelectionListener {
         database.connect();
 
         // Get the list of tables...
-        String[] tableNames = database.getTablenames();
+        // We need unique names for the ui and schema,table for the import
+        Map<String, String[]> tableMap = new LinkedHashMap<String, String[]>();
+        final int SCHEMA = 0, TABLE = 1;
+        for (String schema : database.getSchemas()) {
+          for (String tableName : database.getTablenames(schema, false)) {
+            String fullName = databaseMeta.getQuotedSchemaTableCombination(schema, tableName);
+            tableMap.put(fullName, new String[]{schema, tableName});
+          }
+        }
+
+        Set<String> nameSet = tableMap.keySet();
+        String[] tableNames = nameSet.toArray(new String[nameSet.size()]);
 
         // Select from it...
         EnterSelectionDialog dialog = new EnterSelectionDialog(
@@ -3330,7 +3342,8 @@ public class MetaEditor implements SelectionListener {
           int[] indexes = dialog.getSelectionIndeces();
           for (int i = 0; i < indexes.length; i++) {
             String tableName = tableNames[indexes[i]];
-            importTableDefinition(database, null, tableName);
+            String[] tableDesc = tableMap.get(tableName);
+            importTableDefinition(database, tableDesc[SCHEMA], tableDesc[TABLE]);
           }
         }
 
@@ -3377,8 +3390,7 @@ public class MetaEditor implements SelectionListener {
     physicalTable.getConcept().setName(schemaMeta.getActiveLocale(), niceName);
 
     DatabaseMeta dbMeta = database.getDatabaseMeta();
-    String schemaTableCombination = dbMeta.getSchemaTableCombination(dbMeta.quoteField(schemaName), dbMeta
-        .quoteField(tableName));
+    String schemaTableCombination = dbMeta.getQuotedSchemaTableCombination(schemaName, tableName);
 
     RowMetaInterface row = database.getTableFields(schemaTableCombination);
 
