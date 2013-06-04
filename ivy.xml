@@ -82,6 +82,12 @@
         <dependency org="pentaho" name="pentaho-big-data-plugin" rev="${dependency.pentaho-big-data-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-big-data-plugin" type="zip" />
         </dependency>
+        <dependency org="pentaho" name="pentaho-mongodb-plugin" rev="${dependency.pentaho-mongodb-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
+            <artifact name="pentaho-mongodb-plugin" type="zip" />
+        </dependency>
+        <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
+            <artifact name="pentaho-cassandra-plugin" type="zip" />
+        </dependency>
 
         <dependency org="junit"        name="junit"        rev="4.4"                 transitive="false" conf="test->default" />
       </dependencies>
