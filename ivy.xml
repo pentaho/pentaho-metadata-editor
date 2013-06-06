@@ -88,6 +88,31 @@
         <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-cassandra-plugin" type="zip" />
         </dependency>
+        
+        <!-- Old libext/misc dependencies -->
+        <dependency org="org.snmp4j" name="snmp4j" rev="1.9.3d" transitive="false" conf="default->default" />
+        <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="default->default" />
+        <!-- 2.0.2 is newer than the one from the old libext (was 1.5.4) -->
+        <dependency org="com.enterprisedt" name="edtftpj" rev="2.0.2" transitive="false" conf="default->default" />
+        <dependency org="ehcache" name="ehcache" rev="1.1" transitive="false" conf="default->default" />
+        <dependency org="com.google.collections" name="google-collections" rev="1.0" transitive="false" conf="default->default" />
+        <dependency org="org.hibernate" name="hibernate" rev="3.2.2.ga" transitive="false" conf="default->default" />
+        <dependency org="com.linuxense" name="javadbf" rev="0.4.0" transitive="false" conf="default->default" />
+        <dependency org="jaxen" name="jaxen" rev="1.1.1" transitive="false" conf="default->default" />
+        <dependency org="rhino" name="js" rev="1.7R3" transitive="false" conf="default->default" />
+        <dependency org="com.jcraft" name="jsch" rev="0.1.24" transitive="false" conf="default->default" />
+        <dependency org="jug-lgpl" name="jug-lgpl" rev="2.0.0" transitive="false" conf="default->default" />
+        <dependency org="net.sourceforge.jexcelapi" name="jxl" rev="2.5.7" transitive="false" conf="default->default" />
+        <dependency org="ktable" name="ktable" rev="2.1.3" transitive="false" conf="default->default" />
+        <dependency org="org.livetribe" name="livetribe-jsr223" rev="2.0.6" transitive="false" conf="default->default" />
+        <dependency org="javax.mail" name="mail" rev="1.4.1" transitive="false" conf="default->default" />
+        <dependency org="pentaho" name="pentaho-palo-core" rev="${dependency.pentaho-palo-core.revision}" transitive="false" conf="default->default" />
+        <dependency org="net.sf.saxon" name="saxon" rev="9.1.0.8" transitive="false" conf="default->default" />
+        <dependency org="net.sf.saxon" name="saxon-dom" rev="9.1.0.8" transitive="false" conf="default->default" />
+        <dependency org="simple-jndi" name="simple-jndi" rev="0.11.1" transitive="false" conf="default->default" />
+        <dependency org="org.springframework" name="spring-core" rev="2.5.6.SEC03" transitive="false" conf="default->default" />
+        <dependency org="com.trilead" name="trilead-ssh2" rev="1.0.0-build215" transitive="false" conf="default->default" />
+        <dependency org="org.xBaseJ" name="xbasej" rev="20091203" transitive="false" conf="default->default" />
 
         <dependency org="junit"        name="junit"        rev="4.4"                 transitive="false" conf="test->default" />
       </dependencies>
