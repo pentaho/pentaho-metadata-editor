@@ -17,12 +17,15 @@
 package org.pentaho.pms.ui.dialog;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -41,10 +44,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.pentaho.pms.core.exception.PentahoMetadataException;
 import org.pentaho.pms.messages.Messages;
+import org.pentaho.pms.mql.PMSFormula;
 import org.pentaho.pms.schema.BusinessColumn;
+import org.pentaho.pms.schema.BusinessModel;
 import org.pentaho.pms.schema.BusinessTable;
 import org.pentaho.pms.schema.PhysicalTable;
+import org.pentaho.pms.schema.RelationshipMeta;
 import org.pentaho.pms.schema.SchemaMeta;
 import org.pentaho.pms.schema.concept.ConceptUtilityBase;
 import org.pentaho.pms.schema.concept.ConceptUtilityInterface;
@@ -263,6 +270,8 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
         }
         if (!found) {
           BusinessColumn column = origTable.findBusinessColumn(((BusinessColumn) entry.getValue()).getId());
+          // check if any complex joins reference it and warn about them
+          warnCannotUpdateRelations(getAffectedRelationships(column));
           int index = origTable.indexOfBusinessColumn(column);
           origTable.removeBusinessColumn(index);
           entriesToRemove.add(entry);
@@ -276,10 +285,17 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
       Map.Entry entry = (Map.Entry) iterator.next();
       ConceptUtilityInterface origConcept = (ConceptUtilityInterface) entry.getValue();
       ConceptUtilityInterface workingConcept = (ConceptUtilityInterface) entry.getKey();
-      try {
-        origConcept.setId(workingConcept.getId());
-      } catch (ObjectAlreadyExistsException e) {
-        // This should not happen as this exception would already have been caught earlier...
+      if (!StringUtils.equals(origConcept.getId(), workingConcept.getId())) {
+        List<BusinessModel.RelationFormulaUpdate> updated = updateComplexRelationships(origConcept, workingConcept);
+        try {
+          origConcept.setId(workingConcept.getId());
+        } catch (ObjectAlreadyExistsException e) {
+          // This should not happen as this exception would already have been caught earlier...
+        }
+        if (updated != null) {
+          // test updated relation after change
+          checkRelationshipUpdates(updated);
+        }
       }
       origConcept.getConcept().clearChildProperties();
       origConcept.getConcept().getChildPropertyInterfaces().putAll(
@@ -301,6 +317,62 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
         }
       }
     }
+  }
+
+  /**
+   * @param updated
+   */
+  private void checkRelationshipUpdates(List<BusinessModel.RelationFormulaUpdate> updated) {
+      Map<RelationshipMeta, String> relationsToTest = new HashMap<RelationshipMeta, String>();
+      Collection<RelationshipMeta> badRelations = new HashSet<RelationshipMeta>();
+      for (BusinessModel.RelationFormulaUpdate update : updated) {
+        if (update.getErrors().isEmpty()) {
+          // still need to test it
+          relationsToTest.put(update.getRelationship(), update.getFormulaBefore());
+        }
+        else {
+          // not good
+          badRelations.add(update.getRelationship());
+        }
+      }
+      for (RelationshipMeta relation : relationsToTest.keySet()) {
+        try {
+          // did the update go well?
+          relation.getComplexJoinFormula(schemaMeta.getActiveModel()).parseAndValidate();
+        } catch (Exception e) {
+          // nope, undo
+          relation.setComplexJoin(relationsToTest.get(relation));
+          badRelations.add(relation);
+        }
+      }
+      warnCannotUpdateRelations(badRelations);
+  }
+
+  private void warnCannotUpdateRelations(Collection<RelationshipMeta> badRelations) {
+    if (!badRelations.isEmpty()) {
+      String msg = Messages.getString("BusinessTableDialog.CANNOT_UPDATE_COMPLEX_JOIN_DESC");
+      for (RelationshipMeta relationship : badRelations) {
+        //just give out a warning that manual intervention is required
+        msg += System.getProperty("line.separator");
+        msg += relationship.toString();
+      }
+      MessageDialog.openError(getShell() ,  Messages.getString("BusinessTableDialog.CANNOT_UPDATE_COMPLEX_JOIN_TITLE"), msg);
+    }
+  }
+
+  private Collection<RelationshipMeta> getAffectedRelationships(BusinessColumn column) {
+    return schemaMeta.getActiveModel().getAffectedComplexRelationships(column);
+  }
+
+  private List<BusinessModel.RelationFormulaUpdate> updateComplexRelationships(ConceptUtilityInterface origConcept, ConceptUtilityInterface workingConcept) {
+    List<BusinessModel.RelationFormulaUpdate> updated = null;
+    if (origConcept instanceof BusinessTable) {
+      return schemaMeta.getActiveModel().updateComplexRelationships((BusinessTable) origConcept, (BusinessTable) workingConcept);
+    }
+    else if (origConcept instanceof BusinessColumn) {
+      return schemaMeta.getActiveModel().updateComplexRelationships((BusinessColumn) origConcept, (BusinessColumn) workingConcept);
+    }
+    return null;
   }
 
   protected void editConcept(ConceptUtilityInterface cu) {
@@ -376,12 +448,10 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
     return conceptEditor;
   }
 
-  public void widgetDefaultSelected(SelectionEvent arg0) {
-    // TODO Auto-generated method stub
-
-  }
+  public void widgetDefaultSelected(SelectionEvent arg0) { }
 
   public void widgetSelected(SelectionEvent arg0) {
     tableModel.setParent(schemaMeta.findPhysicalTable(physicalTableText.getText()));
   }
+
 }

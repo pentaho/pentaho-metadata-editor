@@ -2737,15 +2737,15 @@ public class MetaEditor implements SelectionListener {
     }
   }
 
-  public void editRelationship(RelationshipMeta ri) {
-    if (ri != null) {
-      String name = ri.toString();
+  public void editRelationship(RelationshipMeta relationship) {
+    if (relationship != null) {
+      String name = relationship.toString();
       BusinessModel activeModel = schemaMeta.getActiveModel();
       if (activeModel == null)
         return;
-      RelationshipDialog rd = new RelationshipDialog(shell, SWT.NONE, log, ri, activeModel);
+      RelationshipDialog rd = new RelationshipDialog(shell, SWT.NONE, log, relationship, activeModel);
       if (rd.open() != null) {
-        String newname = ri.toString();
+        String newname = relationship.toString();
 
         if (!name.equalsIgnoreCase(newname)) {
           treeViewer.update(mainTreeNode, null);
@@ -2782,8 +2782,9 @@ public class MetaEditor implements SelectionListener {
     RelationshipDialog dialog = new RelationshipDialog(shell, SWT.NONE, log, relationship, schemaMeta.getActiveModel());
     if (dialog.open() != null) {
       activeModel.addRelationship(relationship);
-      if (activeModelTreeNode != null)
+      if (activeModelTreeNode != null) {
         activeModelTreeNode.getRelationshipsRoot().addDomainChild(relationship);
+      }
       refreshGraph();
     }
   }

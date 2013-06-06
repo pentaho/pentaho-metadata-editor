@@ -134,7 +134,7 @@ public class QueryBuilderDialog extends Dialog {
 
   protected void configureShell(Shell arg0) {
     super.configureShell(arg0);
-    arg0.setText("Query Builder");
+    arg0.setText("Query Builder");// XXX Hardcoded title
     arg0.setSize(850, 650);
   }
 
@@ -359,6 +359,7 @@ public class QueryBuilderDialog extends Dialog {
     return super.createDialogArea(composite);
   }
 
+  //TODO: is this used anywhere?
   public void showSQL() {
     try {
     	@SuppressWarnings("unchecked")

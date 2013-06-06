@@ -102,6 +102,8 @@ public class Constants {
     
     imageRegistry.put("up-arrow", createImage(display, "arrow_up.png")); //$NON-NLS-1$ //$NON-NLS-2$
     imageRegistry.put("down-arrow", createImage(display, "arrow_down.png")); //$NON-NLS-1$ //$NON-NLS-2$
+
+    imageRegistry.put("check", createImage(display, "check.png")); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private static Image createImage(final Display display, final String filename) {

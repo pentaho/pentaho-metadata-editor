@@ -16,18 +16,27 @@
  */
 package org.pentaho.pms.ui.dialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -36,11 +45,15 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.pentaho.di.core.logging.LogChannelInterface;
-import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.core.gui.WindowProperty;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
+import org.pentaho.pms.core.exception.PentahoMetadataException;
+import org.pentaho.pms.mql.PMSFormula;
+import org.pentaho.pms.mql.Selection;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.schema.BusinessColumn;
 import org.pentaho.pms.schema.BusinessModel;
@@ -48,6 +61,11 @@ import org.pentaho.pms.schema.BusinessTable;
 import org.pentaho.pms.schema.RelationshipMeta;
 import org.pentaho.pms.ui.util.Const;
 import org.pentaho.pms.ui.util.GUIResource;
+import org.pentaho.reporting.libraries.formula.Formula;
+import org.pentaho.reporting.libraries.formula.function.logical.AndFunction;
+import org.pentaho.reporting.libraries.formula.lvalues.ContextLookup;
+import org.pentaho.reporting.libraries.formula.lvalues.FormulaFunction;
+import org.pentaho.reporting.libraries.formula.parser.ParseException;
 
 public class RelationshipDialog extends Dialog {
   private Label wlFrom;
@@ -118,11 +136,13 @@ public class RelationshipDialog extends Dialog {
 
   private BusinessModel businessModel;
 
-  private BusinessTable fromtable, totable;
+  private BusinessTable fromTable, toTable;
 
   private ModifyListener lsMod;
 
   private boolean changed, backupComplex;
+  
+  private ToolBar toolBar;
 
 private FormData fdlJoinType;
 
@@ -131,9 +151,8 @@ private FormData fdlJoinType;
     super(parent, style);
     this.relationshipMeta = relationshipMeta;
     this.businessModel = businessModel;
-
-    fromtable = relationshipMeta.getTableFrom();
-    totable = relationshipMeta.getTableTo();
+    fromTable = relationshipMeta.getTableFrom();
+    toTable = relationshipMeta.getTableTo();
   }
 
   public Object open() {
@@ -160,11 +179,10 @@ private FormData fdlJoinType;
     shell.setText(Messages.getString("RelationshipDialog.USER_HOP_FROM_TO")); //$NON-NLS-1$
 
     int middle = props.getMiddlePct();
-    int length = 350;
     int margin = Const.MARGIN;
 
     //////////////////////////////////////////////////////////////////////
-    // From step line
+    // From table
     //
     wFrom = new CCombo(shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
     wFrom.setText(Messages.getString("RelationshipDialog.USER_SELECT_SOURCE_TABLE")); //$NON-NLS-1$
@@ -177,7 +195,7 @@ private FormData fdlJoinType;
     wFrom.addModifyListener(new ModifyListener() {
       public void modifyText(ModifyEvent e) {
         // grab the new fromtable:
-        fromtable = businessModel.findBusinessTable(wFrom.getText());
+        fromTable = businessModel.findBusinessTable(wFrom.getText());
         refreshFromFields();
       }
     });
@@ -211,7 +229,7 @@ private FormData fdlJoinType;
     wFromField.setLayoutData(fdFromField);
 
     //////////////////////////////////////////////////////////////////////
-    // To line
+    // To Table
     //
     wTo = new CCombo(shell, SWT.BORDER | SWT.READ_ONLY);
     wTo.setText(Messages.getString("RelationshipDialog.USER_SELECT_DESTINATION_TABLE")); //$NON-NLS-1$
@@ -224,7 +242,7 @@ private FormData fdlJoinType;
     wTo.addModifyListener(new ModifyListener() {
       public void modifyText(ModifyEvent e) {
         // grab the new fromtable:
-        totable = businessModel.findBusinessTable(wTo.getText());
+        toTable = businessModel.findBusinessTable(wTo.getText());
         refreshToFields();
       }
     });
@@ -383,8 +401,39 @@ private FormData fdlJoinType;
     fdlComplexJoin = new FormData();
     fdlComplexJoin.left = new FormAttachment(0, 0);
     fdlComplexJoin.right = new FormAttachment(middle, -margin);
-    fdlComplexJoin.top = new FormAttachment(wComplex, margin);
+    fdlComplexJoin.top = new FormAttachment(wlComplex, margin*2);
     wlComplexJoin.setLayoutData(fdlComplexJoin);
+
+    // complex join toolbar
+    toolBar = new ToolBar(shell, SWT.HORIZONTAL | SWT.RIGHT_TO_LEFT);
+    FormData fdTb = new FormData(); 
+    fdTb.left = new FormAttachment(middle, margin);
+    fdTb.right = new FormAttachment(100, 0);
+    fdTb.top = new FormAttachment(wComplex, 0);
+    props.setLook(toolBar);
+    toolBar.setLayoutData(fdTb);
+    // add column
+    ToolItem addColumnCJ = new ToolItem(toolBar, SWT.NULL);
+    addColumnCJ.setImage(GUIResource.getInstance().getImageGenericAdd());
+    addColumnCJ.setToolTipText(Messages.getString("RelationshipDialog.COMPLEX_JOIN_ADD_CONDITION"));//TODO:i18n
+    addColumnCJ.addSelectionListener(new SelectionListener() {
+      public void widgetDefaultSelected(SelectionEvent e) { /**/ }
+      public void widgetSelected(SelectionEvent e) {
+        AddComplexJoinColumnsDialog dialog = new AddComplexJoinColumnsDialog();
+        dialog.open();
+      }
+    });
+    // validate
+    ToolItem validateCJ = new ToolItem(toolBar, SWT.NULL);
+    validateCJ.setImage(GUIResource.getInstance().getImageCheck());
+    validateCJ.setToolTipText(Messages.getString("RelationshipDialog.COMPLEX_JOIN_VALIDATE"));//$NON-NLS-1$
+    validateCJ.addSelectionListener(new SelectionListener() {
+      public void widgetDefaultSelected(SelectionEvent e) { /**/ }
+      public void widgetSelected(SelectionEvent e) {
+        validateComplexJoinFormula(wComplexJoin.getText());
+      }
+    });
+    // ComplexJoin formula text
     wComplexJoin = new Text(shell, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
     wComplexJoin.setText(""); //$NON-NLS-1$
     props.setLook(wComplexJoin);
@@ -392,8 +441,8 @@ private FormData fdlJoinType;
     fdComplexJoin = new FormData();
     fdComplexJoin.left = new FormAttachment(middle, margin);
     fdComplexJoin.right = new FormAttachment(100, 0);
-    fdComplexJoin.top = new FormAttachment(wlComplexJoin, margin);
-    fdComplexJoin.bottom = new FormAttachment(wlComplexJoin, 100);
+    fdComplexJoin.top = new FormAttachment(toolBar, margin);
+    fdComplexJoin.bottom = new FormAttachment(wlComplexJoin, 150);
     wComplexJoin.setLayoutData(fdComplexJoin);
 
     // Description
@@ -412,7 +461,7 @@ private FormData fdlJoinType;
     fdDescription = new FormData();
     fdDescription.left = new FormAttachment(middle, margin);
     fdDescription.right = new FormAttachment(100, 0);
-    fdDescription.top = new FormAttachment(wlDescription, margin);
+    fdDescription.top = new FormAttachment(wComplexJoin, margin);
     fdDescription.bottom = new FormAttachment(100, -50);
     wDescription.setLayoutData(fdDescription);
 
@@ -436,6 +485,8 @@ private FormData fdlJoinType;
         ok();
       }
     };
+    wOK.addListener(SWT.Selection, lsOK);
+    wCancel.addListener(SWT.Selection, lsCancel);
     
     // If someone changes the relationship, we automatically modify the join type.
     //
@@ -453,9 +504,7 @@ private FormData fdlJoinType;
     		wRelation.select(RelationshipMeta.getRelationType(wJoinType.getSelectionIndex()));
 		}
 	});
-    
-    wOK.addListener(SWT.Selection, lsOK);
-    wCancel.addListener(SWT.Selection, lsCancel);
+
 
     // Detect [X] or ALT-F4 or something that kills this window...
     shell.addShellListener(new ShellAdapter() {
@@ -484,43 +533,27 @@ private FormData fdlJoinType;
   }
 
   public void setComplex() {
-    wFromField.setEnabled(relationshipMeta.isRegular());
-    wToField.setEnabled(relationshipMeta.isRegular());
+    wFromField.setEnabled(!relationshipMeta.isComplex());
+    wToField.setEnabled(!relationshipMeta.isComplex());
     wComplexJoin.setEnabled(relationshipMeta.isComplex());
     wlComplexJoin.setEnabled(relationshipMeta.isComplex());
-
-    /*
-     if (relationshipMeta.isRegular())
-     {
-     wFromField.setBackground(bg);
-     wToField.setBackground(bg);
-     wComplexJoin.setBackground(gray);
-     }
-     else
-     {
-     wFromField.setBackground(gray);
-     wToField.setBackground(gray);
-     wComplexJoin.setBackground(bg);
-     }
-     */
+    toolBar.setEnabled(relationshipMeta.isComplex());
+    wGuess.setEnabled(relationshipMeta.isComplex());
   }
 
   public void refreshFromFields() {
-    wFromField.removeAll();
-    if (fromtable != null) {
-      for (int i = 0; i < fromtable.nrBusinessColumns(); i++) {
-        BusinessColumn f = fromtable.getBusinessColumn(i);
-        wFromField.add(f.getId());
-      }
-    }
+    refreshFields(fromTable, wFromField);
   }
 
   public void refreshToFields() {
-    wToField.removeAll();
-    if (totable != null) {
-      for (int i = 0; i < totable.nrBusinessColumns(); i++) {
-        BusinessColumn f = totable.getBusinessColumn(i);
-        wToField.add(f.getId());
+    refreshFields(toTable, wToField);
+  }
+
+  protected static void refreshFields(BusinessTable table, CCombo combo) {
+    combo.removeAll();
+    if (table != null) {
+      for(BusinessColumn column : table.getBusinessColumns()) {
+        combo.add(column.getId());
       }
     }
   }
@@ -553,8 +586,9 @@ private FormData fdlJoinType;
     wRelation.select(relationshipMeta.getType());
     wJoinType.select(relationshipMeta.getJoinType());
     wComplex.setSelection(relationshipMeta.isComplex());
-    if (relationshipMeta.getComplexJoin() != null)
+    if (relationshipMeta.getComplexJoin() != null) {
       wComplexJoin.setText(relationshipMeta.getComplexJoin());
+    }
     setComplex();
     
     wDescription.setText(Const.NVL(relationshipMeta.getDescription(), ""));
@@ -650,8 +684,56 @@ private FormData fdlJoinType;
       mb.open();
       return;      
     }
+    if (relationshipMeta.isComplex()) {
+      if (!checkComplexJoin()) {
+        return;
+      }
+    }
 
     dispose();
+  }
+
+  private boolean checkComplexJoin() {
+    if (relationshipMeta.isComplex()) {
+      String complexJoin = relationshipMeta.getComplexJoin();
+      // if there is something wrong with the formula,
+      // we must make the user aware of the implications
+      try {
+        PMSFormula joinFormula = new PMSFormula(businessModel, complexJoin, null);
+        joinFormula.parseAndValidate();
+        List<BusinessColumn> referencedColumns = new ArrayList<BusinessColumn>();
+        for (Selection selection : joinFormula.getBusinessColumns()) {
+          referencedColumns.add(selection.getBusinessColumn());
+        }
+        relationshipMeta.setCJReferencedColumns(referencedColumns);
+        return true;
+      } catch (PentahoMetadataException e) {
+        return MessageDialog.openConfirm(shell,
+            Messages.getString("RelationshipDialog.COMPLEX_JOIN_BAD_FORMULA_TITLE"), 
+            Messages.getString("RelationshipDialog.COMPLEX_JOIN_BAD_FORMULA_DESC"));
+      }
+    }
+    else return true;
+  }
+
+  private void validateComplexJoinFormula(String formula) {
+    if (StringUtils.isEmpty(formula)) return;
+    PMSFormula joinFormula;
+    try {
+      joinFormula = new PMSFormula(businessModel, formula, null);
+      joinFormula.parseAndValidate();
+      // all clear
+      MessageDialog.openInformation(shell, "Formula OK", "Validations passed."); //TODO:i18n
+    } catch (PentahoMetadataException e) {
+      // if it's a parse error we might get friendlier message
+      String message = e.getLocalizedMessage();
+      if (e.getCause() != null && e.getCause() instanceof ParseException) {
+        message += System.getProperty("line.separator");
+        message += System.getProperty("line.separator");
+        message += e.getCause().getLocalizedMessage();
+      }
+      MessageDialog.openError(shell, Messages.getString("RelationshipDialog.COMPLEX_JOIN_BAD_FORMULA_TITLE"), message);
+    }
   }
 
   // Try to find fields with the same name in both tables...
@@ -713,13 +795,155 @@ private FormData fdlJoinType;
 
   // Try to find fields with the same name in both tables...
   public void guessRelationship() {
-    if (fromtable != null && totable != null) {
-      if (fromtable.isFactTable() && totable.isDimensionTable())
+    if (fromTable != null && toTable != null) {
+      if (fromTable.isFactTable() && toTable.isDimensionTable())
         wRelation.select(RelationshipMeta.TYPE_RELATIONSHIP_N_1);
-      if (fromtable.isDimensionTable() && totable.isFactTable())
+      if (fromTable.isDimensionTable() && toTable.isFactTable())
         wRelation.select(RelationshipMeta.TYPE_RELATIONSHIP_1_N);
-      if (fromtable.isFactTable() && totable.isFactTable())
+      if (fromTable.isFactTable() && toTable.isFactTable())
         wRelation.select(RelationshipMeta.TYPE_RELATIONSHIP_N_N);
+    }
+  }
+  
+  /**
+   * Simple interface to cover simplest join cases
+   */
+  class AddComplexJoinColumnsDialog extends TitleAreaDialog {
+    private Shell shell;
+    public AddComplexJoinColumnsDialog() {
+      super(RelationshipDialog.this.shell);
+    }
+    CCombo wColumnTo;
+    CCombo wColumnFrom;
+    
+    protected Control createDialogArea(Composite parent) {
+      Composite c0 = (Composite) super.createDialogArea(parent);
+
+      setTitle(Messages.getString("RelationshipDialog.COMPLEX_JOIN_ADD_CONDITION"));
+      setMessage(Messages.getString("RelationshipDialog.COMPLEX_JOIN_ADD_CONDITION_DETAIL"));
+
+      FormLayout formLayout = new FormLayout();
+      formLayout.marginWidth = Const.FORM_MARGIN;
+      formLayout.marginHeight = Const.FORM_MARGIN;
+      
+      Composite c1 = new Composite(c0, SWT.BORDER);
+      c1.setBackground(GUIResource.getInstance().getColorWhite());
+
+      c1.setLayout(formLayout);
+      PropsUI props = PropsUI.getInstance();
+      
+      int middle = 50;
+
+      CCombo wFrom = new CCombo(c1, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+      props.setLook(wFrom);
+      // free will is overrated
+      wFrom.add(fromTable.getId());
+      wFrom.select(0);
+      wFrom.setEditable(false);
+      wFrom.setEnabled(false);
+      FormData fdFrom = new FormData();
+      fdFrom.left = new FormAttachment(0, Const.MARGIN);
+      fdFrom.top = new FormAttachment(0, Const.MARGIN);
+      fdFrom.right = new FormAttachment(middle, -Const.MARGIN);
+      wFrom.setLayoutData(fdFrom);
+
+
+      wColumnFrom = new CCombo(c1, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+      props.setLook(wColumnFrom);
+      refreshFields(fromTable, wColumnFrom);
+      wColumnFrom.select(0);
+      wColumnFrom.setEditable(false);
+      FormData fdFromField = new FormData();
+      fdFromField.left = new FormAttachment(wFrom, Const.MARGIN );//*2
+      fdFromField.top = new FormAttachment(0, Const.MARGIN);
+      fdFromField.right = new FormAttachment(100, 0);
+      wColumnFrom.setLayoutData(fdFromField);
+      
+      
+      CCombo wTo = new CCombo(c1, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+      props.setLook(wTo);
+      wTo.add(toTable.getId());
+      wTo.select(0);
+      wTo.setEditable(false);
+      wTo.setEnabled(false);
+      FormData fdTo = new FormData();
+      fdTo.left = new FormAttachment(0, Const.MARGIN);
+      fdTo.top = new FormAttachment(wFrom, Const.MARGIN);
+      fdTo.right = new FormAttachment(middle, -Const.MARGIN);
+      wTo.setLayoutData(fdTo);
+
+
+      wColumnTo = new CCombo(c1, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+      props.setLook(wColumnTo);
+      refreshFields(toTable, wColumnTo);
+      wColumnTo.select(0);
+      wColumnTo.setEditable(false);
+      FormData fdToField = new FormData();
+      fdToField.left = new FormAttachment(wTo, Const.MARGIN );
+      fdToField.top = new FormAttachment(wColumnFrom, Const.MARGIN);
+      fdToField.right = new FormAttachment(100, 0);
+      wColumnTo.setLayoutData(fdToField);
+
+      return c0;
+    }
+    
+    protected void okPressed() {
+      // nothing fancy just assume simplest use cases
+      // or just add to the formula otherwise
+      String complexJoin = wComplexJoin.getText();
+      BusinessColumn fieldTo = toTable.findBusinessColumn(wColumnTo.getText());
+      BusinessColumn fieldFrom = fromTable.findBusinessColumn(wColumnFrom.getText());
+      ContextLookup to = new ContextLookup(fieldTo.toString());
+      ContextLookup from = new ContextLookup(fieldFrom.toString());
+      final String newLine = System.getProperty("line.separator");
+      String toAdd = from.toString() + " = " + to.toString();
+      if (StringUtils.isEmpty(complexJoin)) {
+        complexJoin = toAdd;
+      }
+      else {
+        toAdd = newLine + toAdd;
+        Formula formula = null;
+        boolean done = false;
+        try {
+          PMSFormula joinFormula = new PMSFormula(businessModel, complexJoin, null);
+          joinFormula.parseAndValidate();
+          formula = joinFormula.getFormula();
+        } catch (PentahoMetadataException e) {
+          formula = null;
+        }
+        if (formula != null) {
+        
+          if (formula.getRootReference() instanceof FormulaFunction
+              && ((FormulaFunction)formula.getRootReference()).getFunction() instanceof AndFunction) {
+            // there's an and add to the end of it
+            int insertPoint = complexJoin.lastIndexOf(')');
+            if (insertPoint > 0) {
+              toAdd = " ;" + toAdd; 
+              complexJoin = 
+                  complexJoin.substring(0, insertPoint) +
+                  toAdd + " " +
+                  complexJoin.substring(insertPoint);
+              done = true;
+            }
+          }
+          else  {
+            // otherwise assume it's a condition and wrap it in an AND
+            complexJoin = 
+                "AND(" + 
+                newLine +
+                complexJoin + " ;" +
+                toAdd +"  " +
+                ")";
+          }
+        }
+        else {
+          // no valid formula, just stick it in there
+          complexJoin += toAdd;
+        }
+      }
+      wComplexJoin.setText(complexJoin);
+      setReturnCode(OK);
+      close();
     }
   }
 }

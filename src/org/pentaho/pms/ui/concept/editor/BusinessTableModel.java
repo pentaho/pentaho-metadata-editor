@@ -80,7 +80,7 @@ public class BusinessTableModel extends AbstractTableModel {
       PhysicalColumn physicalColumn = physicalTable.findPhysicalColumn(localeCode, id);
 
       UniqueList columns;
-      if (null != businessModel) {
+      if (businessModel != null) {
         // merge all business columns + business columns in this table (in case the table has yet to be added to the 
         // model) into one UniqueList
         columns = new UniqueArrayList<BusinessColumn>();

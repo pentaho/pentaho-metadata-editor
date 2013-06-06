@@ -91,8 +91,10 @@ public class GUIResource
     private Image     imageGenericDelete;
     private Image     imageBol;
     private Image     imageIcon;
+    private Image     imageCheck;
 
     private ManagedFont fontMedium;
+
     
     /**
      * GUIResource also contains the clipboard as it has to be allocated only once!
@@ -266,6 +268,7 @@ public class GUIResource
         imageBusinessModel  = new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "business_model.png")); //$NON-NLS-1$
         imageBol         = new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "bol.png")); //$NON-NLS-1$
         imageIcon        = new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "icon.png")); //$NON-NLS-1$
+        imageCheck        = new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "check.png")); //$NON-NLS-1$
     }
 
     /**
@@ -576,6 +579,10 @@ public class GUIResource
     public Image getImageBusinessModel()
     {
         return imageBusinessModel;
+    }
+    
+    public Image getImageCheck() {
+      return imageCheck;
     }
     
     /**
