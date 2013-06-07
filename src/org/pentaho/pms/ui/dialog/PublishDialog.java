@@ -70,7 +70,8 @@ public class PublishDialog extends TitleAreaDialog {
   private static final String SOLUTIONS_PROPS_FILE = "ui/publishSolutions.properties";
   private static final String DEFAULT_PUBLISH_URL = "http://localhost:8080/pentaho/plugin/data-access/api/metadata/import"; //$NON-NLS-1$
   private static final String DEFAULT_METADATA_FILE= "metadata.xmi";
-  private static final Object SUCCESS = "SUCCESS";
+  protected static final String SUCCESS = "3";
+  protected static final String PUBLISH_SCHEMA_EXISTS_ERROR = "8";
   private SchemaMeta schemaMeta;
   
   private LogWriter log;
@@ -91,6 +92,7 @@ public class PublishDialog extends TitleAreaDialog {
   private Properties solutionFolders;
   private Properties mdFiles;
   private String userDomain;
+  private boolean overwriteInRepository = false;
 
   /**
    * @param parent
@@ -228,7 +230,7 @@ public class PublishDialog extends TitleAreaDialog {
   protected void buttonPressed(int buttonId) {
     switch (buttonId) {
       case IDialogConstants.OK_ID:
-        if (ok()) {
+        if (postPublishEvent()) {
           setReturnCode(buttonId);
           close();
         }
@@ -241,33 +243,34 @@ public class PublishDialog extends TitleAreaDialog {
     }
   }
   
-  private boolean ok() {
-    boolean responseValue = false;
+  private boolean postPublishEvent() {
+    boolean responseValue = true;
     if (populateStrings()) {
       try {
         InputStream fileStream = this.createInputStream();
         FormDataMultiPart part = new FormDataMultiPart()
             .field("domainId", userDomain, MediaType.MULTIPART_FORM_DATA_TYPE)
+            .field("overwrite",String.valueOf(overwriteInRepository),MediaType.MULTIPART_FORM_DATA_TYPE)
             .field("metadataFile", fileStream, MediaType.MULTIPART_FORM_DATA_TYPE);
         part.getField("metadataFile").setContentDisposition(
             FormDataContentDisposition.name("metadataFile")
             .fileName(userDomain).build());
         Client client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(userId, userPassword));
-        System.out.println(serverURL + " ");
+      
         WebResource resource = client.resource(serverURL);
      
       
         ClientResponse resp = resource
             .type(MediaType.MULTIPART_FORM_DATA_TYPE)
             .put(ClientResponse.class, part);
-        System.out.println(resp);
-        if(resp != null && SUCCESS.equals(resp.getEntity(String.class))){
-          //test for overwrite here resp.getEntity(String.class) == 8
-          responseValue = true;
-        }
-        responseValue = displayMessageBox(responseValue);
+        String status = "-1";
+        if(resp != null && resp.getStatus() > 0){
+          status = String.valueOf(resp.getStatus());
+        } 
         
+        System.out.println("Return Status" + status);
+        responseValue = displayMessageBox(status);
       } catch (Exception e) {
         e.printStackTrace();
         responseValue = displayErrorDialog(e);
@@ -278,20 +281,38 @@ public class PublishDialog extends TitleAreaDialog {
     return responseValue;
   }
   
-  private boolean displayMessageBox(boolean returnValue){
+  @SuppressWarnings("deprecation")
+  private boolean displayMessageBox(String statusCode){
+    boolean response = true;
     MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_INFORMATION);
-    if(returnValue){
+    if(SUCCESS.equals(statusCode)){
       mb.setText(Messages.getString("PublishDialog.ACTION_SUCCEEDED")); //$NON-NLS-1$
       mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_SUCCEEDED", userDomain)); //$NON-NLS-1$
     } else {
-      mb.setText(Messages.getString("PublishDialog.PUBLISH_FAILED_DIALOG_TITLE")); //$NON-NLS-1$
-      mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", userDomain)); //$NON-NLS-1$
+      if(PUBLISH_SCHEMA_EXISTS_ERROR.equals(statusCode) && !overwriteInRepository){
+        overwriteDialog();
+        return true;
+      } else {
+        mb.setText(Messages.getString("PublishDialog.PUBLISH_FAILED_DIALOG_TITLE")); //$NON-NLS-1$
+        mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", userDomain)); //$NON-NLS-1$
+        response = false;
+      }
     }
-    mb.open();
+    overwriteInRepository = false;
+    mb.open();      
     dispose();
-    return returnValue;
+    return response;
   }
   
+  private void overwriteDialog(){
+    MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION);
+    mb.setText(Messages.getString("PublishDialog.FILE_EXISTS")); //$NON-NLS-1$
+    mb.setMessage(Messages.getString("PublishDialog.FILE_OVERWRITE")); //$NON-NLS-1$        
+    if(mb.open() == SWT.OK){
+      this.overwriteInRepository = true;
+      postPublishEvent();
+    }   
+  }
   private boolean displayErrorDialog(Exception e){
     new ErrorDialog( getShell(),
         Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("PublishDialog.ACTION_FAILED"), e); //$NON-NLS-1$ //$NON-NLS-2$
