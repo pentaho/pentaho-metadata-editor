@@ -290,8 +290,7 @@ public class PublishDialog extends TitleAreaDialog {
       mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_SUCCEEDED", userDomain)); //$NON-NLS-1$
     } else {
       if(PUBLISH_SCHEMA_EXISTS_ERROR.equals(statusCode) && !overwriteInRepository){
-        overwriteDialog();
-        return true;
+        return overwriteDialog();        
       } else {
         mb.setText(Messages.getString("PublishDialog.PUBLISH_FAILED_DIALOG_TITLE")); //$NON-NLS-1$
         mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", userDomain)); //$NON-NLS-1$
@@ -304,14 +303,15 @@ public class PublishDialog extends TitleAreaDialog {
     return response;
   }
   
-  private void overwriteDialog(){
+  private boolean overwriteDialog(){
     MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION);
     mb.setText(Messages.getString("PublishDialog.FILE_EXISTS")); //$NON-NLS-1$
     mb.setMessage(Messages.getString("PublishDialog.FILE_OVERWRITE")); //$NON-NLS-1$        
     if(mb.open() == SWT.OK){
       this.overwriteInRepository = true;
-      postPublishEvent();
+      return postPublishEvent();
     }   
+    return true;
   }
   private boolean displayErrorDialog(Exception e){
     new ErrorDialog( getShell(),
