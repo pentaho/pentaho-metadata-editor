@@ -1,61 +1,23 @@
+REM ${project.name}
+REM ${project.version}.${build.number}
+REM Copyright © ${project.inceptionYear} ${project.organization.name}
+REM Classpath is built by launcher. See ..\launcher\launcher.properties.
+
 @echo off
+setlocal 
 
-REM **************************************************
-REM ** Make sure we use the correct J2SE version!   **
-REM ** Uncomment the PATH line in case of trouble   **
-REM **************************************************
 cd /D %~dp0
-REM set PATH=C:\j2sdk1.4.2_01\bin;.;%PATH%
 
-set CLASSPATH=.
+REM Special console/debug options when called from meta-editor.bat or meta-editorebug.bat
+if "%CONSOLE%"=="1" set PENTAHO_JAVA=java
+if not "%CONSOLE%"=="1" set PENTAHO_JAVA=javaw
+set IS64BITJAVA=0
 
-REM ******************
-REM   Core Library
-REM ******************
-REM This will get the versioned pentaho-meta.jar
-FOR %%F IN (lib\*.jar) DO call :addcp %%F
-REM set CLASSPATH=%CLASSPATH%;lib\pentaho-meta.jar
-
-REM **********************
-REM   External Libraries
-REM **********************
-
-REM Loop the libext directory and add the classpath.
-REM The following command would only add the last jar: FOR %%F IN (libext\*.jar) DO call set CLASSPATH=%CLASSPATH%;%%F
-REM So the circumvention with a subroutine solves this ;-)
-
-FOR %%F IN (libext\*.jar) DO call :addcp %%F
-FOR %%F IN (libext\commons\*.jar) DO call :addcp %%F
-FOR %%F IN (libext\JDBC\*.jar) DO call :addcp %%F
-FOR %%F IN (libext\meta\*.jar) DO call :addcp %%F
-FOR %%F IN (libext\misc\*.jar) DO call :addcp %%F
-FOR %%F IN (libext\pentaho\*.jar) DO call :addcp %%F
-
-goto extlibe
-
-:addcp
-set CLASSPATH=%CLASSPATH%;%1
-goto :eof
-
-:extlibe
-
-REM *****************
-REM   SWT Libraries
-REM *****************
-
-set CLASSPATH=%CLASSPATH%;libswt\runtime.jar
-set CLASSPATH=%CLASSPATH%;libswt\jface.jar
-set CLASSPATH=%CLASSPATH%;libswt\common.jar
-set CLASSPATH=%CLASSPATH%;libswt\commands.jar
+call "%~dp0set-pentaho-env.bat"
 
 REM **************************************************
 REM   Platform Specific SWT       **
 REM **************************************************
-
-set PENTAHO_JAVA=javaw
-call "%~dp0set-pentaho-env.bat"
-
-echo "%_PENTAHO_JAVA%"
 
 REM The following line is predicated on the 64-bit Sun
 REM java output from -version which
@@ -82,7 +44,10 @@ GOTO CHECK32VS64BITJAVA
 FOR /F %%a IN ('java -version 2^>^&1^|find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)
 GOTO CHECK32VS64BITJAVA
 :CHECK32VS64BITJAVA
+
+
 IF %IS64BITJAVA% == 1 GOTO :USE64
+
 :USE32
 REM ===========================================
 REM Using 32bit Java, so include 32bit SWT Jar
@@ -94,30 +59,42 @@ REM ===========================================
 REM Using 64bit java, so include 64bit SWT Jar
 REM ===========================================
 set LIBSPATH=libswt\win64
+set SWTJAR=..\libswt\win64
 :CONTINUE
 popd
 
-set CLASSPATH=%CLASSPATH%;%LIBSPATH%\swt.jar
+REM **********************
+REM   Collect arguments
+REM **********************
+
+set _cmdline=
+:TopArg
+if %1!==! goto EndArg
+set _cmdline=%_cmdline% %1
+shift
+goto TopArg
+:EndArg
 
 REM ******************************************************************
 REM ** Set java runtime options                                     **
-REM ** Change 128m to higher values in case you run out of memory.  **
+REM ** Change 512m to higher values in case you run out of memory   **
+REM ** or set the PENTAHO_JAVA_OPTIONS environment variable         **
 REM ******************************************************************
 
-set OPT=-Xmx256m -cp %CLASSPATH% -Djava.library.path=%LIBSPATH%
+if "%PENTAHO_JAVA_OPTIONS%"=="" set PENTAHO_JAVA_OPTIONS="-Xmx256m"
+
+set OPT=%PENTAHO_JAVA_OPTIONS% "-Djava.library.path=%LIBSPATH%" 
+rem **** USE THIS LINE IF REMOTE DEBUGGING (port 5105) IS REQUIRED***
+REM set OPT=%OPT% -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5105
 
 REM ***************
 REM ** Run...    **
 REM ***************
 
-start "Pentaho Metadata Editor" "%_PENTAHO_JAVA%" %OPT% org.pentaho.pms.ui.MetaEditor %1 %2 %3 %4 %5 %6 %7 %8 %9
+REM Eventually call java instead of javaw and do not run in a separate window
+if not "CONSOLE%"=="1" set START_OPTION=start "Pentaho Metadata Editor"
 
-REM *****************************************************************************
-REM If you are having trouble launching the application, comment out the 
-REM "start..."  line above, and uncomment the next 2 lines below . 
-REM This will allow you to see any exceptions that may be preventing the 
-REM application from starting successfully ...
-
-REM "%_PENTAHO_JAVA%" %OPT% org.pentaho.pms.ui.MetaEditor %1 %2 %3 %4 %5 %6 %7 %8 %9
-REM pause
-REM ******************************************************************************
+@echo on
+%TART_OPTION% "%PENTAHO_JAVA%" %OPT% -jar launcher\launcher-1.0.0.jar -lib ..\%LIBSPATH% %_cmdline%
+@echo off
+if "%PAUSE%"=="1" pause

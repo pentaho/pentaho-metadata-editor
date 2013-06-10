@@ -3,53 +3,48 @@
  
 # this script must be executed inside the pme folder
 
-DIR_REL=`dirname $0`
-cd $DIR_REL
-DIR=`pwd`
-
 # **************************************************
 # ** Set these to the location of your mozilla
 # ** installation directory.  Use a Mozilla with
 # ** Gtk2 and Fte enabled.
 # **************************************************
 
-export MOZILLA_FIVE_HOME=/usr/local/mozilla
-export LD_LIBRARY_PATH=/usr/local/mozilla
+# set MOZILLA_FIVE_HOME=/usr/local/mozilla
+# set LD_LIBRARY_PATH=/usr/local/mozilla
+
+# Try to guess xulrunner location - change this if you need to
+MOZILLA_FIVE_HOME=$(find /usr/lib -maxdepth 1 -name xulrunner-[0-9]* | head -1)
+LD_LIBRARY_PATH=${MOZILLA_FIVE_HOME}:${LD_LIBRARY_PATH}
+export MOZILLA_FIVE_HOME LD_LIBRARY_PATH
+
+
+# Fix for GTK Windows issues with SWT
+export GDK_NATIVE_WINDOWS=1
+
+# Fix overlay scrollbar bug with Ubuntu 11.04
+export LIBOVERLAY_SCROLLBAR=0
 
 # **************************************************
-# ** Core libraries:                              **
+# ** Init BASEDIR                                 **
 # **************************************************
 
-CLASSPATH=.
+BASEDIR=`dirname $0`
+cd $BASEDIR
+DIR=`pwd`
+cd -
 
-# This will get the versioned pentaho-meta.jar
-for i in `ls ./lib/*.jar`
-do
-  CLASSPATH=${CLASSPATH}:${i}
-done
-
-CLASSPATH=$CLASSPATH:libswt/commands.jar
-CLASSPATH=$CLASSPATH:libswt/common.jar
-CLASSPATH=$CLASSPATH:libswt/jface.jar
-CLASSPATH=$CLASSPATH:libswt/runtime.jar
-
-# **************************************************
-# ** JDBC & other libraries used:                 **
-# **************************************************
-
-for f in `find libext`
-do
-  CLASSPATH=$CLASSPATH:$f
-done
 
 # **************************************************
 # ** Platform specific libraries ...              **
 # **************************************************
 
-. "$DIR/set-pentaho-env.sh"
-setPentahoEnv
 
 LIBPATH="NONE"
+STARTUP="-jar launcher/launcher-1.0.0.jar"
+
+
+. "$DIR/set-pentaho-env.sh"
+setPentahoEnv
 
 case `uname -s` in 
   AIX)
@@ -137,25 +132,17 @@ esac
 
 export LIBPATH
 
-if [ "$LIBPATH" != "NONE" ]
-then
-  for f in `find $LIBPATH -name '*.jar'`
-  do
-    CLASSPATH=$CLASSPATH:$f
-  done
-fi
-
 
 # ******************************************************************
 # ** Set java runtime options                                     **
 # ** Change 256m to higher values in case you run out of memory.  **
 # ******************************************************************
 
-OPT="-Xmx256m -cp $CLASSPATH -Djava.library.path=$LIBPATH"
+OPT="-Xmx256m
+
 
 # ***************
 # ** Run...    **
 # ***************
-
-"$_PENTAHO_JAVA" $OPT org.pentaho.pms.ui.MetaEditor "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
+"$_PENTAHO_JAVA" $OPT $STARTUP -lib $LIBPATH "${1+$@}"
 cd -
