@@ -138,7 +138,7 @@ export LIBPATH
 # ** Change 256m to higher values in case you run out of memory.  **
 # ******************************************************************
 
-OPT="-Xmx256m
+OPT="-Xmx256m"
 
 
 # ***************
