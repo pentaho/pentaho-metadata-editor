@@ -40,7 +40,7 @@ cd -
 
 
 LIBPATH="NONE"
-STARTUP="-jar launcher/launcher-1.0.0.jar"
+STARTUP="-jar launcher/launcher.jar"
 
 
 . "$DIR/set-pentaho-env.sh"
