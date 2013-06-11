@@ -48,11 +48,11 @@ setPentahoEnv
 
 case `uname -s` in 
   AIX)
-    LIBPATH=libswt/aix/
+    LIBPATH=$BASEDIR/../libswt/aix/
     ;;
 
   SunOS) 
-    LIBPATH=libswt/solaris/
+    LIBPATH=$BASEDIR/../libswt/solaris/
     ;;
 
   Darwin)
@@ -69,18 +69,18 @@ case `uname -s` in
       x86_64)
         if $($_PENTAHO_JAVA -version 2>&1 | grep "64-Bit" > /dev/null )
         then
-          LIBPATH=libswt/linux/x86_64/
+          LIBPATH=$BASEDIR/../libswt/linux/x86_64/
         else
-          LIBPATH=libswt/linux/x86/
+          LIBPATH=$BASEDIR/../libswt/linux/x86/
         fi
         ;;
 
       i[3-6]86)
-        LIBPATH=libswt/linux/x86/
+        LIBPATH=$BASEDIR/../libswt/linux/x86/
         ;;
 
       ppc)
-        LIBPATH=libswt/linux/ppc/
+        LIBPATH=$BASEDIR/../libswt/linux/ppc/
         ;;
 
       *)  
@@ -94,17 +94,17 @@ case `uname -s` in
       ARCH=`uname -m`
     case $ARCH in
       x86_64)
-        LIBPATH=libswt/freebsd/x86_64/
+        LIBPATH=$BASEDIR/../libswt/freebsd/x86_64/
         echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
         exit
         ;;
 
       i[3-6]86)
-        LIBPATH=libswt/freebsd/x86/
+        LIBPATH=$BASEDIR/../libswt/freebsd/x86/
         ;;
 
       ppc)
-        LIBPATH=libswt/freebsd/ppc/
+        LIBPATH=$BASEDIR/../libswt/freebsd/ppc/
         echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
         exit
         ;;
@@ -117,7 +117,7 @@ case `uname -s` in
     ;;
 
   HP-UX) 
-    LIBPATH=libswt/hpux/
+    LIBPATH=$BASEDIR/../libswt/hpux/
     ;;
   CYGWIN*)
     ./MetaEditor.bat
@@ -138,11 +138,10 @@ export LIBPATH
 # ** Change 256m to higher values in case you run out of memory.  **
 # ******************************************************************
 
-OPT="-Xmx256m"
+OPT="-Xmx256m -Djava.library.path=$LIBPATH"
 
 
 # ***************
 # ** Run...    **
 # ***************
 "$_PENTAHO_JAVA" $OPT $STARTUP -lib $LIBPATH "${1+$@}"
-cd -
