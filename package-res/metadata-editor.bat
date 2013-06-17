@@ -95,6 +95,6 @@ REM Eventually call java instead of javaw and do not run in a separate window
 if not "CONSOLE%"=="1" set START_OPTION=start "Pentaho Metadata Editor"
 
 @echo on
-%TART_OPTION% "%PENTAHO_JAVA%" %OPT% -jar launcher\launcher.jar -lib ..\%LIBSPATH% %_cmdline%
+%START_OPTION% "%PENTAHO_JAVA%" %OPT% -jar launcher\launcher.jar -lib ..\%LIBSPATH% %_cmdline%
 @echo off
 if "%PAUSE%"=="1" pause
