@@ -47,7 +47,7 @@
 	<classpathentry kind="lib" path="libext/misc/jaxen-1.1.1.jar"/>
 	<classpathentry kind="lib" path="libext/misc/google-collect-1.0-rc1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=pentaho-metadata-editor-4.5.1&amp;ivyXmlPath=ivy.xml&amp;confs=*"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=pentaho-metadata-editor-4.8&amp;ivyXmlPath=ivy.xml&amp;confs=*"/>
 	<classpathentry kind="lib" path="libswt/linux/x86_64/swt.jar"/>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
