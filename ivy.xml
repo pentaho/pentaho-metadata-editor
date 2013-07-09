@@ -56,20 +56,7 @@
         
         <dependency org="pentaho" name="pentaho-big-data-plugin" rev="${dependency.pentaho-big-data-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-big-data-plugin" type="zip" />
-        </dependency>
-        <!-- big-data splunk plugin -->
-        <dependency org="pentaho" name="pentaho-splunk-plugin" rev="${dependency.pentaho-splunk-plugin.revision}" transitive="false" conf="plugin->default" changing="true">
-          <artifact name="pentaho-splunk-plugin" type="zip"/>
-        </dependency>
-        <!-- big-data mongodb plugin -->
-        <dependency org="pentaho" name="pentaho-mongodb-plugin" rev="${dependency.pentaho-mongodb-plugin.revision}" transitive="false" conf="plugin->default" changing="true">
-          <artifact name="pentaho-mongodb-plugin" type="zip"/>
-          </dependency>
-        <!-- big-data cassandra plugin -->
-        <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" transitive="false" conf="plugin->default" changing="true">
-          <artifact name="pentaho-cassandra-plugin" type="zip"/>
-        </dependency>
-        
+        </dependency>        
         
         <dependency org="junit"     name="junit"        rev="4.4"   conf="test->default"/>
     </dependencies>
