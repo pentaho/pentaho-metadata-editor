@@ -56,10 +56,12 @@ case `uname -s` in
     ;;
 
   Darwin)
-	echo "Starting Metadata Editor using 'metadata-editor.sh' from OS X is not supported."
-	echo "Please start using 'Metadata Editor 32-bit' or"
-	echo "'Metadata Editor 64-bit' as appropriate."
-	exit
+#	echo "Starting Metadata Editor using 'metadata-editor.sh' from OS X is not supported."
+#	echo "Please start using 'Metadata Editor 32-bit' or"
+#	echo "'Metadata Editor 64-bit' as appropriate."
+#	exit
+	LIBPATH=$BASEDIR/../libswt/osx64/
+	OPT="-XstartOnFirstThread $OPT"
 	;;
 
 
@@ -138,7 +140,7 @@ export LIBPATH
 # ** Change 256m to higher values in case you run out of memory.  **
 # ******************************************************************
 
-OPT="-Xmx256m -Djava.library.path=$LIBPATH"
+OPT="-Xmx256m -Djava.library.path=$LIBPATH $OPT"
 
 
 # ***************
