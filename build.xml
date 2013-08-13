@@ -201,11 +201,13 @@
     <zip destfile="${dist.dir}/${package.basename}.zip">
       <zipfileset dir="${stage.dir}" prefix="metadata-editor" filemode="755">
         <include name="**/*.sh" />
+      	<include name="**/*.command" />
         <include name="**/JavaApplicationStub" />
       </zipfileset>
       <zipfileset dir="${stage.dir}" prefix="metadata-editor">
         <include name="**/*" />
         <exclude name="**/*.sh" />
+      	<exclude name="**/*.command" />
         <exclude name="**/JavaApplicationStub" />
         <exclude name="**/Thumbs.db" />
       </zipfileset>
