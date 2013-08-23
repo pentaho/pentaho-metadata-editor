@@ -89,6 +89,7 @@ import org.pentaho.di.core.database.Database;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.dnd.DragAndDropContainer;
 import org.pentaho.di.core.dnd.XMLTransfer;
+import org.pentaho.di.core.exception.KettleDatabaseException;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.gui.Point;
 import org.pentaho.di.core.logging.LogChannel;
@@ -3324,12 +3325,32 @@ public class MetaEditor implements SelectionListener {
         Map<String, String[]> tableMap = new LinkedHashMap<String, String[]>();
         final int SCHEMA = 0, TABLE = 1;
 
-        String[] catsAndSchemas = database.getSchemas();
+        ///////////////////////////////////////////////////
+        // This is a hack for PMD-907.
+        // A NPE can be thrown on getSchema JDBC's implementations.
+        String[] catsAndSchemas = new String[0];
+        Exception ex = null;
+        try {
+            catsAndSchemas = database.getSchemas();
+        } catch (Exception e) {
+            // This can happen on shitty implementation of JDBC.
+            // We'll try the catalogs.
+            ex = e;
+        }
+
         if (catsAndSchemas.length == 0) {
             // Try the catalogs instead.
             // Some DBs call them catalogs, like MySQL.
             catsAndSchemas = database.getCatalogs();
         }
+
+        if (catsAndSchemas.length == 0 && ex != null) {
+            // If we couldn't figure neither the schemas or catalogs
+            // and we have cached an exception, throw that.
+            throw new KettleDatabaseException(ex);
+        }
+        // Moving on.
+        ///////////////////////////////////////////////////
 
         for (String schema : catsAndSchemas) {
           for (String tableName : database.getTablenames(schema, false)) {
