@@ -3338,9 +3338,19 @@ public class MetaEditor implements SelectionListener {
             ex = e;
         }
 
-        if (catsAndSchemas.length == 0) {
+        if (catsAndSchemas.length == 0
+            && databaseMeta.isMySQLVariant())
+        {
+            // MySQL doesn't report schema names. If we call
+            // get Catalogs, we get all the schemas, even those for which
+            // the current user doesn't have permissions. we'll use the
+            // DB name instead, as configured in the JDBC URL.
+            catsAndSchemas =
+                new String[] {
+                    databaseMeta.getDatabaseName()};
+        } else if (catsAndSchemas.length == 0) {
             // Try the catalogs instead.
-            // Some DBs call them catalogs, like MySQL.
+            // Some DBs call them catalogs.
             catsAndSchemas = database.getCatalogs();
         }
 
