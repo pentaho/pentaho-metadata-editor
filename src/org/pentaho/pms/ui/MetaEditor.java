@@ -89,6 +89,7 @@ import org.pentaho.di.core.database.Database;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.dnd.DragAndDropContainer;
 import org.pentaho.di.core.dnd.XMLTransfer;
+import org.pentaho.di.core.exception.KettleDatabaseException;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.gui.Point;
 import org.pentaho.di.core.logging.LogChannel;
@@ -182,7 +183,7 @@ import org.pentaho.pms.util.VersionHelper;
 /**
  * Class to edit the metadata domain (Schema Metadata), load/store into the
  * MDR/CWM model
- * 
+ *
  * @since 16-may-2003
  */
 public class MetaEditor implements SelectionListener {
@@ -349,7 +350,7 @@ public class MetaEditor implements SelectionListener {
     shell.layout();
     getMainListener().handleEvent(null); // Force everything to match the
     // current state
-    
+
 
     shell.setMaximized(true);
 
@@ -373,12 +374,12 @@ public class MetaEditor implements SelectionListener {
           if (treeViewer.getTree().getSelection().length == 1) {
             if (alt && (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN)) {
               // support CTRL UP and CTRL DOWN
-              final TreeItem ti = treeViewer.getTree().getSelection()[0];  
+              final TreeItem ti = treeViewer.getTree().getSelection()[0];
               final ConceptTreeNode node = (ConceptTreeNode) ti.getData();
 
               if (node instanceof BusinessModelTreeNode ||
                   node instanceof CategoryTreeNode ||
-                  (node instanceof BusinessColumnTreeNode && 
+                  (node instanceof BusinessColumnTreeNode &&
                    node.getParent() instanceof CategoryTreeNode)
               ) {
                 final ConceptTreeNode parentNode = (ConceptTreeNode) node.getParent();
@@ -391,7 +392,7 @@ public class MetaEditor implements SelectionListener {
             }
           }
         }
-        
+
         BusinessModel activeModel = schemaMeta.getActiveModel();
 
         // ESC --> Unselect All steps
@@ -1369,7 +1370,7 @@ public class MetaEditor implements SelectionListener {
     // Keyboard shortcuts!
     treeViewer.getTree().addKeyListener(defKeys);
     treeViewer.getTree().addKeyListener(modKeys);
-    
+
   }
 
   private void addDropTargetToTree(final Tree tree) {
@@ -1645,7 +1646,7 @@ public class MetaEditor implements SelectionListener {
 
   /**
    * Only one selected item possible
-   * 
+   *
    * @param e
    */
   private void updateMenusAndToolbars(SelectionEvent e) {
@@ -1683,9 +1684,9 @@ public class MetaEditor implements SelectionListener {
           clearDBCache();
         }
       });
-      
+
     } else if (node instanceof BusinessModelsTreeNode) {
-      
+
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
       miNew.setText(Messages.getString("MetaEditor.USER_NEW_MODEL_TEXT")); //$NON-NLS-1$
       miNew.addListener(SWT.Selection, new Listener() {
@@ -1693,9 +1694,9 @@ public class MetaEditor implements SelectionListener {
             newBusinessModel();
         }
       });
-      
+
     } else if (node instanceof DatabaseMetaTreeNode) { // We clicked on a database node
-      
+
       final DatabaseMeta databaseMeta = ((DatabaseMetaTreeNode) node).getDatabaseMeta();
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
       miNew.setText(Messages.getString("MetaEditor.USER_NEW_TEXT")); //$NON-NLS-1$
@@ -1766,9 +1767,9 @@ public class MetaEditor implements SelectionListener {
           exploreDB();
         }
       });
-      
+
     } else if (node instanceof PhysicalTableTreeNode) { // We clicked on a physical table
-      
+
       final PhysicalTable physicalTable = (PhysicalTable) ((PhysicalTableTreeNode) node).getDomainObject();
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
       miNew.setText(Messages.getString("MetaEditor.USER_NEW_PHYSICAL_TABLETEXT")); //$NON-NLS-1$
@@ -1802,7 +1803,7 @@ public class MetaEditor implements SelectionListener {
           editPhysicalColumn(physicalColumn);
         }
       });
-      
+
     } else if (node instanceof BusinessModelTreeNode) {
       final BusinessModelsTreeNode parentNode = (BusinessModelsTreeNode) node.getParent();
       final BusinessModelTreeNode treeNode = (BusinessModelTreeNode) node;
@@ -1821,9 +1822,9 @@ public class MetaEditor implements SelectionListener {
             editBusinessModel(businessModel, node);
         }
       });
-      
+
       new MenuItem(mainMenu, SWT.SEPARATOR);
-      
+
       MenuItem miUp = new MenuItem(mainMenu, SWT.PUSH);
       miUp.setText(Messages.getString("MetaEditor.USER_MOVE_UP")); //$NON-NLS-1$
       miUp.addListener(SWT.Selection, new Listener() {
@@ -1831,7 +1832,7 @@ public class MetaEditor implements SelectionListener {
           parentNode.moveChildUp(treeNode);
         }
       });
-  
+
       MenuItem miDown = new MenuItem(mainMenu, SWT.PUSH);
       miDown.setText(Messages.getString("MetaEditor.USER_MOVE_DOWN")); //$NON-NLS-1$
       miDown.addListener(SWT.Selection, new Listener() {
@@ -1839,9 +1840,9 @@ public class MetaEditor implements SelectionListener {
           parentNode.moveChildDown(treeNode);
         }
       });
-      
+
       new MenuItem(mainMenu, SWT.SEPARATOR);
-      
+
       MenuItem miDelete = new MenuItem(mainMenu, SWT.PUSH);
       miDelete.setText(Messages.getString("MetaEditor.USER_DELETE_TEXT")); //$NON-NLS-1$
       miDelete.addListener(SWT.Selection, new Listener() {
@@ -1912,9 +1913,9 @@ public class MetaEditor implements SelectionListener {
           delBusinessTable(businessTable);
         }
       });
-      
+
     } else if (node instanceof BusinessColumnTreeNode) {
-      
+
       final BusinessColumn businessColumn = (BusinessColumn) ((BusinessColumnTreeNode) node).getDomainObject();
       MenuItem miEdit = new MenuItem(mainMenu, SWT.PUSH);
       miEdit.setText(Messages.getString("MetaEditor.USER_EDIT_TEXT")); //$NON-NLS-1$
@@ -1925,13 +1926,13 @@ public class MetaEditor implements SelectionListener {
           treeViewer.update(node, null);
         }
       });
-      
+
       if (node.getParent() instanceof CategoryTreeNode) {
         final BusinessColumnTreeNode currentTreeNode = (BusinessColumnTreeNode) node;
         final CategoryTreeNode parentTreeNode = (CategoryTreeNode) node.getParent();
-        
+
         new MenuItem(mainMenu, SWT.SEPARATOR);
-        
+
         MenuItem miUp = new MenuItem(mainMenu, SWT.PUSH);
         miUp.setText(Messages.getString("MetaEditor.USER_MOVE_UP")); //$NON-NLS-1$
         miUp.addListener(SWT.Selection, new Listener() {
@@ -1939,7 +1940,7 @@ public class MetaEditor implements SelectionListener {
             parentTreeNode.moveChildUp(currentTreeNode);
           }
         });
-    
+
         MenuItem miDown = new MenuItem(mainMenu, SWT.PUSH);
         miDown.setText(Messages.getString("MetaEditor.USER_MOVE_DOWN")); //$NON-NLS-1$
         miDown.addListener(SWT.Selection, new Listener() {
@@ -1948,7 +1949,7 @@ public class MetaEditor implements SelectionListener {
           }
         });
       }
-      
+
     } else if (node instanceof RelationshipTreeNode) {
       final RelationshipMeta relationshipMeta = (RelationshipMeta) ((RelationshipTreeNode) node).getDomainObject();
       MenuItem miNew = new MenuItem(mainMenu, SWT.PUSH);
@@ -1974,9 +1975,9 @@ public class MetaEditor implements SelectionListener {
           delRelationship(relationshipMeta);
         }
       });
-      
+
     } else if (node instanceof CategoryTreeNode) {
-      
+
       final ConceptTreeNode treeNode = (CategoryTreeNode)node;
       final ConceptTreeNode conceptParentNode = (ConceptTreeNode)node.getParent();
 
@@ -2219,7 +2220,7 @@ public class MetaEditor implements SelectionListener {
 
     // Create a business table with a new ID and localized name
     BusinessTable businessTable = new BusinessTable(null, physicalTable);
-  
+
     // copy all localized names from physical table to new business table
     Locales locales = schemaMeta.getLocales();
     Iterator locIter = locales.getLocaleList().iterator();
@@ -2231,7 +2232,7 @@ public class MetaEditor implements SelectionListener {
       }
       businessTable.getConcept().setName(loc.getCode(), tableName);
     }
-    
+
     try {
       businessTable.setId(BusinessTable.proposeId(activeLocale, businessTable, physicalTable, activeModel
           .getBusinessTables()));
@@ -2405,11 +2406,11 @@ public class MetaEditor implements SelectionListener {
   /*
    * public void newSelected() { BusinessModel activeModel =
    * schemaMeta.getActiveModel(); if (activeModel == null) return;
-   * 
+   *
    * log.logDebug(APPLICATION_NAME,
    * Messages.getString("MetaEditor.DEBUG_NEW_SELECTED")); //$NON-NLS-1$ //
    * Determine what menu we selected from...
-   * 
+   *
    * TreeItem ti[] = treeViewer.getTree().getSelection();
    *  // Then call newConnection or newTrans if (ti.length >= 1) { String name =
    * ti[0].getText(); TreeItem parent = ti[0].getParentItem(); if (parent ==
@@ -2488,8 +2489,8 @@ public class MetaEditor implements SelectionListener {
 
   public BusinessModel newBusinessModel() {
     String id = null;
-    // returns valid id, and semi-random number used for id generation 
-    // ...mimics old behavior as closely as possible. 
+    // returns valid id, and semi-random number used for id generation
+    // ...mimics old behavior as closely as possible.
     String[] ids = generateBusinessModelId();
 
     BusinessModel businessModel = new BusinessModel(ids[0]);
@@ -2956,7 +2957,7 @@ public class MetaEditor implements SelectionListener {
       props.addLastFile(LastUsedFile.FILE_TYPE_SCHEMA, domainName, Const.FILE_SEPARATOR, false, ""); //$NON-NLS-1$
       saveSettings();
       addMenuLast();
-      
+
       schemaMeta.clearChanged();
       setShellText();
       log.logDebug(Messages.getString("MetaEditor.DEBUG_FILE_WRITTEN_TO_REPOSITORY", domainName)); //$NON-NLS-1$
@@ -3323,7 +3324,45 @@ public class MetaEditor implements SelectionListener {
         // We need unique names for the ui and schema,table for the import
         Map<String, String[]> tableMap = new LinkedHashMap<String, String[]>();
         final int SCHEMA = 0, TABLE = 1;
-        for (String schema : database.getSchemas()) {
+
+        ///////////////////////////////////////////////////
+        // This is a hack for PMD-907.
+        // A NPE can be thrown on getSchema JDBC's implementations.
+        String[] catsAndSchemas = new String[0];
+        Exception ex = null;
+        try {
+            catsAndSchemas = database.getSchemas();
+        } catch (Exception e) {
+            // This can happen on shitty implementation of JDBC.
+            // We'll try the catalogs.
+            ex = e;
+        }
+
+        if (catsAndSchemas.length == 0
+            && databaseMeta.isMySQLVariant())
+        {
+            // MySQL doesn't report schema names. If we call
+            // get Catalogs, we get all the schemas, even those for which
+            // the current user doesn't have permissions. we'll use the
+            // DB name instead, as configured in the JDBC URL.
+            catsAndSchemas =
+                new String[] {
+                    databaseMeta.getDatabaseName()};
+        } else if (catsAndSchemas.length == 0) {
+            // Try the catalogs instead.
+            // Some DBs call them catalogs.
+            catsAndSchemas = database.getCatalogs();
+        }
+
+        if (catsAndSchemas.length == 0 && ex != null) {
+            // If we couldn't figure neither the schemas or catalogs
+            // and we have cached an exception, throw that.
+            throw new KettleDatabaseException(ex);
+        }
+        // Moving on.
+        ///////////////////////////////////////////////////
+
+        for (String schema : catsAndSchemas) {
           for (String tableName : database.getTablenames(schema, false)) {
             String fullName = databaseMeta.getQuotedSchemaTableCombination(schema, tableName);
             tableMap.put(fullName, new String[]{schema, tableName});
@@ -3530,9 +3569,9 @@ public class MetaEditor implements SelectionListener {
   }
 
   public static void main(String[] args) throws Exception {
-    
+
     KettleEnvironment.init(false);
-    
+
     System.setProperty("java.naming.factory.initial", "org.osjava.sj.SimpleContextFactory"); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty("org.osjava.sj.root", "simple-jndi"); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty("org.osjava.sj.delimiter", "/"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -3680,10 +3719,10 @@ public class MetaEditor implements SelectionListener {
   private void editBusinessTable(BusinessTable businessTable, ConceptTreeNode node) {
     try {
       if (businessTable != null) {
-  
+
         BusinessTableDialog td = new BusinessTableDialog(shell, businessTable, schemaMeta);
         int res = td.open();
-  
+
         if (Window.OK == res) {
           if (node != null) {
             node.sync();
@@ -3691,7 +3730,7 @@ public class MetaEditor implements SelectionListener {
             synchronize(businessTable);
           }
           refreshAll();
-  
+
         }
       }
     } catch (Exception e) {
@@ -3705,30 +3744,30 @@ public class MetaEditor implements SelectionListener {
     try {
       if (businessTable != null) {
         log.logDebug(Messages.getString("MetaEditor.DEBUG_DUPLICATE_TABLE", businessTable.getId())); //$NON-NLS-1$
-  
+
         BusinessModel activeModel = schemaMeta.getActiveModel();
-  
+
         // This should be a unique clone of the business table AND it's columns...
         BusinessTable newTable = businessTable.cloneUnique(schemaMeta.getActiveLocale(), activeModel.getBusinessTables(),
             activeModel.getAllBusinessColumns());
-  
+
         try {
-  
+
           activeModel.addBusinessTable(newTable);
-  
+
         } catch (ObjectAlreadyExistsException e) {
-  
+
           new ErrorDialog(
               shell,
               Messages.getString("General.USER_TITLE_ERROR"), Messages.getString("MetaEditor.USER_BUSINESS_TABLE_NAME_EXISTS"), e); //$NON-NLS-1$ //$NON-NLS-2$
-  
+
         }
-  
+
         if (activeModelTreeNode != null)
           activeModelTreeNode.getBusinessTablesRoot().addDomainChild(newTable);
-  
+
         refreshGraph();
-  
+
       }
     } catch (Exception e) {
       new ErrorDialog(
@@ -3740,7 +3779,7 @@ public class MetaEditor implements SelectionListener {
 
   /**
    * Test Query & Reporting
-   * 
+   *
    */
   protected void testQR() {
     try {
@@ -3999,22 +4038,22 @@ public class MetaEditor implements SelectionListener {
       setActiveBusinessModel(e);
     }
   }
-  
+
   private String[] generateBusinessModelId(){
 
     int idNum = schemaMeta.nrBusinessModels();
-    
+
     String prefix = Settings.getBusinessModelIDPrefix() + "model_";//$NON-NLS-1$
     if (Settings.isAnIdUppercase()){
-      prefix = prefix.toUpperCase();       
+      prefix = prefix.toUpperCase();
     }
-    
-    String id = null; 
+
+    String id = null;
 
     boolean found = true;
-    
+
     while (found){
-      
+
       found = false;
       id = prefix + (++idNum); //$NON-NLS-1$
 
@@ -4028,23 +4067,23 @@ public class MetaEditor implements SelectionListener {
         }
       }
     }
-    
+
     return new String[]{id, Integer.toString(idNum)};
-	  
+
   }
-  
+
   public void exportLocale(String locale) throws Exception {
     FileDialog dialog = new FileDialog(shell, SWT.SAVE);
     dialog.setFilterExtensions(new String[] { "*.properties", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     dialog.setFilterNames(new String[] { Messages.getString("MetaEditor.USER_PROPERTIES_FILES"), Messages.getString("MetaEditor.USER_ALL_FILES") }); //$NON-NLS-1$ //$NON-NLS-2$
     dialog.setFileName("metadata_" + locale + ".properties"); //$NON-NLS-1$
     String filename = dialog.open();
-    
+
     if(filename != null) {
       File file = new File(filename);
-      
+
       boolean writeToFile = true;
-      
+
       if(file.exists()) {
         int result = SWT.NO;
           MessageBox mb = new MessageBox(shell, SWT.NO | SWT.YES | SWT.ICON_WARNING);
@@ -4053,9 +4092,9 @@ public class MetaEditor implements SelectionListener {
           result = mb.open();
         if (result == SWT.NO) {
           writeToFile = false;
-        }        
+        }
       }
-      
+
       if(writeToFile) {
         LocaleExportProgressDialog progDialog = new LocaleExportProgressDialog(shell, schemaMeta, locale, filename);
         progDialog.open();
