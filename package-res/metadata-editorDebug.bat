@@ -31,4 +31,4 @@ echo -
 echo Launching metadata-editor: "%~dp0metadata-editor.bat" %OPTIONS%
 if not "%REDIRECT%"=="1" "%~dp0metadata-editor.bat" %SPTIONS%
 if "%REDIRECT%"=="1" echo Console output gets redirected to "%~dp0metaDataEditorDebug.txt"
-if "%EDIRECT%"=="1" "%~dp0metadata-editor.bat" %OPTIONS% >>"%~dp0metaDataaEditorDebug.txt"
+if "%REDIRECT%"=="1" "%~dp0metadata-editor.bat" %OPTIONS% >>"%~dp0metaDataEditorDebug.txt"
