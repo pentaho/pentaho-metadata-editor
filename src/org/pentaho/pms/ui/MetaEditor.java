@@ -241,7 +241,7 @@ public class MetaEditor implements SelectionListener {
 
   private Menu msEdit;
 
-  private Menu mPopAD;
+  // private Menu mPopAD;
 
   private MenuItem miEditSelectAll, miEditUnselectAll, miEditProperties, miEditOptions, miEditRefresh;
 
@@ -1030,46 +1030,46 @@ public class MetaEditor implements SelectionListener {
     miLogging = new MenuItem(msTools, SWT.CASCADE);
     miLogging.setText(Messages.getString("MetaEditor.USER_CONFIGURE_LOGGING"));//$NON-NLS-1$
 
-    new MenuItem(msTools, SWT.SEPARATOR);
-    MenuItem miPopAD = new MenuItem(msTools, SWT.CASCADE);
-    miPopAD.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_DISTRIBUTE")); //$NON-NLS-1$
-    mPopAD = new Menu(miPopAD);
-
-    MenuItem miPopALeft = new MenuItem(mPopAD, SWT.CASCADE);
-    miPopALeft.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_LEFT")); //$NON-NLS-1$
-    miPopALeft.addListener(SWT.Selection, lsAlignLeft);
-
-    MenuItem miPopARight = new MenuItem(mPopAD, SWT.CASCADE);
-    miPopARight.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_RIGHT")); //$NON-NLS-1$
-    miPopARight.addListener(SWT.Selection, lsAlignRight);
-
-    MenuItem miPopATop = new MenuItem(mPopAD, SWT.CASCADE);
-    miPopATop.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_TOP")); //$NON-NLS-1$
-    miPopATop.addListener(SWT.Selection, lsAlignTop);
-
-    MenuItem miPopABottom = new MenuItem(mPopAD, SWT.CASCADE);
-    miPopABottom.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_BOTTOM")); //$NON-NLS-1$
-    miPopABottom.addListener(SWT.Selection, lsAlignBottom);
-
-    new MenuItem(mPopAD, SWT.SEPARATOR);
-    MenuItem miPopDHoriz = new MenuItem(mPopAD, SWT.CASCADE);
-    miPopDHoriz.setText(Messages.getString("MetaEditorGraph.USER_DISTRIBUTE_HORIZ")); //$NON-NLS-1$
-    miPopDHoriz.addListener(SWT.Selection, lsDistribHoriz);
-
-    MenuItem miPopDVertic = new MenuItem(mPopAD, SWT.CASCADE);
-    miPopDVertic.setText(Messages.getString("MetaEditorGraph.USER_DISTRIBUTE_VERT")); //$NON-NLS-1$
-    miPopDVertic.addListener(SWT.Selection, lsDistribVert);
-
-    new MenuItem(mPopAD, SWT.SEPARATOR);
-    MenuItem miPopSSnap = new MenuItem(mPopAD, SWT.CASCADE);
-    miPopSSnap.setText(Messages.getString("MetaEditorGraph.USER_SNAP_TO_GRID", Integer.toString(Const.GRID_SIZE))); //$NON-NLS-1$
-    miPopAD.setMenu(mPopAD);
-
-    miPopSSnap.addSelectionListener(new SelectionAdapter() {
-      public void widgetSelected(SelectionEvent e) {
-        metaEditorGraph.snaptogrid(Const.GRID_SIZE);
-      }
-    });
+//    new MenuItem(msTools, SWT.SEPARATOR);
+//    MenuItem miPopAD = new MenuItem(msTools, SWT.CASCADE);
+//    miPopAD.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_DISTRIBUTE")); //$NON-NLS-1$
+//    mPopAD = new Menu(miPopAD);
+//
+//    MenuItem miPopALeft = new MenuItem(mPopAD, SWT.CASCADE);
+//    miPopALeft.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_LEFT")); //$NON-NLS-1$
+//    miPopALeft.addListener(SWT.Selection, lsAlignLeft);
+//
+//    MenuItem miPopARight = new MenuItem(mPopAD, SWT.CASCADE);
+//    miPopARight.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_RIGHT")); //$NON-NLS-1$
+//    miPopARight.addListener(SWT.Selection, lsAlignRight);
+//
+//    MenuItem miPopATop = new MenuItem(mPopAD, SWT.CASCADE);
+//    miPopATop.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_TOP")); //$NON-NLS-1$
+//    miPopATop.addListener(SWT.Selection, lsAlignTop);
+//
+//    MenuItem miPopABottom = new MenuItem(mPopAD, SWT.CASCADE);
+//    miPopABottom.setText(Messages.getString("MetaEditorGraph.USER_ALIGN_BOTTOM")); //$NON-NLS-1$
+//    miPopABottom.addListener(SWT.Selection, lsAlignBottom);
+//
+//    new MenuItem(mPopAD, SWT.SEPARATOR);
+//    MenuItem miPopDHoriz = new MenuItem(mPopAD, SWT.CASCADE);
+//    miPopDHoriz.setText(Messages.getString("MetaEditorGraph.USER_DISTRIBUTE_HORIZ")); //$NON-NLS-1$
+//    miPopDHoriz.addListener(SWT.Selection, lsDistribHoriz);
+//
+//    MenuItem miPopDVertic = new MenuItem(mPopAD, SWT.CASCADE);
+//    miPopDVertic.setText(Messages.getString("MetaEditorGraph.USER_DISTRIBUTE_VERT")); //$NON-NLS-1$
+//    miPopDVertic.addListener(SWT.Selection, lsDistribVert);
+//
+//    new MenuItem(mPopAD, SWT.SEPARATOR);
+//    MenuItem miPopSSnap = new MenuItem(mPopAD, SWT.CASCADE);
+//    miPopSSnap.setText(Messages.getString("MetaEditorGraph.USER_SNAP_TO_GRID", Integer.toString(Const.GRID_SIZE))); //$NON-NLS-1$
+//    miPopAD.setMenu(mPopAD);
+//
+//    miPopSSnap.addSelectionListener(new SelectionAdapter() {
+//      public void widgetSelected(SelectionEvent e) {
+//        metaEditorGraph.snaptogrid(Const.GRID_SIZE);
+//      }
+//    });
 
     miLogging.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
@@ -1107,7 +1107,7 @@ public class MetaEditor implements SelectionListener {
 
           // Enable/disable menus that rely on having more than 1
           // graph item selected
-          mPopAD.setEnabled(nrSelected > 1);
+          // mPopAD.setEnabled(nrSelected > 1);
         }
       };
     }
