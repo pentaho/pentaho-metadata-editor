@@ -110,7 +110,6 @@
         <dependency org="simple-jndi" name="simple-jndi" rev="0.11.1" transitive="false" conf="default->default" />
         <dependency org="org.springframework" name="spring-core" rev="2.5.6.SEC03" transitive="false" conf="default->default" />
         <dependency org="com.trilead" name="trilead-ssh2" rev="1.0.0-build215" transitive="false" conf="default->default" />
-        <dependency org="org.xBaseJ" name="xbasej" rev="20091203" transitive="false" conf="default->default" />
 
         <dependency org="junit"        name="junit"        rev="4.4"                 transitive="false" conf="test->default" />
       </dependencies>
