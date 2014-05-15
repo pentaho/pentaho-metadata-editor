@@ -223,7 +223,7 @@
 var overwrite = &quot;true&quot;;
 var userId = &quot;admin&quot;;
 var userPassword = &quot;password&quot;;
-var fileStream = new java.io.FileInputStream(vars.get(&quot;TestPath&quot;) + &quot;/&quot; + userDomain + &quot;.xmi&quot;);
+var fileStream = new java.io.FileInputStream(vars.get(&quot;TestPath&quot;) + &quot;/test.xmi&quot;);
 
 var part = new com.sun.jersey.multipart.FormDataMultiPart();
 part.field(&quot;domainId&quot;, userDomain, javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE);
@@ -313,12 +313,12 @@ if (ResponseCode.equals(&quot;3&quot;)) {
               <hashTree/>
             </hashTree>
             <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Publish Special Characters Domain" enabled="true">
-              <stringProp name="BeanShellSampler.query">var userDomain = &quot;Test!@#$%^&amp;*()_+{}[]|;:&apos;&lt;&gt;,.?Domain&quot;;
+              <stringProp name="BeanShellSampler.query">var userDomain = &quot;Test!@#$%^&amp;*()_+{}[]-+|:&lt;&gt;?,.Domain&quot;;
 var overwrite = &quot;true&quot;;
 var userId = &quot;admin&quot;;
 var userPassword = &quot;password&quot;;
-var filename = vars.get(&quot;TestPath&quot;) + userDomain + &quot;.xmi&quot;;
-var fileStream = new java.io.FileInputStream(filename);
+var fileStream = new java.io.FileInputStream(vars.get(&quot;TestPath&quot;) + &quot;/test.xmi&quot;);
+
 var part = new com.sun.jersey.multipart.FormDataMultiPart();
 part.field(&quot;domainId&quot;, userDomain, javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE);
 part.field(&quot;overwrite&quot;,overwrite, javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE);
@@ -367,7 +367,7 @@ if (ResponseCode.equals(&quot;3&quot;)) {
             <hashTree>
               <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response contains Special Characters Domain" enabled="true">
                 <collectionProp name="Asserion.test_strings">
-                  <stringProp name="1414427613">Test\!\@\#\$\%\^\&amp;\*\(\)_\+\{\}\[\]|\;\:\&apos;\&lt;\&gt;\,\.\?\Domain</stringProp>
+                  <stringProp name="76822536">test1\!\@\#\$\%\^\&amp;\*\(\)_\+\{\}\[\]|\;\:\&apos;\&lt;\&gt;\,\.\?\.prpt</stringProp>
                 </collectionProp>
                 <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
                 <boolProp name="Assertion.assume_success">false</boolProp>
