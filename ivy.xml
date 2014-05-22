@@ -3,16 +3,17 @@
     <info organisation="pentaho" module="${ivy.artifact.id}" revision="${project.revision}" />
     
     <configurations>
-    	<conf name="default"/>
-    	<conf name="test" visibility="private"/>
-    	<conf name="source"/>
-        <conf name="drivers"/>
-        <conf name="plugin"/>
+      <conf name="default"/>
+      <conf name="test" visibility="private"/>
+      <conf name="source"/>
+      <conf name="drivers"/>
+      <conf name="plugin"/>
+      <conf name="swtlibs"/>
     </configurations>
     
     <publications>
-	    <artifact name="pentaho-metadata-editor" type="jar" conf="default"/>
-	    <artifact name="pentaho-metadata-editor" m:classifier="sources" type="source" ext="jar" conf="source"/>
+      <artifact name="pentaho-metadata-editor" type="jar" conf="default"/>
+      <artifact name="pentaho-metadata-editor" m:classifier="sources" type="source" ext="jar" conf="source"/>
     </publications>    
     
     <dependencies defaultconf="default->default">
@@ -21,7 +22,7 @@
       <dependency org="commons-logging"     name="commons-logging"     rev="1.1.1" transitive="false" />
       <dependency org="commons-collections" name="commons-collections" rev="3.2.1" transitive="false" />
       <dependency org="commons-httpclient"  name="commons-httpclient"  rev="3.1" transitive="false" />
-	  <dependency org="log4j"        name="log4j"        rev="1.2.16"              transitive="false" conf="default" />
+      <dependency org="log4j"        name="log4j"        rev="1.2.16"              transitive="false" conf="default" />
       <dependency org="commons-vfs"  name="commons-vfs"  rev="20091118-pentaho"    transitive="false" conf="default" />
       <dependency org="commons-codec"       name="commons-codec"       rev="1.3"   transitive="false"/>
 
@@ -32,7 +33,7 @@
       <dependency org="org.netbeans" name="nbmdr"        rev="200507110943-custom" transitive="false" conf="default" />
       <dependency org="org.safehaus.jug" name="jug-lgpl" rev="2.0.0" transitive="false" />
       <dependency org="dom4j"            name="dom4j"    rev="1.6.1" transitive="true" />
-	  <dependency org="jaxen"            name="jaxen"    rev="1.1.1" transitive="false" />
+      <dependency org="jaxen"            name="jaxen"    rev="1.1.1" transitive="false" />
       <dependency org="org.netbeans"     name="jmi"      rev="200507110943" transitive="false" />
 
         <dependency org="pentaho-library"        name="libformula"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
@@ -46,19 +47,19 @@
         <dependency org="pentaho-kettle" name="kettle-dbdialog"          rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
         <dependency org="pentaho-kettle" name="kettle-ui-swt"            rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
         <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" conf="default->default" transitive="false"/>
-        <dependency org="commons-io"     name="commons-io"         		 rev="1.4"/>
+        <dependency org="commons-io"     name="commons-io"              rev="1.4"/>
         <dependency org="pentaho"        name="pentaho-vfs-browser"      rev="${dependency.pentaho-vfs-browser.revision}" conf="default->default" transitive="false" changing="true" />
         
-    	<!-- jersey -->
-    	<dependency org="com.sun.jersey.contribs" name="jersey-multipart" rev="1.16"/>
-    	<dependency org="com.sun.jersey.contribs" name="jersey-apache-client" rev="1.16" transitive="false"/>
-    	<dependency org="com.sun.jersey.contribs" name="jersey-spring" rev="1.16" transitive="false"/>
+      <!-- jersey -->
+      <dependency org="com.sun.jersey.contribs" name="jersey-multipart" rev="1.16"/>
+      <dependency org="com.sun.jersey.contribs" name="jersey-apache-client" rev="1.16" transitive="false"/>
+      <dependency org="com.sun.jersey.contribs" name="jersey-spring" rev="1.16" transitive="false"/>
 
-    	<dependency org="com.sun.jersey" name="jersey-core" rev="1.16" transitive="false"/>
-    	<dependency org="com.sun.jersey" name="jersey-json" rev="1.16" transitive="false"/>
-    	<dependency org="com.sun.jersey" name="jersey-client" rev="1.16" transitive="false"/>
-    	<dependency org="com.sun.jersey" name="jersey-server" rev="1.16" transitive="false"/>
-    	<dependency org="com.sun.jersey" name="jersey-servlet" rev="1.16" transitive="false"/>
+      <dependency org="com.sun.jersey" name="jersey-core" rev="1.16" transitive="false"/>
+      <dependency org="com.sun.jersey" name="jersey-json" rev="1.16" transitive="false"/>
+      <dependency org="com.sun.jersey" name="jersey-client" rev="1.16" transitive="false"/>
+      <dependency org="com.sun.jersey" name="jersey-server" rev="1.16" transitive="false"/>
+      <dependency org="com.sun.jersey" name="jersey-servlet" rev="1.16" transitive="false"/>
 
         <!-- driver dependencies -->
         <dependency org="hsqldb" name="hsqldb" rev="1.8.0" transitive="false" conf="drivers->default" />
@@ -88,6 +89,12 @@
             <artifact name="pentaho-cassandra-plugin" type="zip" />
         </dependency>
         
+        <!-- SWT it required to compile any version of any architecture will work -->
+        <dependency org="org.eclipse.swt"       name="swt-linux-x86_64"    rev="4.3.2" transitive="false" />
+        <dependency org="org.eclipse"           name="jface"               rev="3.3.0-I20070606-0010" transitive="false" conf="default->default"/>
+        <dependency org="org.eclipse.core"      name="commands"            rev="3.3.0-I20070605-0010" transitive="false"/>
+        <dependency org="org.eclipse.equinox"   name="common"              rev="3.3.0-v20070426"      transitive="false"/>
+        
         <!-- Old libext/misc dependencies -->
         <dependency org="org.snmp4j" name="snmp4j" rev="1.9.3d" transitive="false" conf="default->default" />
         <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="default->default" />
@@ -110,6 +117,12 @@
         <dependency org="simple-jndi" name="simple-jndi" rev="0.11.1" transitive="false" conf="default->default" />
         <dependency org="org.springframework" name="spring-core" rev="2.5.6.SEC03" transitive="false" conf="default->default" />
         <dependency org="com.trilead" name="trilead-ssh2" rev="1.0.0-build215" transitive="false" conf="default->default" />
+        
+        <!-- The OS-specific SWT libraries are bundled together, unzip them all for assembly -->
+        <dependency org="org.eclipse"          name="swtlibs"               rev="4.3.2" conf="swtlibs->default" transitive="false">
+          <artifact name="swtlibs" type="zip"/>
+        </dependency>
+
 
         <dependency org="junit"        name="junit"        rev="4.4"                 transitive="false" conf="test->default" />
       </dependencies>

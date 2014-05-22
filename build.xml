@@ -42,6 +42,9 @@
 	
 	<!-- Plugin resolve dir -->
 	<property name="resolve-plugins.dir" value="plugins" />
+	
+	<!-- SWT Library Directory -->
+	<property name="swtlib.dir" value="libswt" />
 
   <!-- Define the default location of the common build file -->
   <property name="common.build.file"
@@ -55,13 +58,12 @@
 
   <path id="cp-meta">
     <fileset dir="${libext}" includes="**/*.jar" />
-    <fileset dir="${libswt}" includes="*.jar" />
-    <fileset dir="${libswt}/win32/" includes="*.jar" />
   </path>
 
   <target name="clean-stage">
     <delete dir="${stage.dir}" />
     <delete dir="${resolve-plugins.dir}" />
+    <delete dir="${swtlib.dir}" />
   </target>
 
   <!-- override compile.compile to include custom classpath and do resource copying -->
@@ -126,7 +128,7 @@
     <ivy:retrieve conf="plugin" pattern="${resolve-plugins.dir}/[module]-[revision](-[classifier]).[ext]" />
   </target>
 
-  <target name="assemble" depends="jar,-init-assemble,-stage-dist-lib,-stage-pentaho-libs" description="copy jar file to distribution directory">
+  <target name="assemble" depends="resolve-swtlibs,jar,-init-assemble,-stage-dist-lib,-stage-pentaho-libs,unzip-swtlibs" description="copy jar file to distribution directory">
     <copy todir="${stage.dir}">
       <fileset dir="." includes="releasenotes.txt" excludes="**/build, **/dist" />
     </copy>
@@ -153,12 +155,6 @@
   	<unzip dest="${stage.plugins.dir}" overwrite="true">
         <fileset file="${resolve-plugins.dir}/*.zip" />
   	</unzip>
-    
-    <!-- swt libs (jdbc etc) -->
-    <mkdir dir="${stage.dir}/libswt" />
-    <copy todir="${stage.dir}/libswt">
-      <fileset dir="${libswt}" includes="**/*" excludes="**/.vpn **/sapjco*.dll" />
-    </copy>
 
     <!--  launcher libs -->
     <mkdir dir="${stage.dir}/launcher" />
@@ -375,6 +371,25 @@
           <property name="run.port" value="${jmeter.run.port}" />
       </jmeter>
     	
-    </target>		
+    </target>	
+    
+    	<!--=======================================================================
+        resolve-swtlibs
+        
+        Resolved the swtlibs configuration from ivy.xml
+    =====================================================================-->
+  	<target name="resolve-swtlibs" depends="install-ivy">
+	    <delete dir="${swtlib.dir}" />
+    	<ivy:resolve file="${ivyfile}" conf="test" />
+  	  <ivy:retrieve conf="swtlibs" pattern="${swtlib.dir}/[module]-[revision](-[classifier]).[ext]" />
+	  </target>
 	
+	  <target name="unzip-swtlibs">
+			<!-- Unzip the libswt package into the libswt folder of the distribution -->
+	    <unzip dest="${stage.dir}" overwrite="true">
+  	    <fileset dir="${swtlib.dir}">
+    	    <include name="**/*.zip"/>
+      	</fileset>
+	    </unzip>
+  	</target>	
 </project>
