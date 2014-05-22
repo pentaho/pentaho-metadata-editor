@@ -40,26 +40,14 @@ cd -
 
 
 LIBPATH="NONE"
-STARTUP="-jar launcher/launcher.jar"
+STARTUP="-jar launcher/pentaho-application-launcher.jar"
 
 
 . "$DIR/set-pentaho-env.sh"
 setPentahoEnv
 
 case `uname -s` in 
-  AIX)
-    LIBPATH=$BASEDIR/../libswt/aix/
-    ;;
-
-  SunOS) 
-    LIBPATH=$BASEDIR/../libswt/solaris/
-    ;;
-
   Darwin)
-#	echo "Starting Metadata Editor using 'metadata-editor.sh' from OS X is not supported."
-#	echo "Please start using 'Metadata Editor 32-bit' or"
-#	echo "'Metadata Editor 64-bit' as appropriate."
-#	exit
 	LIBPATH=$BASEDIR/../libswt/osx64/
 	OPT="-XstartOnFirstThread $OPT"
 	;;
@@ -92,39 +80,12 @@ case `uname -s` in
     esac
     ;;
 
-  FreeBSD)
-      ARCH=`uname -m`
-    case $ARCH in
-      x86_64)
-        LIBPATH=$BASEDIR/../libswt/freebsd/x86_64/
-        echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
-        exit
-        ;;
 
-      i[3-6]86)
-        LIBPATH=$BASEDIR/../libswt/freebsd/x86/
-        ;;
-
-      ppc)
-        LIBPATH=$BASEDIR/../libswt/freebsd/ppc/
-        echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
-        exit
-        ;;
-
-      *)  
-        echo "I'm sorry, this Linux platform [$ARCH] is not yet supported!"
-        exit
-        ;;
-    esac
-    ;;
-
-  HP-UX) 
-    LIBPATH=$BASEDIR/../libswt/hpux/
-    ;;
   CYGWIN*)
     ./MetaEditor.bat
     # exit
     ;;
+
 
   *) 
     echo The Metadata Editor is not supported on this hosttype : `uname -s`

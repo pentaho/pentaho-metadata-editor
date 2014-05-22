@@ -13,7 +13,6 @@
   <property name="cr" value="${line.separator}" />
 
   <!-- set global properties for this build -->
-  <property name="launcher" location="launcher" />
   <property name="libext" location="libext" />
   <property name="libswt" location="libswt" />
   <property name="stage.dir" location="stage" />
@@ -54,17 +53,19 @@
   <!-- Import the build-res/subfloor.xml file which contains all the default tasks -->
   <import file="${common.build.file}" />
   
-  <target name="clean-all" depends="clean-stage,clean,clean-jars" />
+  <target name="clean-all" depends="clean-stage,clean,clean-jars">
+    <delete dir="${libext}" />
+    <delete dir="${swtlib.dir}" />
+    <delete dir="${resolve-plugins.dir}" />
+  </target>
+
+  <target name="clean-stage">
+    <delete dir="${stage.dir}" />
+  </target>
 
   <path id="cp-meta">
     <fileset dir="${libext}" includes="**/*.jar" />
   </path>
-
-  <target name="clean-stage">
-    <delete dir="${stage.dir}" />
-    <delete dir="${resolve-plugins.dir}" />
-    <delete dir="${swtlib.dir}" />
-  </target>
 
   <!-- override compile.compile to include custom classpath and do resource copying -->
   <target name="compile.compile" depends="init">
@@ -128,7 +129,7 @@
     <ivy:retrieve conf="plugin" pattern="${resolve-plugins.dir}/[module]-[revision](-[classifier]).[ext]" />
   </target>
 
-  <target name="assemble" depends="resolve-swtlibs,jar,-init-assemble,-stage-dist-lib,-stage-pentaho-libs,unzip-swtlibs" description="copy jar file to distribution directory">
+  <target name="assemble" depends="-init-assemble,resolve-launcher,resolve-swtlibs,jar,-stage-dist-lib,-stage-pentaho-libs,unzip-swtlibs" description="copy jar file to distribution directory">
     <copy todir="${stage.dir}">
       <fileset dir="." includes="releasenotes.txt" excludes="**/build, **/dist" />
     </copy>
@@ -156,12 +157,6 @@
         <fileset file="${resolve-plugins.dir}/*.zip" />
   	</unzip>
 
-    <!--  launcher libs -->
-    <mkdir dir="${stage.dir}/launcher" />
-    <copy todir="${stage.dir}/launcher" >
-      <fileset dir="${launcher}" includes="**/*" />
-    </copy>
-    
     <!-- documentation -->
     <!--
 		<mkdir dir="${stage.dir}/docs" />
@@ -392,4 +387,9 @@
       	</fileset>
 	    </unzip>
   	</target>	
+  	
+    <target name="resolve-launcher" depends="install-ivy">
+      <ivy:resolve file="${ivyfile}" conf="launcher" />
+      <ivy:retrieve conf="launcher" pattern="${stage.dir}/launcher/[module].[ext]" />
+    </target>
 </project>
