@@ -9,6 +9,7 @@
       <conf name="drivers"/>
       <conf name="plugin"/>
       <conf name="swtlibs"/>
+      <conf name="launcher"/>
     </configurations>
     
     <publications>
@@ -118,10 +119,13 @@
         <dependency org="org.springframework" name="spring-core" rev="2.5.6.SEC03" transitive="false" conf="default->default" />
         <dependency org="com.trilead" name="trilead-ssh2" rev="1.0.0-build215" transitive="false" conf="default->default" />
         
+        <!-- ASSEMBLY RELATED ITEMS -->
         <!-- The OS-specific SWT libraries are bundled together, unzip them all for assembly -->
         <dependency org="org.eclipse"          name="swtlibs"               rev="4.3.2" conf="swtlibs->default" transitive="false">
           <artifact name="swtlibs" type="zip"/>
         </dependency>
+        <dependency org="pentaho" name="pentaho-application-launcher" rev="${dependency.launcher.revision}" conf="launcher->default"/>
+
 
 
         <dependency org="junit"        name="junit"        rev="4.4"                 transitive="false" conf="test->default" />
