@@ -255,7 +255,7 @@ public class PublishDialog extends TitleAreaDialog {
             .field("metadataFile", fileStream, MediaType.MULTIPART_FORM_DATA_TYPE);
         part.getField("metadataFile").setContentDisposition(
             FormDataContentDisposition.name("metadataFile")
-            .fileName(userDomain).build());
+            .fileName("metadataFile" + System.currentTimeMillis()).build());
         Client client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(userId, userPassword));
       
