@@ -128,8 +128,13 @@
     <ivy:resolve file="${ivyfile}" conf="plugin" />
     <ivy:retrieve conf="plugin" pattern="${resolve-plugins.dir}/[module]-[revision](-[classifier]).[ext]" />
   </target>
+	
+  <target name="resolve-oss-licenses" depends="install-ivy">
+    <ivy:resolve file="${ivyfile}" conf="oss-licenses" />
+    <ivy:retrieve conf="oss-licenses" pattern="${bin.dir}/[module].[ext]" />
+  </target>
 
-  <target name="assemble" depends="-init-assemble,resolve-launcher,resolve-swtlibs,jar,-stage-dist-lib,-stage-pentaho-libs,unzip-swtlibs" description="copy jar file to distribution directory">
+  <target name="assemble" depends="-init-assemble,resolve-launcher,resolve-swtlibs,resolve-oss-licenses,jar,-stage-dist-lib,-stage-pentaho-libs,unzip-swtlibs" description="copy jar file to distribution directory">
     <copy todir="${stage.dir}">
       <fileset dir="." includes="releasenotes.txt" excludes="**/build, **/dist" />
     </copy>
@@ -137,6 +142,12 @@
     <copy todir="${stage.dir}" overwrite="true">
       <fileset dir="${package.resdir}" />
     </copy>
+  	
+    <unzip src="${bin.dir}/oss-licenses.zip" dest="${stage.dir}">
+      <patternset>
+        <include name="PentahoMetadata_OSS_Licenses.html"/>
+      </patternset>
+    </unzip>
     
     <!-- external libs (jdbc etc) -->
     <mkdir dir="${stage.dir}" />
