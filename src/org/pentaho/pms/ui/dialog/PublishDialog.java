@@ -73,6 +73,7 @@ public class PublishDialog extends TitleAreaDialog {
   private static final String DEFAULT_METADATA_FILE= "metadata.xmi";
   protected static final String SUCCESS = "3";
   protected static final String PUBLISH_SCHEMA_EXISTS_ERROR = "8";
+  protected static final String PUBLISH_PROHIBITED_SYMBOLS_ERROR = "10";
   private SchemaMeta schemaMeta;
   
   private LogWriter log;
@@ -266,12 +267,14 @@ public class PublishDialog extends TitleAreaDialog {
             .type(MediaType.MULTIPART_FORM_DATA_TYPE)
             .put(ClientResponse.class, part);
         String status = "-1";
+        String message = "";
         if(resp != null && resp.getStatus() > 0){
           status = String.valueOf(resp.getStatus());
+          message = resp.getEntity( String.class );
         } 
         
         System.out.println("Return Status" + status);
-        responseValue = displayMessageBox(status);
+        responseValue = displayMessageBox( status, message );
       } catch (Exception e) {
         e.printStackTrace();
         responseValue = displayErrorDialog(e);
@@ -283,7 +286,7 @@ public class PublishDialog extends TitleAreaDialog {
   }
   
   @SuppressWarnings("deprecation")
-  private boolean displayMessageBox(String statusCode){
+  private boolean displayMessageBox( String statusCode, String message ){
     boolean response = true;
     MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_INFORMATION);
     if(SUCCESS.equals(statusCode)){
@@ -292,6 +295,10 @@ public class PublishDialog extends TitleAreaDialog {
     } else {
       if(PUBLISH_SCHEMA_EXISTS_ERROR.equals(statusCode) && !overwriteInRepository){
         return overwriteDialog();        
+      } else if ( PUBLISH_PROHIBITED_SYMBOLS_ERROR.equals( statusCode ) && message != null && message.length() > 0 ) {
+        mb.setText( Messages.getString( "PublishDialog.PUBLISH_FAILED_DIALOG_TITLE" ) ); //$NON-NLS-1$
+        mb.setMessage( message );
+        response = false;
       } else {
         mb.setText(Messages.getString("PublishDialog.PUBLISH_FAILED_DIALOG_TITLE")); //$NON-NLS-1$
         mb.setMessage(Messages.getString("PublishDialog.FILE_SAVE_FAILED", userDomain)); //$NON-NLS-1$
