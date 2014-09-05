@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -86,6 +87,7 @@ import org.pentaho.di.core.DBCache;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.LastUsedFile;
 import org.pentaho.di.core.Props;
+import org.pentaho.di.core.database.BaseDatabaseMeta;
 import org.pentaho.di.core.database.Database;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.dnd.DragAndDropContainer;
@@ -297,6 +299,10 @@ public class MetaEditor implements SelectionListener {
   private CwmSchemaFactoryInterface cwmSchemaFactory;
 
   private Menu mainMenu;
+
+  // Use only unit tests
+  MetaEditor() {
+  }
 
   public MetaEditor( LogChannelInterface log ) {
     this( log, null );
@@ -3317,6 +3323,49 @@ public class MetaEditor implements SelectionListener {
     }
   }
 
+  String[] getSchemas( Database database, DatabaseMeta databaseMeta ) throws KettleDatabaseException {
+    // This is a hack for PMD-907. A NPE can be thrown on getSchema JDBC's implementations.
+    String[] schemas = null;
+    Exception ex = null;
+    try {
+      schemas = database.getSchemas();
+    } catch ( Exception e ) {
+      // This can happen on shitty implementation of JDBC. We'll try the catalogs.
+      ex = e;
+    }
+
+    if ( ArrayUtils.isEmpty( schemas ) ) {
+      // MySQL doesn't report schema names. If we call get Catalogs, we get all the schemas, even those for which the
+      // current user doesn't have permissions. we'll use the DB name instead, as configured in the JDBC URL.
+      // Else try the catalogs instead. Some DBs call them catalogs.
+      schemas =
+        ( databaseMeta.isMySQLVariant() ) ? new String[] { databaseMeta.getDatabaseName() } : database.getCatalogs();
+    }
+
+    if ( ArrayUtils.isEmpty( schemas ) && ex != null ) {
+      // If we couldn't figure neither the schemas or catalogs and we have cached an exception, throw that.
+      throw new KettleDatabaseException( ex );
+    }
+    return schemas;
+  }
+
+  Map<String, String[]> getTablesBySchemas( Database database, DatabaseMeta databaseMeta, String[] schemas )
+    throws KettleDatabaseException {
+    Map<String, String[]> tableMap = new LinkedHashMap<String, String[]>();
+    String preferredSchemaName =
+      String.valueOf( databaseMeta.getAttributes().get( BaseDatabaseMeta.ATTRIBUTE_PREFERRED_SCHEMA_NAME ) );
+    for ( String schema : schemas ) {
+      if ( StringUtils.isBlank( preferredSchemaName ) || StringUtils.isNotBlank( preferredSchemaName )
+        && schema.equals( preferredSchemaName ) ) {
+        for ( String tableName : database.getTablenames( schema, false ) ) {
+          String fullName = databaseMeta.getQuotedSchemaTableCombination( schema, tableName );
+          tableMap.put( fullName, new String[] { schema, tableName } );
+        }
+      }
+    }
+    return tableMap;
+  }
+
   public void importMultipleTables( DatabaseMeta databaseMeta ) {
     if ( databaseMeta != null ) {
       Database database = null;
@@ -3325,49 +3374,9 @@ public class MetaEditor implements SelectionListener {
         database.connect();
 
         // Get the list of tables...
-        // We need unique names for the ui and schema,table for the import
-        Map<String, String[]> tableMap = new LinkedHashMap<String, String[]>();
-        final int SCHEMA = 0, TABLE = 1;
-
-        // /////////////////////////////////////////////////
-        // This is a hack for PMD-907.
-        // A NPE can be thrown on getSchema JDBC's implementations.
-        String[] catsAndSchemas = new String[0];
-        Exception ex = null;
-        try {
-          catsAndSchemas = database.getSchemas();
-        } catch ( Exception e ) {
-          // This can happen on shitty implementation of JDBC.
-          // We'll try the catalogs.
-          ex = e;
-        }
-
-        if ( catsAndSchemas.length == 0 && databaseMeta.isMySQLVariant() ) {
-          // MySQL doesn't report schema names. If we call
-          // get Catalogs, we get all the schemas, even those for which
-          // the current user doesn't have permissions. we'll use the
-          // DB name instead, as configured in the JDBC URL.
-          catsAndSchemas = new String[] { databaseMeta.getDatabaseName() };
-        } else if ( catsAndSchemas.length == 0 ) {
-          // Try the catalogs instead.
-          // Some DBs call them catalogs.
-          catsAndSchemas = database.getCatalogs();
-        }
-
-        if ( catsAndSchemas.length == 0 && ex != null ) {
-          // If we couldn't figure neither the schemas or catalogs
-          // and we have cached an exception, throw that.
-          throw new KettleDatabaseException( ex );
-        }
-        // Moving on.
-        // /////////////////////////////////////////////////
-
-        for ( String schema : catsAndSchemas ) {
-          for ( String tableName : database.getTablenames( schema, false ) ) {
-            String fullName = databaseMeta.getQuotedSchemaTableCombination( schema, tableName );
-            tableMap.put( fullName, new String[] { schema, tableName } );
-          }
-        }
+        // We need unique names for the UI and schema,table for the import
+        String[] schemas = getSchemas( database, databaseMeta );
+        Map<String, String[]> tableMap = getTablesBySchemas( database, databaseMeta, schemas );
 
         Set<String> nameSet = tableMap.keySet();
         String[] tableNames = nameSet.toArray( new String[nameSet.size()] );
@@ -3384,7 +3393,7 @@ public class MetaEditor implements SelectionListener {
           for ( int i = 0; i < indexes.length; i++ ) {
             String tableName = tableNames[indexes[i]];
             String[] tableDesc = tableMap.get( tableName );
-            importTableDefinition( database, tableDesc[SCHEMA], tableDesc[TABLE] );
+            importTableDefinition( database, tableDesc[0], tableDesc[1] );
           }
         }
 
