@@ -62,6 +62,10 @@
   <target name="clean-stage">
     <delete dir="${stage.dir}" />
   </target>
+	
+  <target name="clean-plugins">
+  	<delete dir="${resolve-plugins.dir}" />
+  </target>
 
   <path id="cp-meta">
     <fileset dir="${libext}" includes="**/*.jar" />
@@ -125,8 +129,17 @@
 
   <!-- Resolve plugin configuration into ${resolve-plugins.dir} -->
   <target name="resolve-plugins" depends="install-ivy">
-    <ivy:resolve file="${ivyfile}" conf="plugin" />
-    <ivy:retrieve conf="plugin" pattern="${resolve-plugins.dir}/[module]-[revision](-[classifier]).[ext]" />
+  	<if>
+  		<equals arg1="${releaseType}" arg2="ee"/>
+  		<then>
+		    <ivy:resolve file="${ivyfile}" conf="ee-plugin" />
+		    <ivy:retrieve conf="ee-plugin" pattern="${resolve-plugins.dir}/[module]-[revision](-[classifier]).[ext]" />
+  		</then>
+  		<else>
+  			<ivy:resolve file="${ivyfile}" conf="plugin" />
+  			<ivy:retrieve conf="plugin" pattern="${resolve-plugins.dir}/[module]-[revision](-[classifier]).[ext]" />
+  		</else>
+  	</if>
   </target>
 	
   <target name="resolve-oss-licenses" depends="install-ivy">
