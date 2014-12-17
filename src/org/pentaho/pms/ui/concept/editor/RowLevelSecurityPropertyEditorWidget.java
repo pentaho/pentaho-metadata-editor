@@ -34,7 +34,6 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.pentaho.pms.schema.security.RowLevelSecurity;
-import org.pentaho.pms.schema.security.SecurityOwner;
 import org.pentaho.pms.schema.security.SecurityReference;
 import org.pentaho.pms.schema.security.RowLevelSecurity.Type;
 import org.pentaho.pms.ui.concept.editor.rls.IRowLevelSecurityModel;
@@ -80,7 +79,10 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
     super(parent, style, conceptModel, propertyId, context, true);
     this.securityReference = securityReference;
     // set this here so that table viewer getElements won't fail but it will be reset in setValue
-    this.rlsModel = new RowLevelSecurityModel((RowLevelSecurity) getProperty().getValue());
+    if ( getProperty() != null && getProperty().getValue() != null ) {
+      this.rlsModel = new RowLevelSecurityModel((RowLevelSecurity) getProperty().getValue().getValue());  
+    }
+    
     createContents();
     refresh();
     if (logger.isDebugEnabled()) {
@@ -161,8 +163,6 @@ public class RowLevelSecurityPropertyEditorWidget extends AbstractPropertyEditor
       }
 
     });
-    Map<SecurityOwner, String> constraintMap = ((RowLevelSecurity) getProperty().getValue())
-        .getRoleBasedConstraintMap();
     roleBasedWidget = new RlsRoleBasedConstraintWidget(parent, SWT.NONE, securityReference, rlsModel);
     FormData fdRoleBasedWidget = new FormData();
     fdRoleBasedWidget.left = new FormAttachment(0, 20);
