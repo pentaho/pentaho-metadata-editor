@@ -93,7 +93,7 @@
             <artifact name="pentaho-cassandra-plugin" type="zip" />
         </dependency>
         
-        <dependency org="pentaho" name="pentaho-big-data-ee-package" rev="${dependency.pentaho-big-data-plugin-ee.revision}" conf="ee-plugin->default" changing="true" transitive="false">
+        <dependency org="pentaho" name="pentaho-big-data-ee-package" rev="${dependency.pentaho-big-data-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-big-data-ee-package" type="zip" />
         </dependency>
         <dependency org="pentaho" name="pentaho-mongodb-plugin" rev="${dependency.pentaho-mongodb-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
