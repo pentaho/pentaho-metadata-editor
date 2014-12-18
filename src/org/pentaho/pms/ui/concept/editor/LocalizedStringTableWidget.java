@@ -86,12 +86,7 @@ public class LocalizedStringTableWidget extends Composite {
   // ~ Methods =========================================================================================================
 
   private LocalizedStringSettings getLocalizedStringSettings() {
-    
-    if( conceptModel.getEffectiveProperty(propertyId) != null 
-        && conceptModel.getEffectiveProperty(propertyId).getValue() != null ) {
-      return (LocalizedStringSettings) conceptModel.getEffectiveProperty(propertyId).getValue().getValue(); 
-    }
-    return null;
+    return (LocalizedStringSettings) conceptModel.getEffectiveProperty(propertyId).getValue();
   }
 
   private List getColumnNames() {

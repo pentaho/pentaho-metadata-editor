@@ -29,7 +29,6 @@ import java.util.Set;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.pentaho.metadata.model.concept.Property;
 import org.pentaho.pms.schema.concept.ConceptInterface;
 import org.pentaho.pms.schema.concept.ConceptPropertyInterface;
 import org.pentaho.pms.schema.concept.DefaultPropertyID;
@@ -394,7 +393,7 @@ public class ConceptModel implements IConceptModel {
       return;
     }
     Object oldValue = prop.getValue();
-    prop.setValue(new Property( value ));
+    prop.setValue(value);
     fireConceptModificationEvent(new PropertyValueModificationEvent(this, id, oldValue, value));
   }
 
