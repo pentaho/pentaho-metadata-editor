@@ -28,7 +28,7 @@
 	<dict>
 		<key>ClassPath</key>
 		<array>
-			<string>./launcher/launcher.jar</string>
+			<string>./launcher/pentaho-application-launcher.jar</string>
 			<string>./libswt/osx64/swt.jar</string>
 		</array>
 		<key>JVMVersion</key>
