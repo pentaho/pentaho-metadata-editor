@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.pentaho.metadata.util.Util;
 import org.pentaho.pms.core.exception.PentahoMetadataException;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.mql.PMSFormula;
@@ -134,22 +135,22 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
 
   protected void okPressed() {
     boolean hasErrors = popupValidationErrorDialogIfNecessary();
-    if (!hasErrors) {
+    if ( !hasErrors ) {
       try {
-        if (lastSelection != null) {
+        if ( lastSelection != null ) {
           String id = conceptIdText.getText();
-          if (id.trim().length() == 0) {
-            MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
-                "BusinessTableDialog.USER_ERROR_INVALID_ID", conceptIdText.getText()));
-            tableColumnTree.setSelection(new StructuredSelection(lastSelection));
+          if ( id.trim().length() == 0 || !Util.validateId( id ) ) {
+            MessageDialog.openError( getShell(), Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString(
+              "BusinessTableDialog.USER_ERROR_INVALID_ID", conceptIdText.getText() ) );
+            tableColumnTree.setSelection( new StructuredSelection( lastSelection ) );
             conceptIdText.forceFocus();
             conceptIdText.selectAll();
           } else {
             // if selection is business column, also verify current column ids aren't being used
-            if (lastSelection instanceof BusinessColumn) {
+            if ( lastSelection instanceof BusinessColumn ) {
               validateBusinessColumnUniqueness();
             }
-            lastSelection.setId(conceptIdText.getText());
+            lastSelection.setId( conceptIdText.getText() );
             updateOriginalBusinessTable();
             super.okPressed();
           }
@@ -157,12 +158,12 @@ public class BusinessTableDialog extends AbstractTableDialog implements Selectio
           updateOriginalBusinessTable();
           super.okPressed();
         }
-      } catch (ObjectAlreadyExistsException e) {
-        if (logger.isErrorEnabled()) {
-          logger.error("an exception occurred", e);
+      } catch ( ObjectAlreadyExistsException e ) {
+        if ( logger.isErrorEnabled() ) {
+          logger.error( "an exception occurred", e );
         }
-        MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
-            "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText()));
+        MessageDialog.openError( getShell(), Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString(
+          "ConceptUtilityBase.ERROR_0001_OBJECT_ID_EXISTS", conceptIdText.getText() ) );
       }
     }
   }
