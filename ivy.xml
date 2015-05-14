@@ -105,8 +105,8 @@
         <dependency org="pentaho" name="pentaho-mongodb-plugin" rev="${dependency.pentaho-mongodb-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-mongodb-plugin" type="zip" />
         </dependency>
-        <dependency org="pentaho" name="pentaho-spark-plugin" rev="${dependency.pentaho-spark-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
-            <artifact name="pentaho-spark-plugin" type="zip" />
+        <dependency org="pentaho" name="pdi-spark-plugin" rev="${dependency.pdi-spark-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
+            <artifact name="pdi-spark-plugin" type="zip" />
         </dependency>
 
         <!-- SWT it required to compile any version of any architecture will work -->
