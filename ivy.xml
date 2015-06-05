@@ -109,7 +109,6 @@
         <!-- 2.0.2 is newer than the one from the old libext (was 1.5.4) -->
         <dependency org="com.enterprisedt" name="edtftpj" rev="2.0.2" transitive="false" conf="default->default" />
         <dependency org="ehcache" name="ehcache" rev="1.1" transitive="false" conf="default->default" />
-        <dependency org="com.google.collections" name="google-collections" rev="1.0" transitive="false" conf="default->default" />
         <dependency org="org.hibernate" name="hibernate" rev="3.2.2.ga" transitive="false" conf="default->default" />
         <dependency org="com.linuxense" name="javadbf" rev="0.4.0" transitive="false" conf="default->default" />
         <dependency org="jaxen" name="jaxen" rev="1.1.1" transitive="false" conf="default->default" />
