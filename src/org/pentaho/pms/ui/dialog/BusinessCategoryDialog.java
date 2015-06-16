@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
@@ -37,6 +38,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.pentaho.metadata.util.Util;
 import org.pentaho.pms.locale.Locales;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.schema.SchemaMeta;
@@ -73,11 +75,11 @@ public class BusinessCategoryDialog extends Dialog {
     this.conceptModel = new ConceptModel(conceptUtil.getConcept());
     this.conceptUtil = conceptUtil;
     this.schemaMeta = schemaMeta;
-    propertyEditorContext.put("locales", schemaMeta.getLocales());
+    propertyEditorContext.put( "locales", schemaMeta.getLocales() );
   }
 
   protected void setShellStyle(int newShellStyle) {
-    super.setShellStyle(newShellStyle | SWT.RESIZE);
+    super.setShellStyle( newShellStyle | SWT.RESIZE );
   }
 
   protected void configureShell(final Shell shell) {
@@ -127,19 +129,26 @@ public class BusinessCategoryDialog extends Dialog {
 
   protected void okPressed() {
     boolean hasErrors = popupValidationErrorDialogIfNecessary();
-    if (!hasErrors) {
-      try {
-        conceptUtil.setId(wId.getText());
-      } catch (ObjectAlreadyExistsException e) {
-        if (logger.isErrorEnabled()) {
-          logger.error("an exception occurred", e);
+    if ( !hasErrors ) {
+      String id = wId.getText().trim();
+      if ( id.isEmpty() || !Util.validateId( id ) ) {
+        MessageDialog.openError( getShell(), Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString(
+          "BusinessTableDialog.USER_ERROR_INVALID_ID", id ) );
+        wId.forceFocus();
+        wId.selectAll();
+      } else {
+        try {
+          conceptUtil.setId( id );
+        } catch ( ObjectAlreadyExistsException e ) {
+          if ( logger.isErrorEnabled() ) {
+            logger.error( "an exception occurred", e );
+          }
+          MessageDialog.openError( getShell(), Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString(
+            "PhysicalTableDialog.USER_ERROR_CATEGORY_ID_EXISTS", id ) );
+          return;
         }
-        MessageDialog.openError(getShell(), Messages.getString("General.USER_TITLE_ERROR"), Messages.getString(
-            "PhysicalTableDialog.USER_ERROR_CATEGORY_ID_EXISTS", wId.getText()));
-        return;
+        super.okPressed();
       }
-
-      super.okPressed();
     }
   }
 
