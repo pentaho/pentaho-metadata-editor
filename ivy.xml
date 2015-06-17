@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
     <info organisation="pentaho" module="${ivy.artifact.id}" revision="${project.revision}" />
-
+    
     <configurations>
       <conf name="default"/>
       <conf name="test" visibility="private"/>
@@ -13,12 +13,12 @@
       <conf name="launcher"/>
       <conf name="oss-licenses" />
     </configurations>
-
+    
     <publications>
       <artifact name="pentaho-metadata-editor" type="jar" conf="default"/>
       <artifact name="pentaho-metadata-editor" m:classifier="sources" type="source" ext="jar" conf="source"/>
-    </publications>
-
+    </publications>    
+    
     <dependencies defaultconf="default->default">
       <!-- Commons -->
       <dependency org="commons-lang"        name="commons-lang"        rev="2.6"   transitive="false" />
@@ -52,7 +52,7 @@
         <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" conf="default->default" transitive="false"/>
         <dependency org="commons-io"     name="commons-io"              rev="1.4"/>
         <dependency org="pentaho"        name="pentaho-vfs-browser"      rev="${dependency.pentaho-vfs-browser.revision}" conf="default->default" transitive="false" changing="true" />
-
+        
       <!-- jersey -->
       <dependency org="com.sun.jersey.contribs" name="jersey-multipart" rev="1.16"/>
       <dependency org="com.sun.jersey.contribs" name="jersey-apache-client" rev="1.16" transitive="false"/>
@@ -65,7 +65,7 @@
       <dependency org="com.sun.jersey" name="jersey-servlet" rev="1.16" transitive="false"/>
 
         <!-- driver dependencies -->
-        <dependency org="hsqldb" name="hsqldb" rev="1.8.0" transitive="false" conf="drivers->default" />
+        <dependency org="org.hsqldb" name="hsqldb" rev="2.3.2"  conf="test->default"/>
         <dependency org="com.h2database" name="h2" rev="1.0.20070617" transitive="false" conf="drivers->default" />
         <dependency org="pentaho" name="pentaho-hadoop-hive-jdbc-shim" rev="${dependency.pentaho-hadoop-hive-jdbc-shim.revision}" conf="drivers->default" />
 
@@ -77,58 +77,50 @@
         <!-- this manual sync should go away once this project is propertly ivy-ized -->
         <dependency org="pentaho" name="pentaho-xul-core" rev="${dependency.pentaho-xul.revision}" conf="default->default" changing="true" transitive="false" />
         <dependency org="pentaho" name="pentaho-xul-swt" rev="${dependency.pentaho-xul.revision}" conf="default->default" changing="true" transitive="false" />
-
+        
         <!-- Kettle plugins and related dependencies -->
         <!-- Scannotation and Javassist required by Kettle plugin loader -->
         <dependency org="javassist" name="javassist" rev="${dependency.javassist.revision}" transitive="false" conf="default->default" changing="true" />
         <dependency org="org.scannotation" name="scannotation" rev="${dependency.scannotation.revision}" transitive="false" conf="default->default" />
-
+        
         <dependency org="pentaho" name="pentaho-big-data-plugin" rev="${dependency.pentaho-big-data-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-big-data-plugin" type="zip" />
         </dependency>
         <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-cassandra-plugin" type="zip" />
         </dependency>
-        <dependency org="pentaho" name="pentaho-mongodb-plugin" rev="${dependency.pentaho-mongodb-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
-            <artifact name="pentaho-mongodb-plugin" type="zip" />
-        </dependency>
         <dependency org="pentaho" name="pdi-spark-plugin" rev="${dependency.pdi-spark-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
             <artifact name="pdi-spark-plugin" type="zip" />
         </dependency>
-
         <dependency org="pentaho" name="pentaho-big-data-ee-package" rev="${dependency.pentaho-big-data-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-big-data-ee-package" type="zip" />
         </dependency>
         <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-cassandra-plugin" type="zip" />
         </dependency>
-        <dependency org="pentaho" name="pentaho-mongodb-plugin" rev="${dependency.pentaho-mongodb-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
-            <artifact name="pentaho-mongodb-plugin" type="zip" />
-        </dependency>
-        <dependency org="pentaho" name="pdi-spark-plugin" rev="${dependency.pdi-spark-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
-            <artifact name="pdi-spark-plugin" type="zip" />
-        </dependency>
-
+         <dependency org="pentaho" name="pdi-spark-plugin" rev="${dependency.pdi-spark-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
+             <artifact name="pdi-spark-plugin" type="zip" />
+         </dependency>
+        
         <!-- SWT it required to compile any version of any architecture will work -->
         <dependency org="org.eclipse.swt"       name="swt-linux-x86_64"    rev="4.3.2" transitive="false" />
         <dependency org="org.eclipse"           name="jface"               rev="3.3.0-I20070606-0010" transitive="false" conf="default->default"/>
         <dependency org="org.eclipse.core"      name="commands"            rev="3.3.0-I20070605-0010" transitive="false"/>
         <dependency org="org.eclipse.equinox"   name="common"              rev="3.3.0-v20070426"      transitive="false"/>
-
+        
         <!-- Old libext/misc dependencies -->
         <dependency org="org.snmp4j" name="snmp4j" rev="1.9.3d" transitive="false" conf="default->default" />
         <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="default->default" />
         <!-- 2.0.2 is newer than the one from the old libext (was 1.5.4) -->
         <dependency org="com.enterprisedt" name="edtftpj" rev="2.0.2" transitive="false" conf="default->default" />
         <dependency org="ehcache" name="ehcache" rev="1.1" transitive="false" conf="default->default" />
-        <dependency org="com.google.collections" name="google-collections" rev="1.0" transitive="false" conf="default->default" />
         <dependency org="org.hibernate" name="hibernate" rev="3.2.2.ga" transitive="false" conf="default->default" />
         <dependency org="com.linuxense" name="javadbf" rev="0.4.0" transitive="false" conf="default->default" />
         <dependency org="jaxen" name="jaxen" rev="1.1.1" transitive="false" conf="default->default" />
         <dependency org="rhino" name="js" rev="1.7R3" transitive="false" conf="default->default" />
         <dependency org="com.jcraft" name="jsch" rev="0.1.24" transitive="false" conf="default->default" />
         <dependency org="jug-lgpl" name="jug-lgpl" rev="2.0.0" transitive="false" conf="default->default" />
-        <dependency org="net.sourceforge.jexcelapi" name="jxl" rev="2.5.7" transitive="false" conf="default->default" />
+        <dependency org="net.sourceforge.jexcelapi" name="jxl" rev="2.5.7" transitive="false" conf="default->default" />       
         <dependency org="org.livetribe" name="livetribe-jsr223" rev="2.0.6" transitive="false" conf="default->default" />
         <dependency org="javax.mail" name="mail" rev="1.4.1" transitive="false" conf="default->default" />
         <dependency org="pentaho" name="pentaho-palo-core" rev="${dependency.pentaho-palo-core.revision}" transitive="false" conf="default->default" />
@@ -137,7 +129,7 @@
         <dependency org="simple-jndi" name="simple-jndi" rev="0.11.1" transitive="false" conf="default->default" />
         <dependency org="org.springframework" name="spring-core" rev="2.5.6.SEC03" transitive="false" conf="default->default" />
         <dependency org="com.trilead" name="trilead-ssh2" rev="1.0.0-build215" transitive="false" conf="default->default" />
-
+        
         <!-- ASSEMBLY RELATED ITEMS -->
         <!-- The OS-specific SWT libraries are bundled together, unzip them all for assembly -->
         <dependency org="org.eclipse"          name="swtlibs"               rev="4.3.2" conf="swtlibs->default" transitive="false">
