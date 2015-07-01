@@ -65,7 +65,7 @@
       <dependency org="com.sun.jersey" name="jersey-servlet" rev="1.16" transitive="false"/>
 
         <!-- driver dependencies -->
-        <dependency org="org.hsqldb" name="hsqldb" rev="2.3.2"  conf="test->default"/>
+        <dependency org="org.hsqldb" name="hsqldb" rev="2.3.2"  conf="drivers->default"/>
         <dependency org="com.h2database" name="h2" rev="1.0.20070617" transitive="false" conf="drivers->default" />
         <dependency org="pentaho" name="pentaho-hadoop-hive-jdbc-shim" rev="${dependency.pentaho-hadoop-hive-jdbc-shim.revision}" conf="drivers->default" />
 
