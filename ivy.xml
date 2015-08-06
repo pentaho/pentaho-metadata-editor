@@ -127,7 +127,6 @@
         <dependency org="net.sf.saxon" name="saxon" rev="9.1.0.8" transitive="false" conf="default->default" />
         <dependency org="net.sf.saxon" name="saxon-dom" rev="9.1.0.8" transitive="false" conf="default->default" />
         <dependency org="simple-jndi" name="simple-jndi" rev="0.11.1" transitive="false" conf="default->default" />
-        <dependency org="org.springframework" name="spring-core" rev="2.5.6.SEC03" transitive="false" conf="default->default" />
         <dependency org="com.trilead" name="trilead-ssh2" rev="1.0.0-build215" transitive="false" conf="default->default" />
         
         <!-- ASSEMBLY RELATED ITEMS -->
