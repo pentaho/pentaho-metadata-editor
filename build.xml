@@ -181,6 +181,9 @@
         <fileset file="${resolve-plugins.dir}/*.zip" />
   	</unzip>
 
+    <chmod file="${stage.dir}/Metadata Editor.app/Contents/MacOS/JavaApplicationStub" perm="ugo+rx"/>
+    <chmod file="${stage.dir}/Metadata Editor.app/Contents/MacOS/universalJavaApplicationStub" perm="ugo+rx"/>
+
     <!-- documentation -->
     <!--
 		<mkdir dir="${stage.dir}/docs" />
@@ -217,13 +220,13 @@
       <zipfileset dir="${stage.dir}" prefix="metadata-editor" filemode="755">
         <include name="**/*.sh" />
       	<include name="**/*.command" />
-        <include name="**/JavaApplicationStub" />
+        <include name="**/**JavaApplicationStub" />
       </zipfileset>
       <zipfileset dir="${stage.dir}" prefix="metadata-editor">
         <include name="**/*" />
         <exclude name="**/*.sh" />
       	<exclude name="**/*.command" />
-        <exclude name="**/JavaApplicationStub" />
+        <exclude name="**/**JavaApplicationStub" />
         <exclude name="**/Thumbs.db" />
       </zipfileset>
     </zip>
