@@ -38,7 +38,10 @@
 		<key>StartOnMainThread</key>
 		<true/>
 		<key>VMOptions</key>
-		<string>-Xmx512m</string>
+		<array>
+			<string>-Xms1024m</string>
+			<string>-Xmx2048m</string>
+		</array>
 	</dict>
 </dict>
 </plist>
