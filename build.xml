@@ -186,7 +186,6 @@
     </copy>
 
     <chmod file="${stage.dir}/Metadata Editor.app/Contents/MacOS/JavaApplicationStub" perm="ugo+rx"/>
-    <chmod file="${stage.dir}/Metadata Editor.app/Contents/MacOS/universalJavaApplicationStub" perm="ugo+rx"/>
 
     <!-- documentation -->
     <!--
