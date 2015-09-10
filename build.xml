@@ -180,6 +180,10 @@
   	<unzip dest="${stage.plugins.dir}" overwrite="true">
         <fileset file="${resolve-plugins.dir}/*.zip" />
   	</unzip>
+    <!-- Specifically for the PDI Data Service Plugin -->
+    <copy todir="${stage.plugins.dir}">
+      <file file="${resolve-plugins.dir}/pdi-dataservice-client-plugin-${dependency.pdi-dataservice-client-plugin.revision}.jar" />
+    </copy>
 
     <chmod file="${stage.dir}/Metadata Editor.app/Contents/MacOS/JavaApplicationStub" perm="ugo+rx"/>
     <chmod file="${stage.dir}/Metadata Editor.app/Contents/MacOS/universalJavaApplicationStub" perm="ugo+rx"/>
