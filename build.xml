@@ -25,7 +25,7 @@
   <property name="productId" value="pme" />
   <property name="releaseType" value="ce" />
   <property name="package.basename" value="${productId}-${releaseType}-${project.revision}" />
-  
+
   <property name="javadoc.zip.filename"
   			value="${package.basename}-javadoc.zip"/>
   <property name="javadoc.tar.filename"
@@ -36,12 +36,12 @@
   			value="${package.basename}-sources.tar.gz"/>
   <property name="javadoc.packagenames"
 	        value="org.pentaho.*"/>
-	
+
   <property name="package.resdir" value="${basedir}/package-res" />
-	
+
 	<!-- Plugin resolve dir -->
 	<property name="resolve-plugins.dir" value="plugins" />
-	
+
 	<!-- SWT Library Directory -->
 	<property name="swtlib.dir" value="libswt" />
 
@@ -52,7 +52,7 @@
 
   <!-- Import the build-res/subfloor.xml file which contains all the default tasks -->
   <import file="${common.build.file}" />
-  
+
   <target name="clean-all" depends="clean-stage,clean,clean-jars">
     <delete dir="${libext}" />
     <delete dir="${swtlib.dir}" />
@@ -62,7 +62,7 @@
   <target name="clean-stage">
     <delete dir="${stage.dir}" />
   </target>
-	
+
   <target name="clean-plugins">
   	<delete dir="${resolve-plugins.dir}" />
   </target>
@@ -117,10 +117,10 @@
       <classpath refid="cp-meta" />
     </javadoc>
   </target>
-	
+
   <!-- Resolve all default items plus JDBC drivers -->
   <target name="resolve" depends="resolve-drivers,resolve-plugins,subfloor.resolve"/>
-  
+
   <!-- Resolve JDBC Drivers into libext/JDBC -->
   <target name="resolve-drivers" depends="resolve-init" description="Retrieves runtime configuration dependencies">
       <ivy:resolve file="${ivy.artifact.ivyfilename}" conf="default"/>
@@ -141,7 +141,7 @@
   		</else>
   	</if>
   </target>
-	
+
   <target name="resolve-oss-licenses" depends="install-ivy">
     <ivy:resolve file="${ivyfile}" conf="oss-licenses" />
     <ivy:retrieve conf="oss-licenses" pattern="${bin.dir}/[module].[ext]" />
@@ -151,17 +151,17 @@
     <copy todir="${stage.dir}">
       <fileset dir="." includes="releasenotes.txt" excludes="**/build, **/dist" />
     </copy>
-    
+
     <copy todir="${stage.dir}" overwrite="true">
       <fileset dir="${package.resdir}" />
     </copy>
-  	
+
     <unzip src="${bin.dir}/oss-licenses.zip" dest="${stage.dir}">
       <patternset>
         <include name="PentahoMetadata_OSS_Licenses.html"/>
       </patternset>
     </unzip>
-    
+
     <!-- external libs (jdbc etc) -->
     <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}/libext">
@@ -180,9 +180,12 @@
   	<unzip dest="${stage.plugins.dir}" overwrite="true">
         <fileset file="${resolve-plugins.dir}/*.zip" />
   	</unzip>
+
     <!-- Specifically for the PDI Data Service Plugin -->
-    <copy todir="${stage.plugins.dir}">
-      <file file="${resolve-plugins.dir}/pdi-dataservice-client-plugin-${dependency.pdi-dataservice-client-plugin.revision}.jar" />
+    <copy todir="${stage.plugins.dir}" verbose="true" >
+      <fileset dir="${resolve-plugins.dir}" >
+        <include name="pdi-dataservice-client-plugin*.jar" />
+      </fileset>
     </copy>
 
     <chmod file="${stage.dir}/Metadata Editor.app/Contents/MacOS/JavaApplicationStub" perm="ugo+rx"/>
@@ -199,7 +202,6 @@
 
   <target name="-init-assemble">
     <echo>Construct the distribution package...</echo>
-
     <!-- root directory -->
     <mkdir dir="${stage.dir}" />
   </target>
@@ -209,7 +211,7 @@
     <mkdir dir="${stage.dir}/lib" />
     <copy todir="${stage.dir}/lib" file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" />
   </target>
-  
+
   <target name="-stage-pentaho-libs">
     <!-- pentaho libs -->
     <mkdir dir="${stage.dir}/libext" />
@@ -236,11 +238,11 @@
   </target>
 
   <target name="package" depends="assemble,package-zip" />
-  
+
   <!-- override dist target so it does assembly and packaging as well -->
   <target name="dist" depends="jar, package" />
 
-	
+
 	<!-- ======================================== EULA assembly packaging ========================================= -->
 
 	<target name="package-eula">
@@ -257,7 +259,7 @@
 		<condition property="isWindows">
 		    <os family="windows" />
 		</condition>
-		
+
 		<if>
 			<not>
 				<isset property="pentaho-eula-assembly-pom.version"/>
@@ -267,7 +269,7 @@
 				<echo>pentaho-eula-assembly-pom.version not set, assuming default of ${pentaho-eula-assembly-pom.version}</echo>
 			</then>
 		</if>
-		
+
 		<if>
 			<not>
 				<isset property="artifactName"/>
@@ -277,14 +279,14 @@
 				<echo>artifactName not set, assuming default of ${artifactName}</echo>
 			</then>
 		</if>
-		
+
 		<if>
 			<not>
 				<available file="dist/pentaho-eula-assembly-pom-${pentaho-eula-assembly-pom.version}-pom.xml" type="file" />
 			</not>
 			<then>
-				<get src="${pentaho.resolve.repo}/com/pentaho/pentaho-eula-assembly-pom/${pentaho-eula-assembly-pom.version}/pentaho-eula-assembly-pom-${pentaho-eula-assembly-pom.version}-pom.xml" 
-		              dest="dist/pentaho-eula-assembly-pom-${pentaho-eula-assembly-pom.version}-pom.xml" 
+				<get src="${pentaho.resolve.repo}/com/pentaho/pentaho-eula-assembly-pom/${pentaho-eula-assembly-pom.version}/pentaho-eula-assembly-pom-${pentaho-eula-assembly-pom.version}-pom.xml"
+		              dest="dist/pentaho-eula-assembly-pom-${pentaho-eula-assembly-pom.version}-pom.xml"
 		              verbose="true" />
 			</then>
 		</if>
@@ -319,17 +321,17 @@
 				</exec>
 			</else>
 		</if>
-		
+
 		<delete file="dist/ant-contrib-1.0b3.jar" />
 
 	</target>
-	
+
 
    <!--=======================================================================
       generate.manifest
-      
+
       Creates a new manifest file if one is not specified, or updates
-      an existing manifest file if one is specified. 
+      an existing manifest file if one is specified.
       Overriding this target in subfloor.xml to address BISERVER-10516
       ====================================================================-->
         <target name="generate.manifest" depends="init,set-build.id">
@@ -347,7 +349,7 @@
 
     <!--=======================================================================
       set-build.id
-      
+
       Overriding this target in subfloor.xml to address BISERVER-10516
       ====================================================================-->
         <target name="set-build.id" unless="build.id" depends="install-antcontrib">
@@ -367,12 +369,12 @@
     <property name="jmeter.version" value="2.11" description="version of jmeter to use" />
     <property name="jmeter.url" value="http://apache.cs.utah.edu/jmeter/binaries/apache-jmeter-${jmeter.version}.zip" description="URL to download jmeter from"/>
     <property name="jmeter.zip" value="${jmeter.home}/jmeter.zip"/>
-    <property name="jmeter.output.dir" value="${bin.dir}/reports/jmeter" description="Base directory that holds all jmeter result files" />	
+    <property name="jmeter.output.dir" value="${bin.dir}/reports/jmeter" description="Base directory that holds all jmeter result files" />
 
 
     <!-- ===================================================================
     jmeter.download-check
-    
+
     checks to see if jmeter is available or not
     ======================================================================== -->
     <target name="jmeter.download-check" description="checks if files have already been downloaded">
@@ -381,13 +383,13 @@
           <available file="${jmeter.home}/apache-jmeter-${jmeter.version}" type="dir" />
         </and>
       </condition>
-    </target>	
+    </target>
 
     <!-- ===================================================================
         jmeter.install
-        
+
         downloads and unzips jmeter from sourceforge.
-        ivy/maven resolution doesn't work well.  
+        ivy/maven resolution doesn't work well.
         only a really old version of jmeter is available.
         the jmeter ant task requires a "home" location of a jmeter install,
         the ivy/maven artifacts aren't a complete install.  So we download it
@@ -422,7 +424,7 @@
       <taskdef name="jmeter"
         classpath="${jmeter.home}/apache-jmeter-${jmeter.version}/extras/ant-jmeter-1.1.1.jar"
         classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" />
-    	
+
       <jmeter
         jmeterhome="${jmeter.home}/apache-jmeter-${jmeter.version}"
         testplan="test-res/${ivy.artifact.id}-jmeter.jmx"
@@ -430,12 +432,12 @@
           <property name="run.server" value="${jmeter.run.server}" />
           <property name="run.port" value="${jmeter.run.port}" />
       </jmeter>
-    	
-    </target>	
-    
+
+    </target>
+
     	<!--=======================================================================
         resolve-swtlibs
-        
+
         Resolved the swtlibs configuration from ivy.xml
     =====================================================================-->
   	<target name="resolve-swtlibs" depends="install-ivy">
@@ -443,7 +445,7 @@
     	<ivy:resolve file="${ivyfile}" conf="test" />
   	  <ivy:retrieve conf="swtlibs" pattern="${swtlib.dir}/[module]-[revision](-[classifier]).[ext]" />
 	  </target>
-	
+
 	  <target name="unzip-swtlibs">
 			<!-- Unzip the libswt package into the libswt folder of the distribution -->
 	    <unzip dest="${stage.dir}" overwrite="true">
@@ -451,8 +453,8 @@
     	    <include name="**/*.zip"/>
       	</fileset>
 	    </unzip>
-  	</target>	
-  	
+  	</target>
+
     <target name="resolve-launcher" depends="install-ivy">
       <ivy:resolve file="${ivyfile}" conf="launcher" />
       <ivy:retrieve conf="launcher" pattern="${stage.dir}/launcher/[module].[ext]" />
