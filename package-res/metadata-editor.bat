@@ -77,11 +77,11 @@ goto TopArg
 
 REM ******************************************************************
 REM ** Set java runtime options                                     **
-REM ** Change 512m to higher values in case you run out of memory   **
+REM ** Change 2048m to higher values in case you run out of memory  **
 REM ** or set the PENTAHO_JAVA_OPTIONS environment variable         **
 REM ******************************************************************
 
-if "%PENTAHO_JAVA_OPTIONS%"=="" set PENTAHO_JAVA_OPTIONS="-Xmx256m"
+if "%PENTAHO_JAVA_OPTIONS%"=="" set PENTAHO_JAVA_OPTIONS="-Xms1024m -Xmx2048m"
 
 set OPT=%PENTAHO_JAVA_OPTIONS% "-Djava.library.path=%LIBSPATH%" 
 rem **** USE THIS LINE IF REMOTE DEBUGGING (port 5105) IS REQUIRED***
