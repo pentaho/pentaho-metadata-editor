@@ -103,10 +103,10 @@ export LIBPATH
 
 # ******************************************************************
 # ** Set java runtime options                                     **
-# ** Change 256m to higher values in case you run out of memory.  **
+# ** Change 2048m to higher values in case you run out of memory. **
 # ******************************************************************
 
-OPT="-Xmx256m -Djava.library.path=$LIBPATH $OPT"
+OPT="-Xms1024m -Xmx2048m -Djava.library.path=$LIBPATH $OPT"
 
 
 # ***************
