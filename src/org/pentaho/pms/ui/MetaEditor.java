@@ -2993,7 +2993,7 @@ public class MetaEditor implements SelectionListener {
         if ( answer == SWT.YES ) {
           CWM delCwm = CWM.getInstance( domainName );
           delCwm.removeDomain();
-          if ( schemaMeta.getDomainName().equalsIgnoreCase( domainName ) ) {
+          if ( domainName.equalsIgnoreCase( schemaMeta.getDomainName() ) ) {
             schemaMeta.clear();
             schemaMeta.addDefaults();
             schemaMeta.clearChanged();
