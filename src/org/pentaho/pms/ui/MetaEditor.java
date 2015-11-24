@@ -185,7 +185,7 @@ import org.pentaho.pms.util.VersionHelper;
 
 /**
  * Class to edit the metadata domain (Schema Metadata), load/store into the MDR/CWM model
- * 
+ *
  * @since 16-may-2003
  */
 public class MetaEditor implements SelectionListener {
@@ -226,17 +226,17 @@ public class MetaEditor implements SelectionListener {
   private Menu msFile;
 
   private MenuItem miFileOpen, miFileNew, miFileSave, miFileSaveAs, miFileExport, miPublish, miFileImport,
-      miFileDelete, miFilePrint, miFileSep3, miFileQuit;
+  miFileDelete, miFilePrint, miFileSep3, miFileQuit;
 
   private MenuItem miNewDomain, miNewConnection, miNewPTable, miNewBTable, miNewBModel, miNewRel, miNewCat;
 
   private MenuItem miNewDomainTB, miNewConnectionTB, miNewPTableTB, miNewBTableTB, miNewBModelTB, miNewRelTB,
-      miNewCatTB;
+  miNewCatTB;
 
   private Listener lsDomainNew, lsConnectionNew, lsPTableNew, lsBTableNew, lsBModelNew, lsRelationNew, lsCategoryNew,
-      lsFileOpen, lsFileSave, lsFileSaveAs, lsFileExport, lsPublish, lsFileImport, lsFileDelete, lsFilePrint,
-      lsFileQuit, lsEditLocales, lsEditConcepts, lsEditCategories, lsAlignRight, lsAlignLeft, lsAlignTop,
-      lsAlignBottom, lsDistribHoriz, lsDistribVert;
+  lsFileOpen, lsFileSave, lsFileSaveAs, lsFileExport, lsPublish, lsFileImport, lsFileDelete, lsFilePrint,
+  lsFileQuit, lsEditLocales, lsEditConcepts, lsEditCategories, lsAlignRight, lsAlignLeft, lsAlignTop,
+  lsAlignBottom, lsDistribHoriz, lsDistribVert;
 
   private MenuItem mEdit;
 
@@ -260,9 +260,11 @@ public class MetaEditor implements SelectionListener {
 
   public static final String STRING_CONNECTIONS = Messages.getString( "MetaEditor.USER_CONNECTIONS" ); //$NON-NLS-1$
 
-  public static final String STRING_BUSINESS_MODELS = Messages.getString( "MetaEditor.USER_BUSINESS_MODELS" ); //$NON-NLS-1$
+  public static final String STRING_BUSINESS_MODELS = Messages.getString( "MetaEditor.USER_BUSINESS_MODELS" );
+    //$NON-NLS-1$
 
-  public static final String STRING_BUSINESS_TABLES = Messages.getString( "MetaEditor.USER_BUSINESS_TABLES" ); //$NON-NLS-1$
+  public static final String STRING_BUSINESS_TABLES = Messages.getString( "MetaEditor.USER_BUSINESS_TABLES" );
+    //$NON-NLS-1$
 
   public static final String STRING_RELATIONSHIPS = Messages.getString( "MetaEditor.USER_RELATIONSHIPS" ); //$NON-NLS-1$
 
@@ -333,7 +335,8 @@ public class MetaEditor implements SelectionListener {
 
     // Load settings in the props
     loadSettings();
-    shell.setImage( new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon.png" ) ) ); //$NON-NLS-1$
+    shell.setImage(
+      new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon.png" ) ) ); //$NON-NLS-1$
 
     initGlobalKeyBindings();
     initGlobalListeners();
@@ -349,7 +352,7 @@ public class MetaEditor implements SelectionListener {
         e.doit = quitFile();
       }
     } );
-    int weights[] = props.getSashWeights();
+    int[] weights = props.getSashWeights();
     sashform.setWeights( weights );
     sashform.setVisible( true );
 
@@ -379,7 +382,7 @@ public class MetaEditor implements SelectionListener {
           if ( treeViewer.getTree().getSelection().length == 1 ) {
             if ( alt && ( e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN ) ) {
               // support CTRL UP and CTRL DOWN
-              final TreeItem ti = treeViewer.getTree().getSelection()[0];
+              final TreeItem ti = treeViewer.getTree().getSelection()[ 0 ];
               final ConceptTreeNode node = (ConceptTreeNode) ti.getData();
 
               if ( node instanceof BusinessModelTreeNode || node instanceof CategoryTreeNode
@@ -426,19 +429,19 @@ public class MetaEditor implements SelectionListener {
           }
           metaEditorGraph.control = false;
         }
-        ;
+
         // CTRL-E --> Select All steps
         if ( e.character == 5 && control && !alt ) {
           exportToXMI();
           metaEditorGraph.control = false;
         }
-        ;
+
         // CTRL-I --> Select All steps
         if ( e.character == 9 && control && !alt ) {
           importFromXMI();
           metaEditorGraph.control = false;
         }
-        ;
+
         // CTRL-N --> new
         if ( e.character == 14 && control && !alt ) {
           newFile();
@@ -468,17 +471,21 @@ public class MetaEditor implements SelectionListener {
     };
     modKeys = new KeyAdapter() {
       public void keyPressed( KeyEvent e ) {
-        if ( e.keyCode == SWT.SHIFT )
+        if ( e.keyCode == SWT.SHIFT ) {
           metaEditorGraph.shift = true;
-        if ( e.keyCode == SWT.MOD1 )
+        }
+        if ( e.keyCode == SWT.MOD1 ) {
           metaEditorGraph.control = true;
+        }
       }
 
       public void keyReleased( KeyEvent e ) {
-        if ( e.keyCode == SWT.SHIFT )
+        if ( e.keyCode == SWT.SHIFT ) {
           metaEditorGraph.shift = false;
-        if ( e.keyCode == SWT.MOD1 )
+        }
+        if ( e.keyCode == SWT.MOD1 ) {
           metaEditorGraph.control = false;
+        }
       }
     };
   }
@@ -695,17 +702,19 @@ public class MetaEditor implements SelectionListener {
       String filename;
       if ( forcedFilename == null ) {
         FileDialog dialog = new FileDialog( shell, SWT.SAVE );
-        dialog.setFilterExtensions( new String[] { "*.xmi", "*.xml", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        dialog
+          .setFilterExtensions( new String[] { "*.xmi", "*.xml", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         dialog
           .setFilterNames( new String[] {
-            Messages.getString( "MetaEditor.USER_XMI_FILES" ), Messages.getString( "MetaEditor.USER_XML_FILES" ), Messages.getString( "MetaEditor.USER_ALL_FILES" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            Messages.getString( "MetaEditor.USER_XMI_FILES" ), Messages.getString( "MetaEditor.USER_XML_FILES" ),
+            Messages.getString( "MetaEditor.USER_ALL_FILES" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         filename = dialog.open();
       } else {
         filename = forcedFilename;
       }
       if ( filename != null ) {
-        if ( !filename.toLowerCase().endsWith( ".xmi" ) && !filename.toLowerCase().endsWith( ".xml" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        {
+        if ( !filename.toLowerCase().endsWith( ".xmi" )
+          && !filename.toLowerCase().endsWith( ".xml" ) ) { //$NON-NLS-1$ //$NON-NLS-2$
           filename += ".xmi"; //$NON-NLS-1$
         }
 
@@ -718,7 +727,8 @@ public class MetaEditor implements SelectionListener {
           } catch ( Exception e ) {
             new ErrorDialog(
               shell,
-              Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_EXPORTING_XMI" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+              Messages.getString( "General.USER_TITLE_ERROR" ),
+              Messages.getString( "MetaEditor.USER_ERROR_EXPORTING_XMI" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
           }
         }
       }
@@ -768,10 +778,12 @@ public class MetaEditor implements SelectionListener {
   public void importFromXMI() {
     if ( showChangedWarning() ) {
       FileDialog fileDialog = new FileDialog( shell, SWT.OPEN );
-      fileDialog.setFilterExtensions( new String[] { "*.xmi", "*.xml", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      fileDialog
+        .setFilterExtensions( new String[] { "*.xmi", "*.xml", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       fileDialog
         .setFilterNames( new String[] {
-          Messages.getString( "MetaEditor.USER_XMI_FILES" ), Messages.getString( "MetaEditor.USER_XML_FILES" ), Messages.getString( "MetaEditor.USER_ALL_FILES" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          Messages.getString( "MetaEditor.USER_XMI_FILES" ), Messages.getString( "MetaEditor.USER_XML_FILES" ),
+          Messages.getString( "MetaEditor.USER_ALL_FILES" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       final String filename = fileDialog.open();
       if ( filename != null ) {
         try {
@@ -780,7 +792,8 @@ public class MetaEditor implements SelectionListener {
           EnterStringDialog stringDialog =
             new EnterStringDialog(
               shell,
-              "", Messages.getString( "MetaEditor.USER_TITLE_SAVE_DOMAIN" ), Messages.getString( "MetaEditor.USER_ENTER_DOMAIN_NAME" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              "", Messages.getString( "MetaEditor.USER_TITLE_SAVE_DOMAIN" ),
+              Messages.getString( "MetaEditor.USER_ENTER_DOMAIN_NAME" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           final String domainName = stringDialog.open();
           if ( domainName != null ) {
             int id = SWT.YES;
@@ -824,13 +837,16 @@ public class MetaEditor implements SelectionListener {
             } else {
               new ErrorDialog(
                 shell,
-                Messages.getString( "MetaEditor.USER_TITLE_ERROR_SAVE_DOMAIN" ), Messages.getString( "MetaEditor.USER_ERROR_LOADING_DOMAIN" ), (Exception) exceptionList.get( 0 ) ); //$NON-NLS-1$ //$NON-NLS-2$
+                Messages.getString( "MetaEditor.USER_TITLE_ERROR_SAVE_DOMAIN" ),
+                Messages.getString( "MetaEditor.USER_ERROR_LOADING_DOMAIN" ),
+                (Exception) exceptionList.get( 0 ) ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
         } catch ( Exception e ) {
           new ErrorDialog(
             shell,
-            Messages.getString( "MetaEditor.USER_TITLE_ERROR_SAVE_DOMAIN" ), Messages.getString( "MetaEditor.USER_ERROR_LOADING_DOMAIN" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "MetaEditor.USER_TITLE_ERROR_SAVE_DOMAIN" ),
+            Messages.getString( "MetaEditor.USER_ERROR_LOADING_DOMAIN" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     }
@@ -840,10 +856,11 @@ public class MetaEditor implements SelectionListener {
   public void open() {
     // Set the shell size, based upon previous time...
     WindowProperty winprop = props.getScreen( shell.getText() );
-    if ( winprop != null )
+    if ( winprop != null ) {
       winprop.setShell( shell );
-    else
+    } else {
       shell.pack();
+    }
 
     shell.open();
 
@@ -869,7 +886,8 @@ public class MetaEditor implements SelectionListener {
     } catch ( Exception e ) {
       new ErrorDialog(
         shell,
-        Messages.getString( "MetaEditor.USER_TITLE_ERROR_STOPPING_REPOSITORY" ), Messages.getString( "MetaEditor.USER_ERROR_STOPPING_REPOSITORY" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "MetaEditor.USER_TITLE_ERROR_STOPPING_REPOSITORY" ),
+        Messages.getString( "MetaEditor.USER_ERROR_STOPPING_REPOSITORY" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -917,7 +935,7 @@ public class MetaEditor implements SelectionListener {
     miNewBTable.addListener( SWT.Selection, lsBTableNew );
 
     miNewBModel = new MenuItem( fileMenu, SWT.CASCADE );
-    miNewBModel.setText( Messages.getString( "MetaEditor.USER_NEW_BUSINESS_MODEL_MENU" ) );//$NON-NLS-1$
+    miNewBModel.setText( Messages.getString( "MetaEditor.USER_NEW_BUSINESS_MODEL_MENU" ) ); //$NON-NLS-1$
     miNewBModel.addListener( SWT.Selection, lsBModelNew );
 
     miNewRel = new MenuItem( fileMenu, SWT.CASCADE );
@@ -1020,20 +1038,20 @@ public class MetaEditor implements SelectionListener {
 
     new MenuItem( msTools, SWT.SEPARATOR );
     miLocalesEditor = new MenuItem( msTools, SWT.CASCADE );
-    miLocalesEditor.setText( Messages.getString( "MetaEditor.USER_CONFIGURE_LOCALES" ) );//$NON-NLS-1$
+    miLocalesEditor.setText( Messages.getString( "MetaEditor.USER_CONFIGURE_LOCALES" ) ); //$NON-NLS-1$
     miLocalesEditor.addListener( SWT.Selection, lsEditLocales );
 
     miConceptEditor = new MenuItem( msTools, SWT.CASCADE );
-    miConceptEditor.setText( Messages.getString( "MetaEditor.USER_CONFIGURE_CONCEPTS" ) );//$NON-NLS-1$
+    miConceptEditor.setText( Messages.getString( "MetaEditor.USER_CONFIGURE_CONCEPTS" ) ); //$NON-NLS-1$
     miConceptEditor.addListener( SWT.Selection, lsEditConcepts );
 
     miCategoryEditor = new MenuItem( msTools, SWT.CASCADE );
-    miCategoryEditor.setText( Messages.getString( "MetaEditor.USER_CONFIGURE_CATEGORYS" ) );//$NON-NLS-1$
+    miCategoryEditor.setText( Messages.getString( "MetaEditor.USER_CONFIGURE_CATEGORYS" ) ); //$NON-NLS-1$
     miCategoryEditor.addListener( SWT.Selection, lsEditCategories );
 
     new MenuItem( msTools, SWT.SEPARATOR );
     miLogging = new MenuItem( msTools, SWT.CASCADE );
-    miLogging.setText( Messages.getString( "MetaEditor.USER_CONFIGURE_LOGGING" ) );//$NON-NLS-1$
+    miLogging.setText( Messages.getString( "MetaEditor.USER_CONFIGURE_LOGGING" ) ); //$NON-NLS-1$
 
     // new MenuItem(msTools, SWT.SEPARATOR);
     // MenuItem miPopAD = new MenuItem(msTools, SWT.CASCADE);
@@ -1067,7 +1085,8 @@ public class MetaEditor implements SelectionListener {
     //
     // new MenuItem(mPopAD, SWT.SEPARATOR);
     // MenuItem miPopSSnap = new MenuItem(mPopAD, SWT.CASCADE);
-    //    miPopSSnap.setText(Messages.getString("MetaEditorGraph.USER_SNAP_TO_GRID", Integer.toString(Const.GRID_SIZE))); //$NON-NLS-1$
+    //    miPopSSnap.setText(Messages.getString("MetaEditorGraph.USER_SNAP_TO_GRID", Integer.toString(Const
+    // .GRID_SIZE))); //$NON-NLS-1$
     // miPopAD.setMenu(mPopAD);
     //
     // miPopSSnap.addSelectionListener(new SelectionAdapter() {
@@ -1130,15 +1149,15 @@ public class MetaEditor implements SelectionListener {
     }
 
     // Previously loaded files...
-    String lf[] = props.getLastFiles();
+    String[] lf = props.getLastFiles();
 
     for ( int i = 0; i < lf.length; i++ ) {
       MenuItem miFileLast = new MenuItem( msFile, SWT.CASCADE );
       char chr = (char) ( '1' + i );
       int accel = SWT.MOD1 | chr;
-      miFileLast.setText( "&" + chr + "  " + lf[i] + " \tCTRL-" + chr ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      miFileLast.setText( "&" + chr + "  " + lf[ i ] + " \tCTRL-" + chr ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       miFileLast.setAccelerator( accel );
-      final String fn = lf[i];
+      final String fn = lf[ i ];
 
       Listener lsFileLast = new Listener() {
         public void handleEvent( Event e ) {
@@ -1164,12 +1183,18 @@ public class MetaEditor implements SelectionListener {
     // First get the toolbar images
     // Make sure that any images we get are disposed of down below in the
     // DisposeListener
-    final Image imFileNew = new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "new.png" ) ); //$NON-NLS-1$
-    final Image imFileOpen = new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "open.png" ) ); //$NON-NLS-1$
-    final Image imFileSave = new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "save.png" ) ); //$NON-NLS-1$
-    final Image imFileSaveAs = new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "saveas.png" ) ); //$NON-NLS-1$
-    final Image imFilePrint = new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "print.png" ) ); //$NON-NLS-1$
-    final Image imSQL = new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "SQLbutton.png" ) ); //$NON-NLS-1$
+    final Image imFileNew =
+      new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "new.png" ) ); //$NON-NLS-1$
+    final Image imFileOpen =
+      new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "open.png" ) ); //$NON-NLS-1$
+    final Image imFileSave =
+      new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "save.png" ) ); //$NON-NLS-1$
+    final Image imFileSaveAs =
+      new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "saveas.png" ) ); //$NON-NLS-1$
+    final Image imFilePrint =
+      new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "print.png" ) ); //$NON-NLS-1$
+    final Image imSQL =
+      new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "SQLbutton.png" ) ); //$NON-NLS-1$
     final Image imConceptEdit =
       new Image( disp, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "concept-editor.png" ) ); //$NON-NLS-1$
     final Image imLocaleEdit =
@@ -1218,7 +1243,7 @@ public class MetaEditor implements SelectionListener {
     miNewBTableTB.addListener( SWT.Selection, lsBTableNew );
 
     miNewBModelTB = new MenuItem( fileMenus, SWT.CASCADE );
-    miNewBModelTB.setText( Messages.getString( "MetaEditor.USER_NEW_BUSINESS_MODEL_MENU" ) );//$NON-NLS-1$
+    miNewBModelTB.setText( Messages.getString( "MetaEditor.USER_NEW_BUSINESS_MODEL_MENU" ) ); //$NON-NLS-1$
     miNewBModelTB.addListener( SWT.Selection, lsBModelNew );
 
     miNewRelTB = new MenuItem( fileMenus, SWT.CASCADE );
@@ -1431,10 +1456,12 @@ public class MetaEditor implements SelectionListener {
           // into
           // any other branch than the business view branch
           boolean isAppropriateForBusinessView =
-            ( ( container.getType() == DragAndDropContainer.TYPE_BUSINESS_TABLE ) || ( container.getType() == DragAndDropContainer.TYPE_BUSINESS_COLUMN ) );
+            ( ( container.getType() == DragAndDropContainer.TYPE_BUSINESS_TABLE ) || ( container.getType()
+              == DragAndDropContainer.TYPE_BUSINESS_COLUMN ) );
 
           if ( isAppropriateForBusinessView
-            && ( !( targetNode instanceof CategoryTreeNode ) && !( targetNode instanceof BusinessViewTreeNode ) && !( targetNode instanceof BusinessViewTreeNode ) ) ) {
+            && ( !( targetNode instanceof CategoryTreeNode ) && !( targetNode instanceof BusinessViewTreeNode )
+            && !( targetNode instanceof BusinessViewTreeNode ) ) ) {
             MessageBox mb = new MessageBox( shell, SWT.OK | SWT.ICON_ERROR );
             mb.setMessage( Messages.getString( "MetaEditor.USER_ERROR_DRAG_TO_VIEW" ) ); //$NON-NLS-1$
             mb.setText( Messages.getString( "General.USER_TITLE_ERROR" ) ); //$NON-NLS-1$
@@ -1478,7 +1505,8 @@ public class MetaEditor implements SelectionListener {
           // Ad-hoc & MDR follow
           //
           if ( ( container.getType() == DragAndDropContainer.TYPE_BUSINESS_TABLE && !parentCategory.isRootCategory() )
-            || ( container.getType() == DragAndDropContainer.TYPE_BUSINESS_COLUMN && parentCategory.isRootCategory() ) ) {
+            || ( container.getType() == DragAndDropContainer.TYPE_BUSINESS_COLUMN && parentCategory
+            .isRootCategory() ) ) {
             MessageBox mb = new MessageBox( shell, SWT.CLOSE | SWT.ICON_INFORMATION );
             mb.setMessage( Messages.getString( "MetaEditor.USER_CATEGORY_COLUMN_SUPPORT" ) ); //$NON-NLS-1$
             mb.setText( Messages.getString( "MetaEditor.USER_SORRY" ) ); //$NON-NLS-1$
@@ -1486,22 +1514,23 @@ public class MetaEditor implements SelectionListener {
             return;
           }
 
-          switch ( container.getType() ) {
-          // Drag physical table onto metaEditorGraph:
-          // 0) Look up the referenced Physical Table name, if it
-          // exists continue
-          // 1) If there is an active business model use that one, if
-          // not ask name, create one, edit it
-          // 2) Create the business table based on the physical table,
-          // edit
-          // 3) Place the business table on the selected coordinates.
-          //
-            case DragAndDropContainer.TYPE_PHYSICAL_TABLE: {
+          switch( container.getType() ) {
+            // Drag physical table onto metaEditorGraph:
+            // 0) Look up the referenced Physical Table name, if it
+            // exists continue
+            // 1) If there is an active business model use that one, if
+            // not ask name, create one, edit it
+            // 2) Create the business table based on the physical table,
+            // edit
+            // 3) Place the business table on the selected coordinates.
+            //
+            case DragAndDropContainer.TYPE_PHYSICAL_TABLE:
               PhysicalTable physicalTable = getSchemaMeta().findPhysicalTable( container.getData() ); // 0)
               if ( physicalTable != null ) {
                 BusinessModel businessModel = getSchemaMeta().getActiveModel();
-                if ( businessModel == null )
+                if ( businessModel == null ) {
                   businessModel = newBusinessModel(); // 1)
+                }
 
                 if ( businessModel != null ) {
                   BusinessTable businessTable = newBusinessTable( physicalTable ); // 2)
@@ -1510,12 +1539,11 @@ public class MetaEditor implements SelectionListener {
                   }
                 }
               }
-            }
               break;
             //
             // Drag business table in categories: make business table
             // name a new category
-            case DragAndDropContainer.TYPE_BUSINESS_TABLE: {
+            case DragAndDropContainer.TYPE_BUSINESS_TABLE:
               BusinessTable businessTable = activeModel.findBusinessTable( container.getData() );
               if ( businessTable != null ) {
                 BusinessCategory businessCategory =
@@ -1529,9 +1557,9 @@ public class MetaEditor implements SelectionListener {
 
                 refreshAll();
               }
-            }
               break;
-            case DragAndDropContainer.TYPE_BUSINESS_COLUMN: {
+
+            case DragAndDropContainer.TYPE_BUSINESS_COLUMN:
               String columnID = container.getData();
               BusinessColumn businessColumn = activeModel.findBusinessColumn( columnID );
               if ( businessColumn != null ) {
@@ -1556,8 +1584,9 @@ public class MetaEditor implements SelectionListener {
                   mb.setMessage( Messages.getString( "MetaEditor.USER_BUSINESS_COLUMN_EXISTS" ) ); //$NON-NLS-1$
                   mb.setText( Messages.getString( "MetaEditor.USER_WARNING" ) ); //$NON-NLS-1$
                   int answer = mb.open();
-                  if ( answer == SWT.NO )
+                  if ( answer == SWT.NO ) {
                     return;
+                  }
                 }
 
                 // Add the column to the parentCategory
@@ -1565,25 +1594,24 @@ public class MetaEditor implements SelectionListener {
                 synchronize( parentCategory );
                 refreshAll();
               }
-            }
               break;
 
             //
             // Nothing we can use: give an error!
             //
-            default: {
+            default:
               MessageBox mb = new MessageBox( shell, SWT.OK | SWT.ICON_ERROR );
               mb.setMessage( Messages.getString(
                 "MetaEditor.USER_CANT_PUT_IN_CATEGORIES_TREE", container.getData().toString() ) ); //$NON-NLS-1$
               mb.setText( Messages.getString( "MetaEditor.USER_SORRY" ) ); //$NON-NLS-1$
               mb.open();
               return;
-            }
           }
         } catch ( Exception e ) {
           new ErrorDialog(
             shell,
-            Messages.getString( "MetaEditor.USER_TITLE_ERROR_DND" ), Messages.getString( "MetaEditor.USER_ERROR_DND" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "MetaEditor.USER_TITLE_ERROR_DND" ), Messages.getString( "MetaEditor.USER_ERROR_DND" ),
+            e ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 
@@ -1610,8 +1638,9 @@ public class MetaEditor implements SelectionListener {
     if ( businessModel != null ) {
       schemaMeta.setActiveModel( businessModel );
       refreshGraph();
-      if ( metaEditorOlap != null )
+      if ( metaEditorOlap != null ) {
         metaEditorOlap.refreshScreen();
+      }
     }
   }
 
@@ -1627,12 +1656,12 @@ public class MetaEditor implements SelectionListener {
       }
 
       public void dragSetData( DragSourceEvent event ) {
-        TreeItem ti[] = fTree.getSelection();
+        TreeItem[] ti = fTree.getSelection();
         String data = null;
         int type = 0;
 
         if ( ti.length == 1 ) { // ensure we've only got one thing selected
-          ConceptTreeNode node = (ConceptTreeNode) ti[0].getData();
+          ConceptTreeNode node = (ConceptTreeNode) ti[ 0 ].getData();
           data = node.getId();
           type = node.getDragAndDropType();
           if ( type == 0 || Const.isEmpty( data ) ) {
@@ -1656,7 +1685,7 @@ public class MetaEditor implements SelectionListener {
 
   /**
    * Only one selected item possible
-   * 
+   *
    * @param e
    */
   private void updateMenusAndToolbars( SelectionEvent e ) {
@@ -1669,14 +1698,16 @@ public class MetaEditor implements SelectionListener {
       mainMenu = new Menu( shell, SWT.POP_UP );
     } else {
       MenuItem[] items = mainMenu.getItems();
-      for ( int i = 0; i < items.length; i++ )
-        items[i].dispose();
+      for ( int i = 0; i < items.length; i++ ) {
+        items[ i ].dispose();
+      }
     }
 
     boolean enableProperties =
       ( ( node instanceof BusinessColumnTreeNode ) || ( node instanceof BusinessModelTreeNode )
         || ( node instanceof BusinessTableTreeNode ) || ( node instanceof CategoryTreeNode )
-        || ( node instanceof PhysicalColumnTreeNode ) || ( node instanceof DatabaseMetaTreeNode ) || ( node instanceof PhysicalTableTreeNode ) );
+        || ( node instanceof PhysicalColumnTreeNode ) || ( node instanceof DatabaseMetaTreeNode )
+        || ( node instanceof PhysicalTableTreeNode ) );
     tiEditProperties.setEnabled( enableProperties );
     miEditProperties.setEnabled( enableProperties );
 
@@ -2119,13 +2150,16 @@ public class MetaEditor implements SelectionListener {
         // Add this to the parent.
         try {
           parentCategory.addBusinessCategory( businessCategory );
-          if ( activeModelTreeNode != null )
+          if ( activeModelTreeNode != null ) {
             activeModelTreeNode.getBusinessViewRoot().addDomainChild( businessCategory );
+          }
           break;
         } catch ( ObjectAlreadyExistsException e ) {
           new ErrorDialog(
             shell,
-            Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_BUSINESS_CATEGORY_EXISTS", businessCategory.getId() ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "General.USER_TITLE_ERROR" ),
+            Messages.getString( "MetaEditor.USER_ERROR_BUSINESS_CATEGORY_EXISTS", businessCategory.getId() ),
+            e ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       } else {
         break;
@@ -2137,8 +2171,9 @@ public class MetaEditor implements SelectionListener {
     int index = parentCategory.indexOfBusinessCategory( businessCategory );
     if ( index >= 0 ) {
       parentCategory.removeBusinessCategory( index );
-      if ( activeModelTreeNode != null )
+      if ( activeModelTreeNode != null ) {
         activeModelTreeNode.getBusinessViewRoot().removeDomainChild( businessCategory );
+      }
     }
   }
 
@@ -2206,7 +2241,8 @@ public class MetaEditor implements SelectionListener {
       ListSelectionDialog comboDialog =
         new ListSelectionDialog(
           shell,
-          Messages.getString( "MetaEditor.USER_SELECT_PHYSICAL_TABLE_MESSAGE" ), Messages.getString( "MetaEditor.USER_TITLE_SELECT_PHYSICAL_TABLE" ), //$NON-NLS-1$ //$NON-NLS-2$
+          Messages.getString( "MetaEditor.USER_SELECT_PHYSICAL_TABLE_MESSAGE" ),
+          Messages.getString( "MetaEditor.USER_TITLE_SELECT_PHYSICAL_TABLE" ), //$NON-NLS-1$ //$NON-NLS-2$
           schemaMeta.getTables().toArray() );
       comboDialog.open();
       physicalTable = (PhysicalTable) comboDialog.getSelection();
@@ -2275,7 +2311,9 @@ public class MetaEditor implements SelectionListener {
         } catch ( ObjectAlreadyExistsException e ) {
           new ErrorDialog(
             shell,
-            Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_BUSINESS_COLUMN_EXISTS", businessColumn.getId() ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "General.USER_TITLE_ERROR" ),
+            Messages.getString( "MetaEditor.USER_ERROR_BUSINESS_COLUMN_EXISTS", businessColumn.getId() ),
+            e ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     }
@@ -2296,7 +2334,9 @@ public class MetaEditor implements SelectionListener {
         } catch ( ObjectAlreadyExistsException e ) {
           new ErrorDialog(
             shell,
-            Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_BUSINESS_TABLE_EXISTS", businessTable.getId() ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "General.USER_TITLE_ERROR" ),
+            Messages.getString( "MetaEditor.USER_ERROR_BUSINESS_TABLE_EXISTS", businessTable.getId() ),
+            e ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     }
@@ -2307,23 +2347,26 @@ public class MetaEditor implements SelectionListener {
   public void delBusinessTable( BusinessTable businessTable ) {
     if ( businessTable != null ) {
       BusinessModel activeModel = schemaMeta.getActiveModel();
-      if ( activeModel == null )
+      if ( activeModel == null ) {
         return;
+      }
       // First delete the relationships it uses.
       RelationshipMeta[] relationships = activeModel.findRelationshipsUsing( businessTable );
       for ( int i = 0; i < relationships.length; i++ ) {
-        int idx = activeModel.indexOfRelationship( relationships[i] );
+        int idx = activeModel.indexOfRelationship( relationships[ i ] );
         if ( idx >= 0 ) {
           activeModel.removeRelationship( idx );
-          if ( activeModelTreeNode != null )
-            activeModelTreeNode.getRelationshipsRoot().removeDomainChild( relationships[i] );
+          if ( activeModelTreeNode != null ) {
+            activeModelTreeNode.getRelationshipsRoot().removeDomainChild( relationships[ i ] );
+          }
         }
       }
 
       int idx = activeModel.indexOfBusinessTable( businessTable );
       activeModel.removeBusinessTable( idx );
-      if ( activeModelTreeNode != null )
+      if ( activeModelTreeNode != null ) {
         activeModelTreeNode.getBusinessTablesRoot().removeDomainChild( businessTable );
+      }
       // call refresh all to refresh the rest of the UI - does not refresh
       // the tree
       refreshAll();
@@ -2411,7 +2454,8 @@ public class MetaEditor implements SelectionListener {
     } catch ( Exception e ) {
       new ErrorDialog(
         shell,
-        Messages.getString( "MetaEditor.USER_TITLE_ERROR_READING_DOMAIN" ), Messages.getString( "MetaEditor.USER_ERROR_READING_DOMAIN" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "MetaEditor.USER_TITLE_ERROR_READING_DOMAIN" ),
+        Messages.getString( "MetaEditor.USER_ERROR_READING_DOMAIN" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
   }
@@ -2438,10 +2482,10 @@ public class MetaEditor implements SelectionListener {
   public void doubleClickedMain() {
     // Determine what tree-item we selected from...
 
-    TreeItem ti[] = treeViewer.getTree().getSelection();
+    TreeItem[] ti = treeViewer.getTree().getSelection();
     if ( ti.length == 1 ) { // ensure we've only got one thing selected
-      ConceptTreeNode node = (ConceptTreeNode) ti[0].getData();
-      final String itemText = ti[0].getText();
+      ConceptTreeNode node = (ConceptTreeNode) ti[ 0 ].getData();
+      final String itemText = ti[ 0 ].getText();
       if ( node instanceof LabelTreeNode ) { // We clicked on one of the labels... not an actual object
         if ( itemText.equals( STRING_CONNECTIONS ) ) {
           newConnection();
@@ -2498,9 +2542,9 @@ public class MetaEditor implements SelectionListener {
     // ...mimics old behavior as closely as possible.
     String[] ids = generateBusinessModelId();
 
-    BusinessModel businessModel = new BusinessModel( ids[0] );
+    BusinessModel businessModel = new BusinessModel( ids[ 0 ] );
     businessModel.addIDChangedListener( ConceptUtilityBase.createIDChangedListener( schemaMeta.getBusinessModels() ) );
-    businessModel.setName( schemaMeta.getActiveLocale(), "Model " + ids[1] ); //$NON-NLS-1$
+    businessModel.setName( schemaMeta.getActiveLocale(), "Model " + ids[ 1 ] ); //$NON-NLS-1$
 
     BusinessModel newBusModel = (BusinessModel) businessModel.clone();
     BusinessModelDialog dialog = new BusinessModelDialog( shell, SWT.NONE, newBusModel, schemaMeta );
@@ -2528,7 +2572,8 @@ public class MetaEditor implements SelectionListener {
       } catch ( ObjectAlreadyExistsException e ) {
         new ErrorDialog(
           shell,
-          Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_BUSINESS_MODEL_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+          Messages.getString( "General.USER_TITLE_ERROR" ),
+          Messages.getString( "MetaEditor.USER_ERROR_BUSINESS_MODEL_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
 
@@ -2557,8 +2602,9 @@ public class MetaEditor implements SelectionListener {
         try {
           businessModel.setId( newBusModel.getId() );
         } catch ( ObjectAlreadyExistsException e ) {
-          MessageDialog.openError( this.shell, Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( //$NON-NLS-1$
-            "The id '{0}' is already in use.", newBusModel.getId() ) );
+          MessageDialog
+            .openError( this.shell, Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( //$NON-NLS-1$
+              "The id '{0}' is already in use.", newBusModel.getId() ) );
         }
 
         businessModel.setConnection( newBusModel.getConnection() );
@@ -2579,7 +2625,8 @@ public class MetaEditor implements SelectionListener {
       MessageBox box = new MessageBox( shell, SWT.YES | SWT.NO | SWT.ICON_QUESTION );
       box.setText( Messages.getString( "General.USER_TITLE_WARNING" ) ); //$NON-NLS-1$
       box.setMessage( Messages.getString(
-        "MetaEditor.USER_DELETE_BUSINESS_MODEL", businessModel.getDisplayName( schemaMeta.getActiveLocale() ) ) ); //$NON-NLS-1$
+        "MetaEditor.USER_DELETE_BUSINESS_MODEL",
+        businessModel.getDisplayName( schemaMeta.getActiveLocale() ) ) ); //$NON-NLS-1$
       int answer = box.open();
       if ( answer == SWT.YES ) {
         schemaMeta.removeBusinessModel( businessModel );
@@ -2616,17 +2663,16 @@ public class MetaEditor implements SelectionListener {
 
         DatabaseDialog con = new DatabaseDialog( shell, newdb );
         String newname = con.open();
-        if ( newname != null ) // null: CANCEL
-        {
+        if ( newname != null ) { // null: CANCEL
           schemaMeta.removeDatabaseMeta( pos + 1 );
           schemaMeta.addDatabase( pos + 1, newdb );
-
         }
         mainTreeNode.getConnectionsRoot().addDomainChild( newdb );
       } catch ( ObjectAlreadyExistsException e ) {
         new ErrorDialog(
           shell,
-          Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_CONNECTION_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+          Messages.getString( "General.USER_TITLE_ERROR" ),
+          Messages.getString( "MetaEditor.USER_ERROR_CONNECTION_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
@@ -2667,7 +2713,8 @@ public class MetaEditor implements SelectionListener {
       try {
         oldColumn.setId( newColumn.getId() );
       } catch ( ObjectAlreadyExistsException e ) {
-        log.logDebug( "This should not happen as this exception would already have been caught earlier..." ); //$NON-NLS-1$
+        log.logDebug(
+          "This should not happen as this exception would already have been caught earlier..." ); //$NON-NLS-1$
       }
       ConceptInterface originalInt = oldColumn.getConcept();
       originalInt.clearChildProperties();
@@ -2710,7 +2757,8 @@ public class MetaEditor implements SelectionListener {
         } catch ( ObjectAlreadyExistsException e ) {
           new ErrorDialog(
             shell,
-            Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_PHYSICAL_TABLE_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "General.USER_TITLE_ERROR" ),
+            Messages.getString( "MetaEditor.USER_PHYSICAL_TABLE_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     }
@@ -2726,7 +2774,8 @@ public class MetaEditor implements SelectionListener {
     log
       .logDebug( Messages
         .getString(
-          "MetaEditor.DEBUG_DELETE_TABLE", physicalTable == null ? "null" : physicalTable.getName( schemaMeta.getActiveLocale() ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          "MetaEditor.DEBUG_DELETE_TABLE", physicalTable == null ? "null"
+            : physicalTable.getName( schemaMeta.getActiveLocale() ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
     if ( physicalTable != null ) {
       int pos = schemaMeta.indexOfTable( physicalTable );
       schemaMeta.removeTable( pos );
@@ -2745,8 +2794,9 @@ public class MetaEditor implements SelectionListener {
     if ( relationship != null ) {
       String name = relationship.toString();
       BusinessModel activeModel = schemaMeta.getActiveModel();
-      if ( activeModel == null )
+      if ( activeModel == null ) {
         return;
+      }
       RelationshipDialog rd = new RelationshipDialog( shell, SWT.NONE, log, relationship, activeModel );
       if ( rd.open() != null ) {
         String newname = relationship.toString();
@@ -2762,11 +2812,13 @@ public class MetaEditor implements SelectionListener {
 
   public void delRelationship( RelationshipMeta relationship ) {
     BusinessModel activeModel = schemaMeta.getActiveModel();
-    if ( activeModel == null )
+    if ( activeModel == null ) {
       return;
+    }
     activeModel.removeRelationship( relationship );
-    if ( activeModelTreeNode != null )
+    if ( activeModelTreeNode != null ) {
       activeModelTreeNode.getRelationshipsRoot().removeDomainChild( relationship );
+    }
     refreshGraph();
   }
 
@@ -2807,7 +2859,8 @@ public class MetaEditor implements SelectionListener {
       } catch ( ObjectAlreadyExistsException e ) {
         new ErrorDialog(
           shell,
-          Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_DATABASE_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+          Messages.getString( "General.USER_TITLE_ERROR" ),
+          Messages.getString( "MetaEditor.USER_ERROR_DATABASE_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
@@ -2835,7 +2888,8 @@ public class MetaEditor implements SelectionListener {
 
         // Show a dialog to select a model
         EnterSelectionDialog selectionDialog =
-          new EnterSelectionDialog( shell, domainNames, Messages.getString( "MetaEditor.USER_SELECT_DOMAIN" ), //$NON-NLS-1$
+          new EnterSelectionDialog( shell, domainNames, Messages.getString( "MetaEditor.USER_SELECT_DOMAIN" ),
+            //$NON-NLS-1$
             Messages.getString( "MetaEditor.USER_SELECT_DOMAIN" ) ); //$NON-NLS-1$
         String domainName = selectionDialog.open();
         if ( domainName != null ) {
@@ -2844,7 +2898,8 @@ public class MetaEditor implements SelectionListener {
       } catch ( CWMException e ) {
         new ErrorDialog(
           shell,
-          Messages.getString( "MetaEditor.USER_TITLE_ERROR_GETTING_DOMAINS" ), Messages.getString( "MetaEditor.USER_ERROR_GETTING_DOMAINS" ), //$NON-NLS-1$ //$NON-NLS-2$
+          Messages.getString( "MetaEditor.USER_TITLE_ERROR_GETTING_DOMAINS" ),
+          Messages.getString( "MetaEditor.USER_ERROR_GETTING_DOMAINS" ), //$NON-NLS-1$ //$NON-NLS-2$
           e );
       }
     }
@@ -2857,7 +2912,7 @@ public class MetaEditor implements SelectionListener {
       mb.setMessage( Messages.getString( "MetaEditor.USER_DOMAIN_CHANGED_SAVE" ) ); //$NON-NLS-1$
       mb.setText( Messages.getString( "General.USER_TITLE_WARNING" ) ); //$NON-NLS-1$
       int answer = mb.open();
-      switch ( answer ) {
+      switch( answer ) {
         case SWT.YES:
           goAhead = saveFile();
           break;
@@ -2893,7 +2948,7 @@ public class MetaEditor implements SelectionListener {
       mb.setText( Messages.getString( "General.USER_TITLE_WARNING" ) ); //$NON-NLS-1$
       int answer = mb.open();
 
-      switch ( answer ) {
+      switch( answer ) {
         case SWT.YES:
           saveFile();
           dispose();
@@ -2927,7 +2982,8 @@ public class MetaEditor implements SelectionListener {
       EnterStringDialog dialog =
         new EnterStringDialog(
           shell,
-          "", Messages.getString( "MetaEditor.USER_TITLE_SAVE_DOMAIN_NAME" ), Messages.getString( "MetaEditor.USER_SAVE_DOMAIN_NAME" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          "", Messages.getString( "MetaEditor.USER_TITLE_SAVE_DOMAIN_NAME" ),
+          Messages.getString( "MetaEditor.USER_SAVE_DOMAIN_NAME" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       String domainName = dialog.open();
 
       if ( domainName != null ) {
@@ -2947,7 +3003,8 @@ public class MetaEditor implements SelectionListener {
     } catch ( Exception e ) {
       new ErrorDialog(
         shell,
-        Messages.getString( "MetaEditor.USER_TITLE_ERROR_SAVING_DOMAIN" ), Messages.getString( "MetaEditor.USER_ERROR_SAVING_DOMAIN_SEVERE" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "MetaEditor.USER_TITLE_ERROR_SAVING_DOMAIN" ),
+        Messages.getString( "MetaEditor.USER_ERROR_SAVING_DOMAIN_SEVERE" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return false;
   }
@@ -2970,7 +3027,8 @@ public class MetaEditor implements SelectionListener {
     } catch ( Exception e ) {
       new ErrorDialog(
         shell,
-        Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_SAVING_DOMAIN" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_SAVING_DOMAIN" ),
+        e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return false;
   }
@@ -2982,7 +3040,8 @@ public class MetaEditor implements SelectionListener {
 
       // Show a dialog to select a model
       EnterSelectionDialog selectionDialog =
-        new EnterSelectionDialog( shell, domainNames, Messages.getString( "MetaEditor.USER_DELETE_DOMAIN" ), //$NON-NLS-1$
+        new EnterSelectionDialog( shell, domainNames, Messages.getString( "MetaEditor.USER_DELETE_DOMAIN" ),
+          //$NON-NLS-1$
           Messages.getString( "MetaEditor.USER_SELECT_DOMAIN_FOR_DELETE" ) ); //$NON-NLS-1$
       String domainName = selectionDialog.open();
       if ( domainName != null ) {
@@ -2993,7 +3052,7 @@ public class MetaEditor implements SelectionListener {
         if ( answer == SWT.YES ) {
           CWM delCwm = CWM.getInstance( domainName );
           delCwm.removeDomain();
-          if ( schemaMeta.getDomainName().equalsIgnoreCase( domainName ) ) {
+          if ( domainName.equalsIgnoreCase( schemaMeta.getDomainName() ) ) {
             schemaMeta.clear();
             schemaMeta.addDefaults();
             schemaMeta.clearChanged();
@@ -3006,7 +3065,8 @@ public class MetaEditor implements SelectionListener {
     } catch ( Throwable e ) {
       new ErrorDialog(
         shell,
-        Messages.getString( "MetaEditor.USER_TITLE_ERROR_RETRIEVING_DOMAIN_LIST" ), Messages.getString( "MetaEditor.USER_ERROR_RETRIEVING_DOMAIN_LIST" ), //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "MetaEditor.USER_TITLE_ERROR_RETRIEVING_DOMAIN_LIST" ),
+        Messages.getString( "MetaEditor.USER_ERROR_RETRIEVING_DOMAIN_LIST" ), //$NON-NLS-1$ //$NON-NLS-2$
         new Exception( e ) );
     }
   }
@@ -3017,18 +3077,24 @@ public class MetaEditor implements SelectionListener {
     VersionHelper verHelper = new VersionHelper();
     StringBuffer message = new StringBuffer();
 
-    message.append( verHelper.getVersionInformation( MetaEditor.class ) ).append( Const.CR ).append( Const.CR ); //$NON-NLS-1$
-    // .append(Messages.getString("MetaEditor.USER_HELP_METADATA_EDITOR")).append(Const.VERSION).append(Const.CR).append(Const.CR);
+    message.append( verHelper.getVersionInformation( MetaEditor.class ) ).append( Const.CR )
+      .append( Const.CR ); //$NON-NLS-1$
+    // .append(Messages.getString("MetaEditor.USER_HELP_METADATA_EDITOR")).append(Const.VERSION).append(Const.CR)
+    // .append(Const.CR);
     // //$NON-NLS-1$
     message
       .append(
-        Messages.getString( "MetaEditor.USER_HELP_PENTAHO_CORPORATION", "" + ( ( new Date() ).getYear() + 1900 ) ) ).append( Const.CR ); //$NON-NLS-1$
+        Messages.getString( "MetaEditor.USER_HELP_PENTAHO_CORPORATION", "" + ( ( new Date() ).getYear() + 1900 ) ) )
+      .append( Const.CR ); //$NON-NLS-1$
     message.append( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_URL" ) ).append( Const.CR ); //$NON-NLS-1$
 
-    message.append(
-      Messages.getString( "MetaEditor.USER_HELP_PENTAHO_COPYRIGHT", "" + ( ( new Date() ).getYear() + 1900 ) ) ) //$NON-NLS-1$
-      .append( Const.CR ).append( Const.CR ).append( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_MESSAGE" ) ) //$NON-NLS-1$
-      .append( Const.CR ).append( Const.CR ).append( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_MESSAGE2" ) ); //$NON-NLS-1$
+    message
+      .append( Messages
+        .getString( "MetaEditor.USER_HELP_PENTAHO_COPYRIGHT", "" + ( ( new Date() ).getYear() + 1900 ) ) ) //$NON-NLS-1$
+      .append( Const.CR ).append( Const.CR )
+      .append( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_MESSAGE" ) ) //$NON-NLS-1$
+      .append( Const.CR ).append( Const.CR )
+      .append( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_MESSAGE2" ) ); //$NON-NLS-1$
 
     mb.setMessage( message.toString() );
     mb.setText( Messages.getString( "MetaEditor.USER_HELP_METADATA_EDITOR" ) ); //$NON-NLS-1$
@@ -3036,16 +3102,18 @@ public class MetaEditor implements SelectionListener {
   }
 
   public void editUnselectAll() {
-    if ( schemaMeta.getActiveModel() == null )
+    if ( schemaMeta.getActiveModel() == null ) {
       return;
+    }
 
     schemaMeta.getActiveModel().unselectAll();
     metaEditorGraph.redraw();
   }
 
   public void editSelectAll() {
-    if ( schemaMeta.getActiveModel() == null )
+    if ( schemaMeta.getActiveModel() == null ) {
       return;
+    }
 
     schemaMeta.getActiveModel().selectAll();
     metaEditorGraph.redraw();
@@ -3089,9 +3157,9 @@ public class MetaEditor implements SelectionListener {
 
   public int getTreePosition( TreeItem ti, String item ) {
     if ( ti != null ) {
-      TreeItem items[] = ti.getItems();
+      TreeItem[] items = ti.getItems();
       for ( int x = 0; x < items.length; x++ ) {
-        if ( items[x].getText().equalsIgnoreCase( item ) ) {
+        if ( items[ x ].getText().equalsIgnoreCase( item ) ) {
           return x;
         }
       }
@@ -3125,8 +3193,9 @@ public class MetaEditor implements SelectionListener {
     // duplicate nodes when setInput() is called
     treeViewer.refresh();
 
-    if ( mainTreeNode.getBusinessModelsRoot().hasChildren() )
+    if ( mainTreeNode.getBusinessModelsRoot().hasChildren() ) {
       activeModelTreeNode = (BusinessModelTreeNode) mainTreeNode.getBusinessModelsRoot().getChildren().get( 0 );
+    }
   }
 
   public void synchronize( Object businessObject ) {
@@ -3135,7 +3204,7 @@ public class MetaEditor implements SelectionListener {
   }
 
   public static final void addTreeCategories( TreeItem tiParent, BusinessCategory parentCategory, String locale,
-    boolean hiddenToo ) {
+                                              boolean hiddenToo ) {
     // Draw the categories tree...
     for ( int i = 0; i < parentCategory.nrBusinessCategories(); i++ ) {
       BusinessCategory businessCategory = parentCategory.getBusinessCategory( i );
@@ -3195,14 +3264,17 @@ public class MetaEditor implements SelectionListener {
 
   public void setShellText() {
     String fname = schemaMeta.domainName;
-    if ( shell.isDisposed() )
+    if ( shell.isDisposed() ) {
       return;
+    }
     if ( fname != null ) {
       shell.setText( APPLICATION_NAME
-        + " - " + fname + ( schemaMeta.hasChanged() ? Messages.getString( "MetaEditor.USER_CHANGED" ) : "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        + " - " + fname + ( schemaMeta.hasChanged() ? Messages.getString( "MetaEditor.USER_CHANGED" )
+        : "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     } else {
       shell.setText( APPLICATION_NAME
-        + ( schemaMeta.hasChanged() ? Messages.getString( "MetaEditor.USER_CHANGED" ) : "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        + ( schemaMeta.hasChanged() ? Messages.getString( "MetaEditor.USER_CHANGED" )
+        : "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -3214,8 +3286,9 @@ public class MetaEditor implements SelectionListener {
 
   private void printFile() {
     BusinessModel activeModel = schemaMeta.getActiveModel();
-    if ( activeModel == null )
+    if ( activeModel == null ) {
       return;
+    }
 
     PrintSpool ps = new PrintSpool();
     Printer printer = ps.getPrinter( shell );
@@ -3279,20 +3352,21 @@ public class MetaEditor implements SelectionListener {
   public void clearDBCache() {
     // Determine what menu we selected from...
 
-    TreeItem ti[] = treeViewer.getTree().getSelection();
+    TreeItem[] ti = treeViewer.getTree().getSelection();
 
     // Then call editConnection or editStep or editTrans
     if ( ti.length == 1 ) {
-      String name = ti[0].getText();
-      TreeItem parent = ti[0].getParentItem();
+      String name = ti[ 0 ].getText();
+      TreeItem parent = ti[ 0 ].getParentItem();
       if ( parent != null ) {
         String type = parent.getText();
         if ( type.equalsIgnoreCase( STRING_CONNECTIONS ) ) {
           DBCache.getInstance().clear( name );
         }
       } else {
-        if ( name.equalsIgnoreCase( STRING_CONNECTIONS ) )
+        if ( name.equalsIgnoreCase( STRING_CONNECTIONS ) ) {
           DBCache.getInstance().clear( null );
+        }
       }
     }
   }
@@ -3313,11 +3387,14 @@ public class MetaEditor implements SelectionListener {
         } catch ( KettleException e ) {
           new ErrorDialog(
             shell,
-            Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_READING_TABLE_FIELDS", tableName ) //$NON-NLS-1$ //$NON-NLS-2$
-              + ( ( schemaName != null ) ? ( "(schema=" + schemaName + ")" ) : "" ), e ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            Messages.getString( "General.USER_TITLE_ERROR" ),
+            Messages.getString( "MetaEditor.USER_ERROR_READING_TABLE_FIELDS", tableName ) //$NON-NLS-1$ //$NON-NLS-2$
+              + ( ( schemaName != null ) ? ( "(schema=" + schemaName + ")" ) : "" ),
+            e ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         } finally {
-          if ( database != null )
+          if ( database != null ) {
             database.disconnect();
+          }
         }
       }
     }
@@ -3379,31 +3456,34 @@ public class MetaEditor implements SelectionListener {
         Map<String, String[]> tableMap = getTablesBySchemas( database, databaseMeta, schemas );
 
         Set<String> nameSet = tableMap.keySet();
-        String[] tableNames = nameSet.toArray( new String[nameSet.size()] );
+        String[] tableNames = nameSet.toArray( new String[ nameSet.size() ] );
 
         // Select from it...
         EnterSelectionDialog dialog =
           new EnterSelectionDialog(
             shell,
             tableNames,
-            Messages.getString( "MetaEditor.USER_TITLE_IMPORT_TABLES" ), Messages.getString( "MetaEditor.USER_SELECT_IMPORT_TABLES" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "MetaEditor.USER_TITLE_IMPORT_TABLES" ),
+            Messages.getString( "MetaEditor.USER_SELECT_IMPORT_TABLES" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         dialog.setMulti( true );
         if ( dialog.open() != null ) {
           int[] indexes = dialog.getSelectionIndeces();
           for ( int i = 0; i < indexes.length; i++ ) {
-            String tableName = tableNames[indexes[i]];
+            String tableName = tableNames[ indexes[ i ] ];
             String[] tableDesc = tableMap.get( tableName );
-            importTableDefinition( database, tableDesc[0], tableDesc[1] );
+            importTableDefinition( database, tableDesc[ 0 ], tableDesc[ 1 ] );
           }
         }
 
       } catch ( Exception e ) {
         new ErrorDialog(
           shell,
-          Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_IMPORTING_PHYSICAL_TABLES" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+          Messages.getString( "General.USER_TITLE_ERROR" ),
+          Messages.getString( "MetaEditor.USER_ERROR_IMPORTING_PHYSICAL_TABLES" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
       } finally {
-        if ( database != null )
+        if ( database != null ) {
           database.disconnect();
+        }
       }
     }
   }
@@ -3419,8 +3499,9 @@ public class MetaEditor implements SelectionListener {
 
     // Set the id to a certain standard...
     id = Settings.getPhysicalTableIDPrefix() + id;
-    if ( Settings.isAnIdUppercase() )
+    if ( Settings.isAnIdUppercase() ) {
       id = id.toUpperCase();
+    }
 
     if ( schemaMeta.findPhysicalTable( id ) != null ) {
       // find a new name for the table: add " 2", " 3", " 4", ... to name:
@@ -3458,15 +3539,21 @@ public class MetaEditor implements SelectionListener {
     }
     String upper = tablename.toUpperCase();
 
-    if ( upper.startsWith( "D_" ) || upper.startsWith( "DIM" ) || upper.endsWith( "DIM" ) )physicalTable.setTableType( TableTypeSettings.DIMENSION ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    if ( upper.startsWith( "F_" ) || upper.startsWith( "FACT" ) || upper.endsWith( "FACT" ) )physicalTable.setTableType( TableTypeSettings.FACT ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    if ( upper.startsWith( "D_" ) || upper.startsWith( "DIM" ) || upper.endsWith( "DIM" ) ) {
+      physicalTable.setTableType( TableTypeSettings.DIMENSION ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+    if ( upper.startsWith( "F_" ) || upper.startsWith( "FACT" ) || upper.endsWith( "FACT" ) ) {
+      physicalTable.setTableType( TableTypeSettings.FACT ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
 
     try {
       schemaMeta.addTable( physicalTable );
     } catch ( ObjectAlreadyExistsException e ) {
       new ErrorDialog(
         shell,
-        Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_PHYICAL_TABLE_EXISTS", physicalTable.getId() ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "General.USER_TITLE_ERROR" ),
+        Messages.getString( "MetaEditor.USER_ERROR_PHYICAL_TABLE_EXISTS", physicalTable.getId() ),
+        e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
   }
@@ -3474,8 +3561,9 @@ public class MetaEditor implements SelectionListener {
   private PhysicalColumn importPhysicalColumnDefinition( ValueMetaInterface v, PhysicalTable physicalTable ) {
     // The id
     String id = Settings.getPhysicalColumnIDPrefix() + v.getName();
-    if ( Settings.isAnIdUppercase() )
+    if ( Settings.isAnIdUppercase() ) {
       id = id.toUpperCase();
+    }
 
     // The name of the column in the database
     String dbname = v.getName();
@@ -3507,7 +3595,7 @@ public class MetaEditor implements SelectionListener {
 
   private DataTypeSettings getDataTypeSettings( ValueMetaInterface v ) {
     DataTypeSettings dataTypeSettings = new DataTypeSettings( DataTypeSettings.DATA_TYPE_STRING );
-    switch ( v.getType() ) {
+    switch( v.getType() ) {
       case ValueMetaInterface.TYPE_BIGNUMBER:
       case ValueMetaInterface.TYPE_INTEGER:
       case ValueMetaInterface.TYPE_NUMBER:
@@ -3546,12 +3634,12 @@ public class MetaEditor implements SelectionListener {
   public void exploreDB() {
     // Determine what menu we selected from...
 
-    TreeItem ti[] = treeViewer.getTree().getSelection();
+    TreeItem[] ti = treeViewer.getTree().getSelection();
 
     // Then call editConnection or editStep or editTrans
     if ( ti.length == 1 ) {
-      String name = ti[0].getText();
-      TreeItem parent = ti[0].getParentItem();
+      String name = ti[ 0 ].getText();
+      TreeItem parent = ti[ 0 ].getParentItem();
       if ( parent != null ) {
         String type = parent.getText();
         if ( type.equalsIgnoreCase( STRING_CONNECTIONS ) ) {
@@ -3568,8 +3656,9 @@ public class MetaEditor implements SelectionListener {
           }
         }
       } else {
-        if ( name.equalsIgnoreCase( STRING_CONNECTIONS ) )
+        if ( name.equalsIgnoreCase( STRING_CONNECTIONS ) ) {
           DBCache.getInstance().clear( null );
+        }
       }
     }
   }
@@ -3582,7 +3671,8 @@ public class MetaEditor implements SelectionListener {
 
     KettleEnvironment.init( false );
 
-    System.setProperty( "java.naming.factory.initial", "org.osjava.sj.SimpleContextFactory" ); //$NON-NLS-1$ //$NON-NLS-2$
+    System
+      .setProperty( "java.naming.factory.initial", "org.osjava.sj.SimpleContextFactory" ); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty( "org.osjava.sj.root", "simple-jndi" ); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty( "org.osjava.sj.delimiter", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
     LogWriter logwriter = LogWriter.getInstance( Const.META_EDITOR_LOG_FILE, false );
@@ -3603,34 +3693,35 @@ public class MetaEditor implements SelectionListener {
     final MetaEditor win = new MetaEditor( log, display );
 
     // Read kettle transformation specified on command-line?
-    if ( args.length == 1 && !Const.isEmpty( args[0] ) ) {
-      if ( CWM.exists( args[0] ) ) // Only try to load the domain if it exists.
+    if ( args.length == 1 && !Const.isEmpty( args[ 0 ] ) ) {
+      if ( CWM.exists( args[ 0 ] ) ) // Only try to load the domain if it exists.
       {
-        win.cwm = CWM.getInstance( args[0] );
+        win.cwm = CWM.getInstance( args[ 0 ] );
         CwmSchemaFactoryInterface cwmSchemaFactory = Settings.getCwmSchemaFactory();
         win.schemaMeta = cwmSchemaFactory.getSchemaMeta( win.cwm );
-        win.setDomainName( args[0] );
+        win.setDomainName( args[ 0 ] );
         win.schemaMeta.clearChanged();
       } else {
         win.newFile();
       }
     } else {
       if ( win.props.openLastFile() ) {
-        String lastfiles[] = win.props.getLastFiles();
+        String[] lastfiles = win.props.getLastFiles();
         if ( lastfiles.length > 0 ) {
           try {
-            if ( CWM.exists( lastfiles[0] ) ) // Only try to load the domain if it exists.
+            if ( CWM.exists( lastfiles[ 0 ] ) ) // Only try to load the domain if it exists.
             {
-              win.cwm = CWM.getInstance( lastfiles[0] );
+              win.cwm = CWM.getInstance( lastfiles[ 0 ] );
               CwmSchemaFactoryInterface cwmSchemaFactory = Settings.getCwmSchemaFactory();
               win.schemaMeta = cwmSchemaFactory.getSchemaMeta( win.cwm );
-              win.setDomainName( lastfiles[0] );
+              win.setDomainName( lastfiles[ 0 ] );
               win.schemaMeta.clearChanged();
             } else {
               win.newFile();
             }
           } catch ( Exception e ) {
-            log.logError( Messages.getString( "MetaEditor.ERROR_0001_CANT_CHECK_DOMAIN_EXISTENCE", e.toString() ) ); //$NON-NLS-1$
+            log.logError(
+              Messages.getString( "MetaEditor.ERROR_0001_CANT_CHECK_DOMAIN_EXISTENCE", e.toString() ) ); //$NON-NLS-1$
             log.logError( Const.getStackTracker( e ) );
           }
         } else {
@@ -3645,8 +3736,9 @@ public class MetaEditor implements SelectionListener {
 
     win.open();
     while ( !win.isDisposed() ) {
-      if ( !win.readAndDispatch() )
+      if ( !win.readAndDispatch() ) {
         win.sleep();
+      }
     }
     win.dispose();
 
@@ -3662,8 +3754,7 @@ public class MetaEditor implements SelectionListener {
   }
 
   /**
-   * @param schemaMeta
-   *          the schemaMeta to set
+   * @param schemaMeta the schemaMeta to set
    */
   public void setSchemaMeta( SchemaMeta schemaMeta ) {
     this.schemaMeta = schemaMeta;
@@ -3689,7 +3780,8 @@ public class MetaEditor implements SelectionListener {
       }
     } catch ( Exception e ) {
       new ErrorDialog( shell,
-        Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_TITLE_DEMO_ERROR" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_TITLE_DEMO_ERROR" ),
+        e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -3715,7 +3807,8 @@ public class MetaEditor implements SelectionListener {
         origBusinessTable.addBusinessColumn( column );
       } catch ( ObjectAlreadyExistsException e ) {
         e.printStackTrace();
-        log.logDebug( "This should not happen as this exception would already have been caught earlier..." ); //$NON-NLS-1$
+        log.logDebug(
+          "This should not happen as this exception would already have been caught earlier..." ); //$NON-NLS-1$
       }
     }
   }
@@ -3742,7 +3835,8 @@ public class MetaEditor implements SelectionListener {
       }
     } catch ( Exception e ) {
       new ErrorDialog( shell,
-        Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_TITLE_DEMO_ERROR" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_TITLE_DEMO_ERROR" ),
+        e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -3766,12 +3860,14 @@ public class MetaEditor implements SelectionListener {
 
           new ErrorDialog(
             shell,
-            Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_BUSINESS_TABLE_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "General.USER_TITLE_ERROR" ),
+            Messages.getString( "MetaEditor.USER_BUSINESS_TABLE_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
 
         }
 
-        if ( activeModelTreeNode != null )
+        if ( activeModelTreeNode != null ) {
           activeModelTreeNode.getBusinessTablesRoot().addDomainChild( newTable );
+        }
 
         refreshGraph();
 
@@ -3779,14 +3875,14 @@ public class MetaEditor implements SelectionListener {
     } catch ( Exception e ) {
       new ErrorDialog(
         shell,
-        Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_BUSINESS_TABLE_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "General.USER_TITLE_ERROR" ),
+        Messages.getString( "MetaEditor.USER_BUSINESS_TABLE_NAME_EXISTS" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
   }
 
   /**
    * Test Query & Reporting
-   * 
    */
   protected void testQR() {
     try {
@@ -3821,7 +3917,8 @@ public class MetaEditor implements SelectionListener {
       }
     } catch ( Exception e ) {
       new ErrorDialog( shell,
-        Messages.getString( "MetaEditor.USER_TITLE_DEMO_ERROR" ), Messages.getString( "MetaEditor.USER_DEMO_ERROR" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "MetaEditor.USER_TITLE_DEMO_ERROR" ), Messages.getString( "MetaEditor.USER_DEMO_ERROR" ),
+        e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -3861,7 +3958,7 @@ public class MetaEditor implements SelectionListener {
     try {
       File file = new File( Const.getQueryFile() );
       FileInputStream fileInputStream = new FileInputStream( file );
-      byte bytes[] = new byte[(int) file.length()];
+      byte[] bytes = new byte[ (int) file.length() ];
       fileInputStream.read( bytes );
       fileInputStream.close();
 
@@ -3888,7 +3985,8 @@ public class MetaEditor implements SelectionListener {
         } catch ( Throwable e ) {
           new ErrorDialog(
             shell,
-            Messages.getString( "General.USER_TITLE_ERROR" ), Messages.getString( "MetaEditor.USER_ERROR_LOADING_SECURITY_INFORMATION" ), //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "General.USER_TITLE_ERROR" ),
+            Messages.getString( "MetaEditor.USER_ERROR_LOADING_SECURITY_INFORMATION" ), //$NON-NLS-1$ //$NON-NLS-2$
             new Exception( e ) );
         }
       }
@@ -3908,12 +4006,14 @@ public class MetaEditor implements SelectionListener {
         EnterTextDialog dialog =
           new EnterTextDialog(
             shell,
-            Messages.getString( "MetaEditor.USER_TITLE_MONDRIAN_XML" ), Messages.getString( "MetaEditor.USER_MONDRIAN_XML" ), xml ); //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString( "MetaEditor.USER_TITLE_MONDRIAN_XML" ),
+            Messages.getString( "MetaEditor.USER_MONDRIAN_XML" ), xml ); //$NON-NLS-1$ //$NON-NLS-2$
         dialog.open();
       } catch ( Exception e ) {
         new ErrorDialog(
           shell,
-          Messages.getString( "MetaEditor.USER_TITLE_MODEL_ERROR" ), Messages.getString( "MetaEditor.USER_MONDRIAN_MODEL_ERROR" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
+          Messages.getString( "MetaEditor.USER_TITLE_MODEL_ERROR" ),
+          Messages.getString( "MetaEditor.USER_MONDRIAN_MODEL_ERROR" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
@@ -3926,7 +4026,7 @@ public class MetaEditor implements SelectionListener {
     TreeItem[] selection = treeViewer.getTree().getSelection();
 
     for ( int i = 0; i < selection.length; i++ ) {
-      TreeItem treeItem = selection[i];
+      TreeItem treeItem = selection[ i ];
       ConceptTreeNode node = (ConceptTreeNode) treeItem.getData();
       if ( node instanceof PhysicalTableTreeNode ) {
         list.add( ( (PhysicalTableTreeNode) node ).getDomainObject() );
@@ -3950,7 +4050,7 @@ public class MetaEditor implements SelectionListener {
       }
     }
 
-    return list.toArray( new ConceptUtilityInterface[list.size()] );
+    return list.toArray( new ConceptUtilityInterface[ list.size() ] );
   }
 
   protected void setParentConcept( ConceptUtilityInterface[] utilityInterfaces ) {
@@ -3958,15 +4058,16 @@ public class MetaEditor implements SelectionListener {
 
     // Ask the user to pick a parent concept...
     EnterSelectionDialog dialog =
-      new EnterSelectionDialog( shell, concepts, Messages.getString( "MetaEditor.USER_TITLE_SELECT_PARENT_CONCEPT" ), //$NON-NLS-1$
+      new EnterSelectionDialog( shell, concepts, Messages.getString( "MetaEditor.USER_TITLE_SELECT_PARENT_CONCEPT" ),
+        //$NON-NLS-1$
         Messages.getString( "MetaEditor.USER_SELECT_PARENT_CONCEPT" ) ); //$NON-NLS-1$
     String conceptName = dialog.open();
     if ( conceptName != null ) {
       ConceptInterface parentInterface = schemaMeta.findConcept( conceptName );
 
       for ( int u = 0; u < utilityInterfaces.length; u++ ) {
-        utilityInterfaces[u].getConcept().setParentInterface( parentInterface );
-        utilityInterfaces[u].setChanged();
+        utilityInterfaces[ u ].getConcept().setParentInterface( parentInterface );
+        utilityInterfaces[ u ].setChanged();
       }
 
       refreshAll();
@@ -3981,14 +4082,15 @@ public class MetaEditor implements SelectionListener {
       // be removed here. Throw a message to tell them to remove the
       // parent concept from the inherited counterpart.
 
-      if ( utilityInterfaces[u].getConcept().getParentInterface() == null ) {
-        MessageDialog.openWarning( this.shell, Messages.getString( "MetaEditor.USER_TITLE_CANT_CLEAR_PARENT_CONCEPT" ), //$NON-NLS-1$
+      if ( utilityInterfaces[ u ].getConcept().getParentInterface() == null ) {
+        MessageDialog.openWarning( this.shell, Messages.getString( "MetaEditor.USER_TITLE_CANT_CLEAR_PARENT_CONCEPT" ),
+          //$NON-NLS-1$
           Messages.getString( "MetaEditor.USER_CANT_CLEAR_PARENT_CONCEPT" ) //$NON-NLS-1$
             + Messages.getString( "MetaEditor.USER_CANT_CLEAR_PARENT_CONCEPT_2" ) //$NON-NLS-1$
             + Messages.getString( "MetaEditor.USER_CANT_CLEAR_PARENT_CONCEPT_3" ) ); //$NON-NLS-1$
       }
-      utilityInterfaces[u].getConcept().setParentInterface( null );
-      utilityInterfaces[u].setChanged();
+      utilityInterfaces[ u ].getConcept().setParentInterface( null );
+      utilityInterfaces[ u ].setChanged();
     }
 
     refreshAll();
@@ -3998,18 +4100,18 @@ public class MetaEditor implements SelectionListener {
     // First we need a distinct list of all property IDs...
     Map<String, String> all = new Hashtable<String, String>();
     for ( int u = 0; u < utilityInterfaces.length; u++ ) {
-      String ids[] = utilityInterfaces[u].getConcept().getChildPropertyIDs();
+      String[] ids = utilityInterfaces[ u ].getConcept().getChildPropertyIDs();
       for ( int i = 0; i < ids.length; i++ ) {
-        all.put( ids[i], "" ); //$NON-NLS-1$
+        all.put( ids[ i ], "" ); //$NON-NLS-1$
       }
     }
     Set<String> keySet = all.keySet();
-    String ids[] = keySet.toArray( new String[keySet.size()] );
-    String names[] = new String[ids.length];
+    String[] ids = keySet.toArray( new String[ keySet.size() ] );
+    String[] names = new String[ ids.length ];
 
     // Get the descriptions to show...
     for ( int i = 0; i < ids.length; i++ ) {
-      names[i] = PredefinedVsCustomPropertyHelper.getDescription( ids[i] );
+      names[ i ] = PredefinedVsCustomPropertyHelper.getDescription( ids[ i ] );
     }
 
     // Ask the user to pick the child properties to delete...
@@ -4017,19 +4119,20 @@ public class MetaEditor implements SelectionListener {
       new EnterSelectionDialog(
         shell,
         names,
-        Messages.getString( "MetaEditor.USER_TITLE_DELETE_PROPERTIES" ), Messages.getString( "MetaEditor.USER_DELETE_PROPERTIES" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString( "MetaEditor.USER_TITLE_DELETE_PROPERTIES" ),
+        Messages.getString( "MetaEditor.USER_DELETE_PROPERTIES" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     String conceptName = dialog.open();
     if ( conceptName != null ) {
 
       for ( int u = 0; u < utilityInterfaces.length; u++ ) {
-        ConceptInterface concept = utilityInterfaces[u].getConcept();
+        ConceptInterface concept = utilityInterfaces[ u ].getConcept();
 
-        int idxs[] = dialog.getSelectionIndeces();
+        int[] idxs = dialog.getSelectionIndeces();
         for ( int i = 0; i < idxs.length; i++ ) {
-          ConceptPropertyInterface property = concept.getChildProperty( ids[idxs[i]] );
+          ConceptPropertyInterface property = concept.getChildProperty( ids[ idxs[ i ] ] );
           if ( property != null ) {
             concept.removeChildProperty( property );
-            utilityInterfaces[u].setChanged();
+            utilityInterfaces[ u ].setChanged();
           }
         }
       }
@@ -4055,7 +4158,7 @@ public class MetaEditor implements SelectionListener {
 
     int idNum = schemaMeta.nrBusinessModels();
 
-    String prefix = Settings.getBusinessModelIDPrefix() + "model_";//$NON-NLS-1$
+    String prefix = Settings.getBusinessModelIDPrefix() + "model_"; //$NON-NLS-1$
     if ( Settings.isAnIdUppercase() ) {
       prefix = prefix.toUpperCase();
     }
@@ -4088,7 +4191,8 @@ public class MetaEditor implements SelectionListener {
     FileDialog dialog = new FileDialog( shell, SWT.SAVE );
     dialog.setFilterExtensions( new String[] { "*.properties", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     dialog.setFilterNames( new String[] {
-      Messages.getString( "MetaEditor.USER_PROPERTIES_FILES" ), Messages.getString( "MetaEditor.USER_ALL_FILES" ) } ); //$NON-NLS-1$ //$NON-NLS-2$
+      Messages.getString( "MetaEditor.USER_PROPERTIES_FILES" ),
+      Messages.getString( "MetaEditor.USER_ALL_FILES" ) } ); //$NON-NLS-1$ //$NON-NLS-2$
     dialog.setFileName( "metadata_" + locale + ".properties" ); //$NON-NLS-1$
     String filename = dialog.open();
 
