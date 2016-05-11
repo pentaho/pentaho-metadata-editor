@@ -12,6 +12,7 @@
       <conf name="swtlibs"/>
       <conf name="launcher"/>
       <conf name="oss-licenses" />
+      <conf name="pentaho-system" />
     </configurations>
     
     <publications>
@@ -43,7 +44,7 @@
         <dependency org="pentaho"        name="pentaho-connections"      rev="${dependency.pentaho-connections.revision}" conf="default->default" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-metadata"         rev="${dependency.pentaho-metadata.revision}" conf="default->default" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-mql-editor"       rev="${dependency.pentaho-mql-editor.revision}" conf="default->default" changing="true" transitive="false"/>
-        <dependency org="pentaho-kettle" name="kettle-engine"            rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
+        <dependency org="pentaho-kettle" name="kettle-engine"            rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="true" />
         <dependency org="pentaho-kettle" name="kettle-core"              rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="true" />
         <dependency org="pentaho-kettle" name="kettle5-log4j-plugin"     rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
         <dependency org="pentaho-kettle" name="kettle-dbdialog"          rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
@@ -103,6 +104,21 @@
          <dependency org="pentaho" name="pdi-spark-plugin" rev="${dependency.pdi-spark-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
              <artifact name="pdi-spark-plugin" type="zip" />
          </dependency>
+         <dependency org="pentaho" name="pentaho-karaf-assembly" rev="${project.revision}" changing="true" conf="pentaho-system->default" m:classifier="client">
+             <artifact name="pentaho-karaf-assembly" type="zip" m:classifier="client"/>
+         </dependency>
+         <dependency org="org.apache.karaf" name="org.apache.karaf.main" rev="3.0.3"  transitive="false"/>
+         <dependency org="org.apache.karaf" name="org.apache.karaf.util" rev="3.0.3"  transitive="false"/>
+         <dependency org="org.apache.karaf.jaas" name="org.apache.karaf.jaas.boot" rev="2.4.2"  transitive="false"/>
+         <dependency org="org.apache.felix" name="org.apache.felix.main" rev="4.2.1"  transitive="false"/>
+         <dependency org="com.tinkerpop.blueprints" name="blueprints-core"   rev="2.6.0"         transitive="false"/>
+         <dependency org="pentaho" name="pdi-osgi-bridge-core" rev="${dependency.pdi-osgi-bridge.revision}" changing="true" />
+         <dependency org="pentaho" name="pentaho-capability-manager"  rev="${dependency.pentaho-capability-manager.revision}" transitive="false"/>
+         <dependency org="pentaho" name="pentaho-metaverse-api" rev="${project.revision}" changing="true" transitive="false"/>
+         <dependency org="pentaho" name="pentaho-platform-api"  rev="${dependency.pentaho-platform.revision}" transitive="false"/>
+         <dependency org="pentaho" name="pentaho-platform-core"  rev="${dependency.pentaho-platform.revision}" transitive="false"/>
+         <dependency org="pentaho" name="pentaho-platform-extensions"  rev="${dependency.pentaho-platform.revision}" transitive="false"/>
+         <dependency org="org.springframework.security" name="spring-security-core" rev="${dependency.spring.security.revision}" />
         
         <!-- SWT it required to compile any version of any architecture will work -->
         <dependency org="org.eclipse.swt"       name="swt-linux-x86_64"    rev="4.3.2" transitive="false" />
