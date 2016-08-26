@@ -95,18 +95,12 @@
         <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-cassandra-plugin" type="zip" />
         </dependency>
-        <dependency org="pentaho" name="pdi-spark-plugin" rev="${dependency.pdi-spark-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
-            <artifact name="pdi-spark-plugin" type="zip" />
-        </dependency>
         <dependency org="pentaho" name="pentaho-big-data-ee-package" rev="${dependency.pentaho-big-data-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-big-data-ee-package" type="zip" />
         </dependency>
         <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-cassandra-plugin" type="zip" />
         </dependency>
-         <dependency org="pentaho" name="pdi-spark-plugin" rev="${dependency.pdi-spark-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
-             <artifact name="pdi-spark-plugin" type="zip" />
-         </dependency>
          <dependency org="pentaho" name="pentaho-karaf-assembly" rev="${project.revision}" changing="true" conf="pentaho-system->default" m:classifier="client">
              <artifact name="pentaho-karaf-assembly" type="zip" m:classifier="client"/>
          </dependency>
