@@ -126,7 +126,7 @@
   </target>
 
   <!-- Resolve all default items plus JDBC drivers -->
-  <target name="resolve" depends="resolve-drivers,resolve-plugins,resolve-ee-dsc,subfloor.resolve"/>
+  <target name="resolve" depends="subfloor.resolve,resolve-drivers,resolve-plugins,resolve-ee-dsc"/>
 
   <!-- Resolve JDBC Drivers into libext/JDBC -->
   <target name="resolve-drivers" depends="resolve-init" description="Retrieves runtime configuration dependencies">
