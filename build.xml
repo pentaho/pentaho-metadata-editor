@@ -126,7 +126,7 @@
   </target>
 
   <!-- Resolve all default items plus JDBC drivers -->
-  <target name="resolve" depends="subfloor.resolve,resolve-drivers,resolve-plugins,resolve-ee-dsc"/>
+  <target name="resolve" depends="resolve-drivers,resolve-plugins,subfloor.resolve"/>
 
   <!-- Resolve JDBC Drivers into libext/JDBC -->
   <target name="resolve-drivers" depends="resolve-init" description="Retrieves runtime configuration dependencies">
@@ -146,17 +146,6 @@
   			<ivy:resolve file="${ivyfile}" conf="plugin" />
   			<ivy:retrieve conf="plugin" pattern="${resolve-plugins.dir}/[module]-[revision](-[classifier]).[ext]" />
   		</else>
-  	</if>
-  </target>
-  
-    <!-- Resolve ee-dsc -->
-  <target name="resolve-ee-dsc" depends="install-ivy">
-  	<if>
-  		<equals arg1="${releaseType}" arg2="ee"/>
-  		<then>
-		    <ivy:resolve file="${ivyfile}" conf="ee-dsc" />
-		    <ivy:retrieve conf="ee-dsc" pattern="${lib.dir}/[module]-[revision](-[classifier]).[ext]" />
-  		</then>
   	</if>
   </target>
 
@@ -396,40 +385,19 @@
     </target>
 
     <target name="resolve-pentaho-system" depends="install-ivy">
-	  <if>
-  		<equals arg1="${releaseType}" arg2="ee"/>
-  		<then>
-  		  <ivy:resolve file="${ivyfile}" conf="pentaho-system-ee" />
-		  <ivy:retrieve conf="pentaho-system-ee" pattern="${system.dir}/[module]-[revision](-[classifier]).[ext]" />
-			<for param="system">
-			  <path id="system-list">
-				<fileset dir="${system.dir}">
-					<include name="*.zip"/>
-				</fileset>
-			  </path>
-              <sequential>
-                <unzip src="@{system}" dest="${system.dir}" overwrite="true"/>
-                <delete file="@{system}"/>
-              </sequential>
-            </for>
-          <move file="${system.dir}/pentaho-karaf-ee-assembly" tofile="${system.dir}/karaf" />
-  		</then>
-  		<else>
-  		  <ivy:resolve file="${ivyfile}" conf="pentaho-system" />
-		  <ivy:retrieve conf="pentaho-system" pattern="${system.dir}/[module].[ext]" />
-			<for param="system">
-			  <path id="system-list">
-				<fileset dir="${system.dir}">
-					<include name="*.zip"/>
-				</fileset>
-			  </path>
-              <sequential>
-                <unzip src="@{system}" dest="${system.dir}" overwrite="true"/>
-                <delete file="@{system}"/>
-              </sequential>
-            </for>
-          <move file="${system.dir}/pentaho-karaf-assembly" tofile="${system.dir}/karaf" />
-  		</else>
-      </if>
+      <ivy:resolve file="${ivyfile}" conf="pentaho-system" />
+      <ivy:retrieve conf="pentaho-system" pattern="${system.dir}/[module].[ext]" />
+      <for param="system">
+        <path id="system-list">
+          <fileset dir="${system.dir}">
+            <include name="*.zip"/>
+          </fileset>
+        </path>
+        <sequential>
+          <unzip src="@{system}" dest="${system.dir}" overwrite="true"/>
+          <delete file="@{system}"/>
+        </sequential>
+      </for>
+      <move file="${system.dir}/pentaho-karaf-assembly" tofile="${system.dir}/karaf" />
     </target>
 </project>
