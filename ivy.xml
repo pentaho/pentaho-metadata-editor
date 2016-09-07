@@ -115,6 +115,9 @@
          <dependency org="pentaho" name="pentaho-platform-api"  rev="${dependency.pentaho-platform.revision}" transitive="false"/>
          <dependency org="pentaho" name="pentaho-platform-core"  rev="${dependency.pentaho-platform.revision}" transitive="false"/>
          <dependency org="pentaho" name="pentaho-platform-extensions"  rev="${dependency.pentaho-platform.revision}" transitive="false"/>
+         
+         <dependency org="pentaho" name="pentaho-platform-repository"  rev="${dependency.pentaho-platform.revision}" transitive="false"/>
+         
          <dependency org="org.springframework.security" name="spring-security-core" rev="${dependency.spring.security.revision}" />
         
         <!-- SWT it required to compile any version of any architecture will work -->
