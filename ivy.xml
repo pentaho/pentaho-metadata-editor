@@ -8,7 +8,6 @@
       <conf name="source"/>
       <conf name="drivers"/>
       <conf name="plugin"/>
-      <conf name="ee-plugin"/>
       <conf name="swtlibs"/>
       <conf name="launcher"/>
       <conf name="oss-licenses" />
@@ -93,12 +92,6 @@
         </dependency>
         <dependency org="commons-configuration" name="commons-configuration" rev="1.9"          transitive="false"/>
         <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
-            <artifact name="pentaho-cassandra-plugin" type="zip" />
-        </dependency>
-        <dependency org="pentaho" name="pentaho-big-data-ee-package" rev="${dependency.pentaho-big-data-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
-            <artifact name="pentaho-big-data-ee-package" type="zip" />
-        </dependency>
-        <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" conf="ee-plugin->default" changing="true" transitive="false">
             <artifact name="pentaho-cassandra-plugin" type="zip" />
         </dependency>
          <dependency org="pentaho" name="pentaho-karaf-assembly" rev="${project.revision}" changing="true" conf="pentaho-system->default" m:classifier="client">
