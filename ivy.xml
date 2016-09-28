@@ -114,7 +114,7 @@
          <dependency org="org.springframework.security" name="spring-security-core" rev="${dependency.spring.security.revision}" />
         
         <!-- SWT it required to compile any version of any architecture will work -->
-        <dependency org="org.eclipse.swt"       name="swt-linux-x86_64"    rev="4.3.2" transitive="false" />
+        <dependency org="org.eclipse.swt"       name="org.eclipse.swt.gtk.linux.x86_64"    rev="4.6" transitive="false" />
         <dependency org="org.eclipse"           name="jface"               rev="3.3.0-I20070606-0010" transitive="false" conf="default->default"/>
         <dependency org="org.eclipse.core"      name="commands"            rev="3.3.0-I20070605-0010" transitive="false"/>
         <dependency org="org.eclipse.equinox"   name="common"              rev="3.3.0-v20070426"      transitive="false"/>
@@ -142,7 +142,7 @@
         
         <!-- ASSEMBLY RELATED ITEMS -->
         <!-- The OS-specific SWT libraries are bundled together, unzip them all for assembly -->
-        <dependency org="org.eclipse"          name="swtlibs"               rev="4.3.2" conf="swtlibs->default" transitive="false">
+        <dependency org="org.eclipse.swt"          name="swtlibs"               rev="4.6" conf="swtlibs->default" transitive="false">
           <artifact name="swtlibs" type="zip"/>
         </dependency>
         <dependency org="pentaho" name="pentaho-application-launcher" rev="${dependency.launcher.revision}" conf="launcher->default"/>
