@@ -12,21 +12,10 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * Copyright (c) 2002-2013 Pentaho Corporation..  All rights reserved.
+ * Copyright (c) 2002-2016 Pentaho Corporation..  All rights reserved.
  */
 
 package org.pentaho.pms.ui;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -183,6 +172,17 @@ import org.pentaho.pms.util.UniqueArrayList;
 import org.pentaho.pms.util.UniqueList;
 import org.pentaho.pms.util.VersionHelper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Class to edit the metadata domain (Schema Metadata), load/store into the MDR/CWM model
  *
@@ -226,17 +226,17 @@ public class MetaEditor implements SelectionListener {
   private Menu msFile;
 
   private MenuItem miFileOpen, miFileNew, miFileSave, miFileSaveAs, miFileExport, miPublish, miFileImport,
-  miFileDelete, miFilePrint, miFileSep3, miFileQuit;
+    miFileDelete, miFilePrint, miFileSep3, miFileQuit;
 
   private MenuItem miNewDomain, miNewConnection, miNewPTable, miNewBTable, miNewBModel, miNewRel, miNewCat;
 
   private MenuItem miNewDomainTB, miNewConnectionTB, miNewPTableTB, miNewBTableTB, miNewBModelTB, miNewRelTB,
-  miNewCatTB;
+    miNewCatTB;
 
   private Listener lsDomainNew, lsConnectionNew, lsPTableNew, lsBTableNew, lsBModelNew, lsRelationNew, lsCategoryNew,
-  lsFileOpen, lsFileSave, lsFileSaveAs, lsFileExport, lsPublish, lsFileImport, lsFileDelete, lsFilePrint,
-  lsFileQuit, lsEditLocales, lsEditConcepts, lsEditCategories, lsAlignRight, lsAlignLeft, lsAlignTop,
-  lsAlignBottom, lsDistribHoriz, lsDistribVert;
+    lsFileOpen, lsFileSave, lsFileSaveAs, lsFileExport, lsPublish, lsFileImport, lsFileDelete, lsFilePrint,
+    lsFileQuit, lsEditLocales, lsEditConcepts, lsEditCategories, lsAlignRight, lsAlignLeft, lsAlignTop,
+    lsAlignBottom, lsDistribHoriz, lsDistribVert;
 
   private MenuItem mEdit;
 
@@ -261,10 +261,10 @@ public class MetaEditor implements SelectionListener {
   public static final String STRING_CONNECTIONS = Messages.getString( "MetaEditor.USER_CONNECTIONS" ); //$NON-NLS-1$
 
   public static final String STRING_BUSINESS_MODELS = Messages.getString( "MetaEditor.USER_BUSINESS_MODELS" );
-    //$NON-NLS-1$
+  //$NON-NLS-1$
 
   public static final String STRING_BUSINESS_TABLES = Messages.getString( "MetaEditor.USER_BUSINESS_TABLES" );
-    //$NON-NLS-1$
+  //$NON-NLS-1$
 
   public static final String STRING_RELATIONSHIPS = Messages.getString( "MetaEditor.USER_RELATIONSHIPS" ); //$NON-NLS-1$
 
@@ -312,7 +312,6 @@ public class MetaEditor implements SelectionListener {
 
   public MetaEditor( LogChannelInterface log, Display display ) {
     this.log = log;
-
     if ( display != null ) {
       disp = display;
     } else {
@@ -320,6 +319,7 @@ public class MetaEditor implements SelectionListener {
     }
     shell = new Shell( disp );
     shell.setText( APPLICATION_NAME );
+
     FormLayout layout = new FormLayout();
     layout.marginWidth = 0;
     layout.marginHeight = 0;
@@ -1514,7 +1514,7 @@ public class MetaEditor implements SelectionListener {
             return;
           }
 
-          switch( container.getType() ) {
+          switch ( container.getType() ) {
             // Drag physical table onto metaEditorGraph:
             // 0) Look up the referenced Physical Table name, if it
             // exists continue
@@ -2912,7 +2912,7 @@ public class MetaEditor implements SelectionListener {
       mb.setMessage( Messages.getString( "MetaEditor.USER_DOMAIN_CHANGED_SAVE" ) ); //$NON-NLS-1$
       mb.setText( Messages.getString( "General.USER_TITLE_WARNING" ) ); //$NON-NLS-1$
       int answer = mb.open();
-      switch( answer ) {
+      switch ( answer ) {
         case SWT.YES:
           goAhead = saveFile();
           break;
@@ -2948,7 +2948,7 @@ public class MetaEditor implements SelectionListener {
       mb.setText( Messages.getString( "General.USER_TITLE_WARNING" ) ); //$NON-NLS-1$
       int answer = mb.open();
 
-      switch( answer ) {
+      switch ( answer ) {
         case SWT.YES:
           saveFile();
           dispose();
@@ -3595,7 +3595,7 @@ public class MetaEditor implements SelectionListener {
 
   private DataTypeSettings getDataTypeSettings( ValueMetaInterface v ) {
     DataTypeSettings dataTypeSettings = new DataTypeSettings( DataTypeSettings.DATA_TYPE_STRING );
-    switch( v.getType() ) {
+    switch ( v.getType() ) {
       case ValueMetaInterface.TYPE_BIGNUMBER:
       case ValueMetaInterface.TYPE_INTEGER:
       case ValueMetaInterface.TYPE_NUMBER:
@@ -3678,7 +3678,7 @@ public class MetaEditor implements SelectionListener {
     LogWriter logwriter = LogWriter.getInstance( Const.META_EDITOR_LOG_FILE, false );
 
     LogChannel log = new LogChannel( APPLICATION_NAME );
-
+    Display.setAppName( APPLICATION_NAME );
     Display display = new Display();
 
     if ( !Props.isInitialized() ) {
@@ -3694,8 +3694,7 @@ public class MetaEditor implements SelectionListener {
 
     // Read kettle transformation specified on command-line?
     if ( args.length == 1 && !Const.isEmpty( args[ 0 ] ) ) {
-      if ( CWM.exists( args[ 0 ] ) ) // Only try to load the domain if it exists.
-      {
+      if ( CWM.exists( args[ 0 ] ) ) { // Only try to load the domain if it exists.
         win.cwm = CWM.getInstance( args[ 0 ] );
         CwmSchemaFactoryInterface cwmSchemaFactory = Settings.getCwmSchemaFactory();
         win.schemaMeta = cwmSchemaFactory.getSchemaMeta( win.cwm );
@@ -3709,8 +3708,7 @@ public class MetaEditor implements SelectionListener {
         String[] lastfiles = win.props.getLastFiles();
         if ( lastfiles.length > 0 ) {
           try {
-            if ( CWM.exists( lastfiles[ 0 ] ) ) // Only try to load the domain if it exists.
-            {
+            if ( CWM.exists( lastfiles[ 0 ] ) ) { // Only try to load the domain if it exists.
               win.cwm = CWM.getInstance( lastfiles[ 0 ] );
               CwmSchemaFactoryInterface cwmSchemaFactory = Settings.getCwmSchemaFactory();
               win.schemaMeta = cwmSchemaFactory.getSchemaMeta( win.cwm );
@@ -3744,6 +3742,7 @@ public class MetaEditor implements SelectionListener {
 
     // Close the logfile...
     logwriter.close();
+    System.exit( 0 );
   }
 
   /**
