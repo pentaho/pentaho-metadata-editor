@@ -12,21 +12,10 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * Copyright (c) 2002-2013 Pentaho Corporation..  All rights reserved.
+ * Copyright (c) 2002-2016 Pentaho Corporation..  All rights reserved.
  */
 
 package org.pentaho.pms.ui;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -183,6 +172,17 @@ import org.pentaho.pms.util.UniqueArrayList;
 import org.pentaho.pms.util.UniqueList;
 import org.pentaho.pms.util.VersionHelper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Class to edit the metadata domain (Schema Metadata), load/store into the MDR/CWM model
  *
@@ -312,7 +312,6 @@ public class MetaEditor implements SelectionListener {
 
   public MetaEditor( LogChannelInterface log, Display display ) {
     this.log = log;
-
     if ( display != null ) {
       disp = display;
     } else {
@@ -320,6 +319,7 @@ public class MetaEditor implements SelectionListener {
     }
     shell = new Shell( disp );
     shell.setText( APPLICATION_NAME );
+
     FormLayout layout = new FormLayout();
     layout.marginWidth = 0;
     layout.marginHeight = 0;
@@ -3678,7 +3678,7 @@ public class MetaEditor implements SelectionListener {
     LogWriter logwriter = LogWriter.getInstance( Const.META_EDITOR_LOG_FILE, false );
 
     LogChannel log = new LogChannel( APPLICATION_NAME );
-
+    Display.setAppName( APPLICATION_NAME );
     Display display = new Display();
 
     if ( !Props.isInitialized() ) {
@@ -3744,6 +3744,7 @@ public class MetaEditor implements SelectionListener {
 
     // Close the logfile...
     logwriter.close();
+    System.exit( 0 );
   }
 
   /**
