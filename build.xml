@@ -156,14 +156,13 @@
   	  <ivy:retrieve conf="swtlibs" pattern="${swtlib.dir}/[module]-[revision](-[classifier]).[ext]" />
 	</target>
 
-	<target name="unzip-swtlibs">
-		<!-- Unzip the libswt package into the libswt folder of the distribution -->
-	    <unzip dest="${stage.dir}" overwrite="true">
-  	    <fileset dir="${swtlib.dir}">
-    	    <include name="**/*.zip"/>
-      	</fileset>
-	    </unzip>
-  	</target>
+    <target name="copy-swtlibs">
+      <copy file="${swtlib.dir}/org.eclipse.swt.gtk.linux.x86-${dependency.swt-linux.revision}.jar" tofile="${stage.dir}/libswt/linux/x86/swt.jar"/>
+      <copy file="${swtlib.dir}/org.eclipse.swt.gtk.linux.x86_64-${dependency.swt-linux.revision}.jar" tofile="${stage.dir}/libswt/linux/x86_64/swt.jar"/>
+      <copy file="${swtlib.dir}/org.eclipse.swt.win32.win32.x86-${dependency.swt-win.revision}.jar" tofile="${stage.dir}/libswt/win32/swt.jar"/>
+      <copy file="${swtlib.dir}/org.eclipse.swt.win32.win32.x86_64-${dependency.swt-win.revision}.jar" tofile="${stage.dir}/libswt/win64/swt.jar"/>
+      <copy file="${swtlib.dir}/org.eclipse.swt.cocoa.macosx.x86_64-${dependency.swt-osx.revision}.jar" tofile="${stage.dir}/libswt/osx64/swt.jar"/>
+    </target>
 
     <target name="resolve-launcher" depends="install-ivy">
       <ivy:resolve file="${ivyfile}" conf="launcher" />
@@ -187,7 +186,7 @@
       <move file="${system.dir}/pentaho-karaf-assembly" tofile="${system.dir}/karaf" />
     </target>
 
-  <target name="assemble" depends="-init-assemble,resolve-launcher,resolve-swtlibs,resolve-oss-licenses,resolve-pentaho-system,jar,-stage-dist-lib,-stage-pentaho-libs,unzip-swtlibs" description="copy jar file to distribution directory">
+  <target name="assemble" depends="-init-assemble,resolve-launcher,resolve-swtlibs,resolve-oss-licenses,resolve-pentaho-system,jar,-stage-dist-lib,-stage-pentaho-libs,copy-swtlibs" description="copy jar file to distribution directory">
     <copy todir="${stage.dir}">
       <fileset dir="." includes="releasenotes.txt" excludes="**/build, **/dist" />
     </copy>
