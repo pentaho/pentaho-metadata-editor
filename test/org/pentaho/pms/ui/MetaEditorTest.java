@@ -1,3 +1,20 @@
+/*!
+ * This program is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License, version 2.1 as published by the Free Software
+ * Foundation.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this
+ * program; if not, you can obtain a copy at http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+ * or from the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * Copyright (c) 2002-2016 Pentaho Corporation..  All rights reserved.
+ */
+
 package org.pentaho.pms.ui;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -16,11 +33,15 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.pentaho.di.core.database.BaseDatabaseMeta;
 import org.pentaho.di.core.database.Database;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleDatabaseException;
+import org.pentaho.pms.schema.SchemaMeta;
 
 @RunWith( MockitoJUnitRunner.class )
 public class MetaEditorTest {
@@ -118,6 +139,29 @@ public class MetaEditorTest {
     } catch ( KettleDatabaseException e ) {
       fail( "Should not send KettleDatabaseException" );
     }
+  }
+
+  @Test
+  public void testNewFile() {
+    MetaEditor me = Mockito.spy( metaEditor );
+    Mockito.doAnswer( new Answer<Void>() {
+      public Void answer( InvocationOnMock invocation ) {
+        return null;
+      }
+    } ).when( me ).setShellText();
+    Mockito.doAnswer( new Answer<Void>() {
+      public Void answer( InvocationOnMock invocation ) {
+        return null;
+      }
+    } ).when( me ).refreshTree();
+    Mockito.doAnswer( new Answer<Void>() {
+      public Void answer( InvocationOnMock invocation ) {
+        return null;
+      }
+    } ).when( me ).refreshAll();
+    me.setSchemaMeta( mock( SchemaMeta.class ) );
+    me.newFile();
+    assertEquals( me.getSchemaMeta().domainName, "NewDomain1" );
   }
 
   private Map<String, String[]> mockForGetTables( String prefferedSchemaName ) throws KettleDatabaseException {
