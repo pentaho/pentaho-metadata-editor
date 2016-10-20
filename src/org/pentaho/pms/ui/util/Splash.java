@@ -76,7 +76,7 @@ public class Splash {
         e.gc.setBackground( new Color( e.display, new RGB( 255, 255, 255 ) ) );
         // Updates for PMD-190 - Use version helper to display version information
         VersionHelper helper = new VersionHelper();
-        e.gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_BLACK ) );
+        e.gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_WHITE ) );
         Font font = new Font( e.display, "Sans", 10, SWT.BOLD ); //$NON-NLS-1$
         e.gc.setFont( font );
         e.gc.setAntialias( SWT.ON );
