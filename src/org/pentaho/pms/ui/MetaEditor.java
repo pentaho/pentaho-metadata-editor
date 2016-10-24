@@ -2931,7 +2931,7 @@ public class MetaEditor implements SelectionListener {
       schemaMeta.clear();
       schemaMeta.addDefaults();
       schemaMeta.clearChanged();
-      setDomainName( null );
+      setDomainName( "NewDomain1" );
       refreshTree();
       refreshAll();
     }
