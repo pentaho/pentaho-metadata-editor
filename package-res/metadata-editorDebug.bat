@@ -20,8 +20,8 @@ if errorlevel == 3 exit
 if errorlevel == 2 set DEBUG_OPTIONS=/level:Debug
 
 echo -
-echo Redirect console output to metaDataaEditorDebug.txt in the actual metadata-editor directory?
-choice /C NYC /N /M "Redirect to metaDataaEditorDebug.txt? (Y=Yes, N=No, C=Cancel)"
+echo Redirect console output to metaDataEditorDebug.txt in the actual metadata-editor directory?
+choice /C NYC /N /M "Redirect to metaDataEditorDebug.txt? (Y=Yes, N=No, C=Cancel)"
 if errorlevel == 3 exit
 if errorlevel == 2 set REDIRECT=1
 REM We need to disable the pause in this case otherwise the user does not see the pause message
