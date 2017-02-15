@@ -38,8 +38,8 @@
       <dependency org="jaxen"            name="jaxen"    rev="1.1.1" transitive="false" />
       <dependency org="org.netbeans"     name="jmi"      rev="200507110943" transitive="false" />
 
-        <dependency org="pentaho-library"        name="libformula"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
-        <dependency org="pentaho-library"        name="libbase"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
+        <dependency org="org.pentaho.reporting.library"        name="libformula"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
+        <dependency org="org.pentaho.reporting.library"        name="libbase"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-connections"      rev="${dependency.pentaho-connections.revision}" conf="default->default" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-metadata"         rev="${dependency.pentaho-metadata.revision}" conf="default->default" changing="true" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-mql-editor"       rev="${dependency.pentaho-mql-editor.revision}" conf="default->default" changing="true" transitive="false"/>
