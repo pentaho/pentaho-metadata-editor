@@ -38,6 +38,9 @@
       <dependency org="jaxen"            name="jaxen"    rev="1.1.1" transitive="false" />
       <dependency org="org.netbeans"     name="jmi"      rev="200507110943" transitive="false" />
 
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.22" transitive="false"/>
+        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.22" transitive="false"/>
+
         <dependency org="pentaho-library"        name="libformula"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
         <dependency org="pentaho-library"        name="libbase"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
         <dependency org="pentaho"        name="pentaho-connections"      rev="${dependency.pentaho-connections.revision}" conf="default->default" changing="true" transitive="false"/>
