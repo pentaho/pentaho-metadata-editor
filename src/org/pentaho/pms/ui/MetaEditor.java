@@ -12,7 +12,7 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * Copyright (c) 2002-2016 Pentaho Corporation..  All rights reserved.
+ * Copyright (c) 2002-2017 Pentaho Corporation..  All rights reserved.
  */
 
 package org.pentaho.pms.ui;
@@ -2931,7 +2931,7 @@ public class MetaEditor implements SelectionListener {
       schemaMeta.clear();
       schemaMeta.addDefaults();
       schemaMeta.clearChanged();
-      setDomainName( "NewDomain1" );
+      setDomainName( "" );
       refreshTree();
       refreshAll();
     }
@@ -2968,7 +2968,7 @@ public class MetaEditor implements SelectionListener {
 
   public boolean saveFile() {
     log.logDetailed( Messages.getString( "MetaEditor.INFO_SAVE_FILE" ) ); //$NON-NLS-1$
-    if ( schemaMeta.domainName != null ) {
+    if ( schemaMeta.domainName != null && !schemaMeta.domainName.trim().isEmpty() ) {
       return save( schemaMeta.domainName );
     } else {
       return saveFileAs();
