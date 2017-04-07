@@ -3267,7 +3267,7 @@ public class MetaEditor implements SelectionListener {
     if ( shell.isDisposed() ) {
       return;
     }
-    if ( fname != null ) {
+    if ( fname != null && !fname.trim().isEmpty() ) {
       shell.setText( APPLICATION_NAME
         + " - " + fname + ( schemaMeta.hasChanged() ? Messages.getString( "MetaEditor.USER_CHANGED" )
         : "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
