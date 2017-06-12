@@ -45,7 +45,7 @@
         <dependency org="pentaho"        name="pentaho-mql-editor"       rev="${dependency.pentaho-mql-editor.revision}" conf="default->default" changing="true" transitive="false"/>
         <dependency org="pentaho-kettle" name="kettle-engine"            rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="true" />
         <dependency org="pentaho-kettle" name="kettle-core"              rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="true" />
-        <dependency org="pentaho-kettle" name="kettle5-log4j-plugin"     rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
+        <dependency org="org.pentaho.di.plugins" name="kettle-log4j-core"     rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
         <dependency org="pentaho-kettle" name="kettle-dbdialog"          rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
         <dependency org="pentaho-kettle" name="kettle-ui-swt"            rev="${dependency.kettle.revision}" conf="default->default" changing="true" transitive="false" />
         <dependency org="pentaho"        name="pentaho-cwm"              rev="${dependency.pentaho-cwm.revision}" conf="default->default" transitive="false"/>
