@@ -12,7 +12,7 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 * See the GNU Lesser General Public License for more details.
 *
-* Copyright (c) 2002-2016 Pentaho Corporation..  All rights reserved.
+* Copyright (c) 2002-2017 Pentaho Corporation..  All rights reserved.
 */
 
 package org.pentaho.pms.ui.util;
@@ -76,7 +76,7 @@ public class Splash {
         e.gc.setBackground( new Color( e.display, new RGB( 255, 255, 255 ) ) );
         // Updates for PMD-190 - Use version helper to display version information
         VersionHelper helper = new VersionHelper();
-        e.gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_WHITE ) );
+        e.gc.setForeground( new Color( display, 65, 65, 65 ) );
         Font font = new Font( e.display, "Sans", 10, SWT.BOLD ); //$NON-NLS-1$
         e.gc.setFont( font );
         e.gc.setAntialias( SWT.ON );
