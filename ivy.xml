@@ -93,8 +93,8 @@
     <dependency org="pentaho" name="pentaho-cassandra-plugin" rev="${dependency.pentaho-cassandra-plugin.revision}" conf="plugin->default" changing="true" transitive="false">
       <artifact name="pentaho-cassandra-plugin" type="zip" />
     </dependency>
-    <dependency org="pentaho" name="pentaho-karaf-assembly" rev="${project.revision}" changing="true" conf="pentaho-system->default" m:classifier="client">
-      <artifact name="pentaho-karaf-assembly" type="zip" m:classifier="client"/>
+    <dependency org="pentaho" name="pentaho-karaf-assembly" rev="${project.revision}" changing="true" conf="pentaho-system->default" m:classifier="pme">
+      <artifact name="pentaho-karaf-assembly" type="zip" m:classifier="pme"/>
     </dependency>
     <dependency org="org.apache.karaf" name="org.apache.karaf.main" rev="3.0.3"  transitive="false"/>
     <dependency org="org.apache.karaf" name="org.apache.karaf.util" rev="3.0.3"  transitive="false"/>
