@@ -12,7 +12,7 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * Copyright (c) 2002-2017 Hitachi Vantara..  All rights reserved.
+ * Copyright (c) 2002-2018 Hitachi Vantara..  All rights reserved.
  */
 
 package org.pentaho.pms.ui;
@@ -335,8 +335,10 @@ public class MetaEditor implements SelectionListener {
 
     // Load settings in the props
     loadSettings();
-    shell.setImage(
-      new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon_high.png" ) ) ); //$NON-NLS-1$
+
+    Image icon_small = new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon.png" ) ); //$NON-NLS-1$
+    Image icon_large = new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon_high.png" ) ); //$NON-NLS-1$
+    shell.setImages( new Image[] { icon_small, icon_large } );
 
     initGlobalKeyBindings();
     initGlobalListeners();
