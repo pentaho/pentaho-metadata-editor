@@ -82,7 +82,7 @@
     <pentaho-reporting.version>${project.version}</pentaho-reporting.version>
     <pentaho-metadata.version>${project.version}</pentaho-metadata.version>
     <pentaho-vfs-browser.version>${project.version}</pentaho-vfs-browser.version>
-    <pentaho-xul.version>${project.version}</pentaho-xul.version>
+    <commons-xul.version>${project.version}</commons-xul.version>
     <pentaho-karaf.version>${project.version}</pentaho-karaf.version>
     <pentaho-osgi-bundles.version>${project.version}</pentaho-osgi-bundles.version>
     <pdi-osgi-bridge.version>${project.version}</pdi-osgi-bridge.version>
@@ -533,9 +533,9 @@
     </dependency>
 
     <dependency>
-      <groupId>pentaho</groupId>
-      <artifactId>pentaho-xul-core</artifactId>
-      <version>${pentaho-xul.version}</version>
+      <groupId>org.pentaho</groupId>
+      <artifactId>commons-xul-core</artifactId>
+      <version>${commons-xul.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -544,9 +544,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>pentaho</groupId>
-      <artifactId>pentaho-xul-swt</artifactId>
-      <version>${pentaho-xul.version}</version>
+      <groupId>org.pentaho</groupId>
+      <artifactId>commons-xul-swt</artifactId>
+      <version>${commons-xul.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
