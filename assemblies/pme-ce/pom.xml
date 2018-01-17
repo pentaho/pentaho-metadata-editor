@@ -56,8 +56,8 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>pentaho</groupId>
-      <artifactId>pentaho-cassandra-plugin</artifactId>
+      <groupId>org.pentaho</groupId>
+      <artifactId>pentaho-cassandra-plugin-package</artifactId>
       <version>${pentaho-cassandra-plugin.version}</version>
       <type>zip</type>
       <scope>runtime</scope>
@@ -256,8 +256,8 @@
                   <type>zip</type>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>pentaho</groupId>
-                  <artifactId>pentaho-cassandra-plugin</artifactId>
+                  <groupId>org.pentaho</groupId>
+                  <artifactId>pentaho-cassandra-plugin-package</artifactId>
                   <version>${pentaho-cassandra-plugin.version}</version>
                   <outputDirectory>${project.build.directory}/plugins</outputDirectory>
                   <type>zip</type>
