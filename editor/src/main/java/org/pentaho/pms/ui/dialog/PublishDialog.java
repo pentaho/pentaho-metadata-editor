@@ -12,28 +12,23 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 * See the GNU Lesser General Public License for more details.
 *
-* Copyright (c) 2002-2017 Hitachi Vantara..  All rights reserved.
+* Copyright (c) 2002-2018 Hitachi Vantara..  All rights reserved.
 */
 
 package org.pentaho.pms.ui.dialog;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import javax.ws.rs.core.MediaType;
-
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataMultiPart;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -51,12 +46,17 @@ import org.pentaho.pms.core.CWM;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.schema.SchemaMeta;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataMultiPart;
+import javax.ws.rs.core.MediaType;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author wseyler
@@ -111,6 +111,23 @@ public class PublishDialog extends TitleAreaDialog {
     Control contents = super.createContents( parent );
     setMessage( Messages.getString( "PublishDialog.USER_DIALOG_MESSAGE" ) ); //$NON-NLS-1$
     setTitle( Messages.getString( "PublishDialog.USER_DIALOG_TITLE" ) ); //$NON-NLS-1$
+
+    if ( domainName.getText() == null || domainName.getText().isEmpty() ) {
+      getOKButton().setEnabled( false );
+    }
+
+    ModifyListener listener = new ModifyListener() {
+      /** {@inheritDoc} */
+      public void modifyText( ModifyEvent e ) {
+        if ( domainName.getText() == null || domainName.getText().isEmpty() ) {
+          getOKButton().setEnabled( false );
+        } else {
+          getOKButton().setEnabled( true );
+        }
+      }
+    };
+    domainName.addModifyListener( listener );
+
     return contents;
   }
 
@@ -192,6 +209,7 @@ public class PublishDialog extends TitleAreaDialog {
     label9.setLayoutData( data );
 
     domainName = new Text( c1, SWT.BORDER );
+
     String schemaDomainName = schemaMeta.getDomainName();
     if ( schemaDomainName != null ) {
       domainName.setText( schemaDomainName );
