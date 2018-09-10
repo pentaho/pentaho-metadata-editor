@@ -12,24 +12,17 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 * See the GNU Lesser General Public License for more details.
 *
-* Copyright (c) 2002-2017 Hitachi Vantara..  All rights reserved.
+* Copyright (c) 2002-2018 Hitachi Vantara..  All rights reserved.
 */
 
 package org.pentaho.pms.ui.dialog;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import javax.ws.rs.core.MediaType;
-
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataMultiPart;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -51,12 +44,17 @@ import org.pentaho.pms.core.CWM;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.schema.SchemaMeta;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataMultiPart;
+import javax.ws.rs.core.MediaType;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author wseyler
@@ -74,6 +72,7 @@ public class PublishDialog extends TitleAreaDialog {
   protected static final String SUCCESS = "3";
   protected static final String PUBLISH_SCHEMA_EXISTS_ERROR = "8";
   protected static final String PUBLISH_PROHIBITED_SYMBOLS_ERROR = "10";
+  protected static final String PUBLISH_EMPTY_FIELDS_ERROR = "11";
   private SchemaMeta schemaMeta;
 
   private LogWriter log;
@@ -192,6 +191,7 @@ public class PublishDialog extends TitleAreaDialog {
     label9.setLayoutData( data );
 
     domainName = new Text( c1, SWT.BORDER );
+
     String schemaDomainName = schemaMeta.getDomainName();
     if ( schemaDomainName != null ) {
       domainName.setText( schemaDomainName );
@@ -246,7 +246,7 @@ public class PublishDialog extends TitleAreaDialog {
   }
 
   private boolean postPublishEvent() {
-    boolean responseValue = true;
+    boolean responseValue = false;
     if ( populateStrings() ) {
       try {
         InputStream fileStream = this.createInputStream();
@@ -281,6 +281,8 @@ public class PublishDialog extends TitleAreaDialog {
       } finally {
         updateUrlPropsFile();
       }
+    } else {
+      responseValue = displayMessageBox( PUBLISH_EMPTY_FIELDS_ERROR, "All fields are mandatory." );
     }
     return responseValue;
   }
@@ -299,6 +301,24 @@ public class PublishDialog extends TitleAreaDialog {
         mb.setText( Messages.getString( "PublishDialog.PUBLISH_FAILED_DIALOG_TITLE" ) ); //$NON-NLS-1$
         mb.setMessage( message );
         response = false;
+      } else if ( PUBLISH_EMPTY_FIELDS_ERROR.equals( statusCode ) ) {
+        if ( serverURLIsEmpty() ) {
+          mb.setText( Messages.getString( "PublishDialog.PUBLISH_FAILED_DIALOG_TITLE" ) );
+          mb.setMessage( Messages.getString( "PublishDialog.PUBLISH_EMPTY_FIELD_ERROR", Messages.getString( "PublishDialog.LABEL_SERVER" ) ) );
+        } else if ( userIdIsEmpty() ) {
+          mb.setText( Messages.getString( "PublishDialog.PUBLISH_FAILED_DIALOG_TITLE" ) );
+          mb.setMessage( Messages.getString( "PublishDialog.PUBLISH_EMPTY_FIELD_ERROR", Messages.getString( "PublishDialog.LABEL_USER" ) ) );
+        } else if ( userPasswordIsEmpty() ) {
+          mb.setText( Messages.getString( "PublishDialog.PUBLISH_FAILED_DIALOG_TITLE" ) );
+          mb.setMessage( Messages.getString( "PublishDialog.PUBLISH_EMPTY_FIELD_ERROR", Messages.getString( "PublishDialog.LABEL_PASSWORD" ) ) );
+        } else if ( domainNameIsEmpty() ) {
+          mb.setText( Messages.getString( "PublishDialog.PUBLISH_FAILED_DIALOG_TITLE" ) );
+          mb.setMessage( Messages.getString( "PublishDialog.PUBLISH_EMPTY_FIELD_ERROR", Messages.getString( "PublishDialog.LABEL_DOMAIN" ) ) );
+        }
+        overwriteInRepository = false;
+        mb.open();
+        return false;
+        //response = false;
       } else {
         mb.setText( Messages.getString( "PublishDialog.PUBLISH_FAILED_DIALOG_TITLE" ) ); //$NON-NLS-1$
         mb.setMessage( Messages.getString( "PublishDialog.FILE_SAVE_FAILED", userDomain ) ); //$NON-NLS-1$
@@ -517,6 +537,26 @@ public class PublishDialog extends TitleAreaDialog {
     userDomain = domainName.getText();
     return !StringUtils.isEmpty( serverURL ) && !StringUtils.isEmpty( userId )
       && !StringUtils.isEmpty( userPassword ) && !StringUtils.isEmpty( userDomain );
+  }
+
+  private boolean serverURLIsEmpty() {
+    serverURL = tServerURL.getText();
+    return StringUtils.isEmpty( serverURL );
+  }
+
+  private boolean userIdIsEmpty() {
+    userId = tUserId.getText();
+    return StringUtils.isEmpty( userId );
+  }
+
+  private boolean userPasswordIsEmpty() {
+    userPassword = tUserPassword.getText();
+    return StringUtils.isEmpty( userPassword );
+  }
+
+  private boolean domainNameIsEmpty() {
+    userDomain = domainName.getText();
+    return StringUtils.isEmpty( userDomain );
   }
 
   private void cancel() {
