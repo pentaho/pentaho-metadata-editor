@@ -2986,7 +2986,7 @@ public class MetaEditor implements SelectionListener {
           shell,
           "", Messages.getString( "MetaEditor.USER_TITLE_SAVE_DOMAIN_NAME" ),
           Messages.getString( "MetaEditor.USER_SAVE_DOMAIN_NAME" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      dialog.setManditory( true );
+      dialog.setMandatory( true );
       String domainName = dialog.open();
 
       if ( domainName != null ) {
