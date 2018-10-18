@@ -41,7 +41,6 @@
     <hibernate.version>3.2.2.ga</hibernate.version>
     <javadbf.version>0.4.0</javadbf.version>
     <javassist.version>3.20.0-GA</javassist.version>
-    <jaxen.version>1.1.1</jaxen.version>
     <jface.version>3.3.0-I20070606-0010</jface.version>
     <js.version>1.7R3</js.version>
     <jsch.version>0.1.54</jsch.version>
