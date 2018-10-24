@@ -34,8 +34,8 @@
       <dependency org="org.netbeans" name="openide-util" rev="200507110943"        transitive="false" conf="default" />
       <dependency org="org.netbeans" name="nbmdr"        rev="200507110943-custom" transitive="false" conf="default" />
       <dependency org="org.safehaus.jug" name="jug-lgpl" rev="2.0.0" transitive="false" />
-      <dependency org="dom4j"            name="dom4j"    rev="1.6.1" transitive="true" />
-      <dependency org="jaxen"            name="jaxen"    rev="1.1.1" transitive="false" />
+      <dependency org="org.dom4j"            name="dom4j"    rev="2.1.1" transitive="true" />
+      <dependency org="jaxen"            name="jaxen"    rev="1.1.6" transitive="false" />
       <dependency org="org.netbeans"     name="jmi"      rev="200507110943" transitive="false" />
 
         <dependency org="org.pentaho.reporting.library"        name="libformula"               conf="default->default" rev="${dependency.reporting-library.revision}" transitive="false"/>
@@ -121,13 +121,13 @@
         
         <!-- Old libext/misc dependencies -->
         <dependency org="org.snmp4j" name="snmp4j" rev="1.9.3d" transitive="false" conf="default->default" />
-        <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="default->default" />
+        <dependency org="org.dom4j" name="dom4j" rev="2.1.1" transitive="false" conf="default->default" />
         <!-- 2.0.2 is newer than the one from the old libext (was 1.5.4) -->
         <dependency org="com.enterprisedt" name="edtftpj" rev="2.0.2" transitive="false" conf="default->default" />
         <dependency org="ehcache" name="ehcache" rev="1.1" transitive="false" conf="default->default" />
         <dependency org="org.hibernate" name="hibernate" rev="3.2.2.ga" transitive="false" conf="default->default" />
         <dependency org="com.linuxense" name="javadbf" rev="0.4.0" transitive="false" conf="default->default" />
-        <dependency org="jaxen" name="jaxen" rev="1.1.1" transitive="false" conf="default->default" />
+        <dependency org="jaxen" name="jaxen" rev="1.1.6" transitive="false" conf="default->default" />
         <dependency org="rhino" name="js" rev="1.7R3" transitive="false" conf="default->default" />
         <dependency org="com.jcraft" name="jsch" rev="0.1.24" transitive="false" conf="default->default" />
         <dependency org="jug-lgpl" name="jug-lgpl" rev="2.0.0" transitive="false" conf="default->default" />
