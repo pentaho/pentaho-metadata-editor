@@ -36,13 +36,11 @@
     <commons-io.version>2.2</commons-io.version>
     <commons-lang.version>2.6</commons-lang.version>
     <commons-logging.version>1.2</commons-logging.version>
-    <dom4j.version>1.6.1</dom4j.version>
     <edtftpj.version>2.1.0</edtftpj.version>
     <ehcache.version>1.1</ehcache.version>
     <hibernate.version>3.2.2.ga</hibernate.version>
     <javadbf.version>0.4.0</javadbf.version>
     <javassist.version>3.20.0-GA</javassist.version>
-    <jaxen.version>1.1.1</jaxen.version>
     <jface.version>3.3.0-I20070606-0010</jface.version>
     <js.version>1.7R3</js.version>
     <jsch.version>0.1.54</jsch.version>
@@ -246,28 +244,6 @@
       <groupId>org.safehaus.jug</groupId>
       <artifactId>jug-lgpl</artifactId>
       <version>${jug-lgpl.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>${dom4j.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>jaxen</groupId>
-      <artifactId>jaxen</artifactId>
-      <version>${jaxen.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>

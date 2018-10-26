@@ -13,6 +13,16 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+    </dependency>
+    <dependency>
+      <!-- Needed for creating a connection-->
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
