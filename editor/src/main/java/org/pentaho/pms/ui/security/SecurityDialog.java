@@ -12,7 +12,7 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 * See the GNU Lesser General Public License for more details.
 *
-* Copyright (c) 2002-2017 Hitachi Vantara..  All rights reserved.
+* Copyright (c) 2002-2019 Hitachi Vantara..  All rights reserved.
 */
 
 package org.pentaho.pms.ui.security;
@@ -583,6 +583,7 @@ public class SecurityDialog extends TitleAreaDialog {
       
       StringBuffer msg = new StringBuffer();
       msg.append(Messages.getString("SecurityDialog.USER_CONNECTION_INFO")); //$NON-NLS-1$
+      msg.append( " " );
          
       if (securityService.hasService()){
         msg.append(Messages.getString("SecurityDialog.USER_FROM_SERVER_URL", securityService.getURL(securityService.getDetailServiceType() == SecurityService.SERVICE_TYPE_ALL ? null : securityService.getServiceTypeCode()))); //$NON-NLS-1$
