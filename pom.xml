@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.pentaho</groupId>
     <artifactId>pentaho-ce-jar-parent-pom</artifactId>
-    <version>8.2.0.0-SNAPSHOT</version>
+    <version>8.2.0.2-503</version>
   </parent>
   <groupId>pentaho</groupId>
   <artifactId>pentaho-metadata-editor-parent</artifactId>
-  <version>8.2.0.0-SNAPSHOT</version>
+  <version>8.2.0.2-503</version>
   <packaging>pom</packaging>
   <name>${project.artifactId}</name>
   <description></description>
@@ -74,19 +74,19 @@
     <xpp3_min.version>1.1.4c</xpp3_min.version>
     <xstream.version>1.4.10</xstream.version>
 
-    <pentaho-connections.version>8.2.0.0-SNAPSHOT</pentaho-connections.version>
-    <pdi.version>8.2.0.0-SNAPSHOT</pdi.version>
-    <pentaho-reporting.version>8.2.0.0-SNAPSHOT</pentaho-reporting.version>
-    <pentaho-metadata.version>8.2.0.0-SNAPSHOT</pentaho-metadata.version>
-    <pentaho-vfs-browser.version>8.2.0.0-SNAPSHOT</pentaho-vfs-browser.version>
-    <commons-xul.version>8.2.0.0-SNAPSHOT</commons-xul.version>
-    <pentaho-karaf.version>8.2.0.0-SNAPSHOT</pentaho-karaf.version>
-    <pentaho-osgi-bundles.version>8.2.0.0-SNAPSHOT</pentaho-osgi-bundles.version>
-    <pdi-osgi-bridge.version>8.2.0.0-SNAPSHOT</pdi-osgi-bridge.version>
-    <pentaho-metaverse.version>8.2.0.0-SNAPSHOT</pentaho-metaverse.version>
-    <platform.version>8.2.0.0-SNAPSHOT</platform.version>
-    <pentaho-hadoop-shims-api.version>8.2.0.0-SNAPSHOT</pentaho-hadoop-shims-api.version>
-    <pentaho-mql-editor.version>8.2.0.0-SNAPSHOT</pentaho-mql-editor.version>
+    <pentaho-connections.version>8.2.0.2-503</pentaho-connections.version>
+    <pdi.version>8.2.0.2-503</pdi.version>
+    <pentaho-reporting.version>8.2.0.2-503</pentaho-reporting.version>
+    <pentaho-metadata.version>8.2.0.2-503</pentaho-metadata.version>
+    <pentaho-vfs-browser.version>8.2.0.2-503</pentaho-vfs-browser.version>
+    <commons-xul.version>8.2.0.2-503</commons-xul.version>
+    <pentaho-karaf.version>8.2.0.2-503</pentaho-karaf.version>
+    <pentaho-osgi-bundles.version>8.2.0.2-503</pentaho-osgi-bundles.version>
+    <pdi-osgi-bridge.version>8.2.0.2-503</pdi-osgi-bridge.version>
+    <pentaho-metaverse.version>8.2.0.2-503</pentaho-metaverse.version>
+    <platform.version>8.2.0.2-503</platform.version>
+    <pentaho-hadoop-shims-api.version>8.2.2018.11.00-342</pentaho-hadoop-shims-api.version>
+    <pentaho-mql-editor.version>8.2.0.2-503</pentaho-mql-editor.version>
   </properties>
 
   <build>
