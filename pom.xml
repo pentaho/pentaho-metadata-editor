@@ -59,7 +59,6 @@
     <mockito-all.version>1.8.0</mockito-all.version>
     <nbmdr.version>200507110943-custom</nbmdr.version>
     <net.sf.saxon.version>9.1.0.8</net.sf.saxon.version>
-    <org.apache.felix.main.version>4.2.1</org.apache.felix.main.version>
     <org.apache.karaf.jaas.boot.version>2.4.2</org.apache.karaf.jaas.boot.version>
     <org.apache.karaf.version>3.0.3</org.apache.karaf.version>
     <org.eclipse.equinox.common.version>3.3.0-v20070426</org.eclipse.equinox.common.version>
@@ -604,17 +603,6 @@
       <groupId>org.apache.karaf.jaas</groupId>
       <artifactId>org.apache.karaf.jaas.boot</artifactId>
       <version>${org.apache.karaf.jaas.boot.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.main</artifactId>
-      <version>${org.apache.felix.main.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
