@@ -59,8 +59,6 @@
     <mockito-all.version>1.8.0</mockito-all.version>
     <nbmdr.version>200507110943-custom</nbmdr.version>
     <net.sf.saxon.version>9.1.0.8</net.sf.saxon.version>
-    <org.apache.karaf.jaas.boot.version>2.4.2</org.apache.karaf.jaas.boot.version>
-    <org.apache.karaf.version>3.0.3</org.apache.karaf.version>
     <org.eclipse.equinox.common.version>3.3.0-v20070426</org.eclipse.equinox.common.version>
     <org.netbeans.version>200507110943</org.netbeans.version>
     <org.eclipse.swt.version>4.6</org.eclipse.swt.version>
@@ -580,7 +578,6 @@
     <dependency>
       <groupId>org.apache.karaf</groupId>
       <artifactId>org.apache.karaf.main</artifactId>
-      <version>${org.apache.karaf.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -591,7 +588,6 @@
     <dependency>
       <groupId>org.apache.karaf</groupId>
       <artifactId>org.apache.karaf.util</artifactId>
-      <version>${org.apache.karaf.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -602,7 +598,6 @@
     <dependency>
       <groupId>org.apache.karaf.jaas</groupId>
       <artifactId>org.apache.karaf.jaas.boot</artifactId>
-      <version>${org.apache.karaf.jaas.boot.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
