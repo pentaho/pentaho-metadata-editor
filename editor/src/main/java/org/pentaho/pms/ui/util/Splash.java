@@ -1,19 +1,19 @@
 /*!
-* This program is free software; you can redistribute it and/or modify it under the
-* terms of the GNU Lesser General Public License, version 2.1 as published by the Free Software
-* Foundation.
-*
-* You should have received a copy of the GNU Lesser General Public License along with this
-* program; if not, you can obtain a copy at http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
-* or from the Free Software Foundation, Inc.,
-* 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-* See the GNU Lesser General Public License for more details.
-*
-* Copyright (c) 2002-2017 Hitachi Vantara..  All rights reserved.
-*/
+ * This program is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License, version 2.1 as published by the Free Software
+ * Foundation.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this
+ * program; if not, you can obtain a copy at http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+ * or from the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * Copyright (c) 2002-2019 Hitachi Vantara..  All rights reserved.
+ */
 
 package org.pentaho.pms.ui.util;
 
@@ -40,9 +40,9 @@ import org.pentaho.pms.util.VersionHelper;
 
 /**
  * Displays the Kettle splash screen
- * 
+ *
  * @author Matt
- * @since  14-mrt-2005
+ * @since 14-mrt-2005
  */
 public class Splash {
   private Shell splash;
@@ -50,8 +50,8 @@ public class Splash {
   public Splash( final Display display ) {
     Rectangle displayBounds = display.getPrimaryMonitor().getBounds();
 
-    final Image splashImage = GUIResource.getInstance().getImageMetaSplash(); // new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "MetaSplash.png"));
-    final Image splashIcon  = GUIResource.getInstance().getImageIcon(); // new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "icon.png"));
+    final Image splashImage = GUIResource.getInstance().getImageMetaSplash();
+    final Image splashIcon = GUIResource.getInstance().getImageIcon();
 
     splash = new Shell( display, SWT.NONE /*SWT.ON_TOP*/ );
     splash.setImage( splashIcon );
@@ -64,9 +64,9 @@ public class Splash {
     Canvas canvas = new Canvas( splash, SWT.NO_BACKGROUND );
 
     FormData fdCanvas = new FormData();
-    fdCanvas.left   = new FormAttachment( 0, 0 );
-    fdCanvas.top    = new FormAttachment( 0, 0 );
-    fdCanvas.right  = new FormAttachment( 100, 0 );
+    fdCanvas.left = new FormAttachment( 0, 0 );
+    fdCanvas.top = new FormAttachment( 0, 0 );
+    fdCanvas.right = new FormAttachment( 100, 0 );
     fdCanvas.bottom = new FormAttachment( 100, 0 );
     canvas.setLayoutData( fdCanvas );
 
@@ -103,6 +103,16 @@ public class Splash {
     splash.setLocation( x, y );
 
     splash.open();
+
+    if ( isMacOS() ) {
+      long endTime = System.currentTimeMillis() + 5000; // 5 second delay... can you read the splash that fast?
+      while ( splash != null && !splash.isDisposed() && endTime > System.currentTimeMillis() ) {
+        if ( !display.readAndDispatch() ) {
+          display.sleep();
+        }
+      }
+      splash.close();
+    }
   }
 
   public void dispose() {
@@ -117,5 +127,10 @@ public class Splash {
 
   public void show() {
     splash.setVisible( true );
+  }
+
+  public static boolean isMacOS() {
+    String osName = System.getProperty( "os.name" ).toLowerCase();
+    return osName.startsWith( "mac os x" );
   }
 }
