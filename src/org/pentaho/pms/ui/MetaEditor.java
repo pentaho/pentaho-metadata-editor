@@ -336,9 +336,8 @@ public class MetaEditor implements SelectionListener {
     // Load settings in the props
     loadSettings();
 
-    Image icon_small = new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon.png" ) ); //$NON-NLS-1$
-    Image icon_large = new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon_high.png" ) ); //$NON-NLS-1$
-    shell.setImages( new Image[] { icon_small, icon_large } );
+    shell.setImage(
+      new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon.png" ) ) ); //$NON-NLS-1$
 
     initGlobalKeyBindings();
     initGlobalListeners();
