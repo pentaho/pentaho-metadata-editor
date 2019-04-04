@@ -12,7 +12,7 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * Copyright (c) 2002-2019 Hitachi Vantara..  All rights reserved.
+ * Copyright (c) 2002-2017 Pentaho Corporation..  All rights reserved.
  */
 
 package org.pentaho.pms.ui;
@@ -335,10 +335,8 @@ public class MetaEditor implements SelectionListener {
 
     // Load settings in the props
     loadSettings();
-
-    Image icon_small = new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon.png" ) ); //$NON-NLS-1$
-    Image icon_large = new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon_high.png" ) ); //$NON-NLS-1$
-    shell.setImages( new Image[] { icon_small, icon_large } );
+    shell.setImage(
+      new Image( display, getClass().getResourceAsStream( Const.IMAGE_DIRECTORY + "icon.png" ) ) ); //$NON-NLS-1$
 
     initGlobalKeyBindings();
     initGlobalListeners();
@@ -2986,7 +2984,6 @@ public class MetaEditor implements SelectionListener {
           shell,
           "", Messages.getString( "MetaEditor.USER_TITLE_SAVE_DOMAIN_NAME" ),
           Messages.getString( "MetaEditor.USER_SAVE_DOMAIN_NAME" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      dialog.setManditory( true );
       String domainName = dialog.open();
 
       if ( domainName != null ) {
@@ -3733,9 +3730,7 @@ public class MetaEditor implements SelectionListener {
       }
     }
 
-    if ( !Splash.isMacOS() ) {
-      splash.hide();
-    }
+    splash.hide();
 
     win.open();
     while ( !win.isDisposed() ) {
