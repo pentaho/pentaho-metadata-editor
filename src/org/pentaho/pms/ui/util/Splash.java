@@ -12,7 +12,7 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * Copyright (c) 2002-2019 Hitachi Vantara..  All rights reserved.
+ * Copyright (c) 2002-2019 Hitachi Vantara Corporation.  All rights reserved.
  */
 
 package org.pentaho.pms.ui.util;
@@ -47,11 +47,11 @@ import org.pentaho.pms.util.VersionHelper;
 public class Splash {
   private Shell splash;
 
-  public Splash( final Display display ) {
+  public Splash( Display display ) {
     Rectangle displayBounds = display.getPrimaryMonitor().getBounds();
 
-    final Image splashImage = GUIResource.getInstance().getImageMetaSplash();
-    final Image splashIcon = GUIResource.getInstance().getImageIcon();
+    final Image splashImage = GUIResource.getInstance().getImageMetaSplash(); // new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "MetaSplash.png"));
+    final Image splashIcon = GUIResource.getInstance().getImageIcon(); // new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "icon.png"));
 
     splash = new Shell( display, SWT.NONE /*SWT.ON_TOP*/ );
     splash.setImage( splashIcon );
@@ -76,7 +76,7 @@ public class Splash {
         e.gc.setBackground( new Color( e.display, new RGB( 255, 255, 255 ) ) );
         // Updates for PMD-190 - Use version helper to display version information
         VersionHelper helper = new VersionHelper();
-        e.gc.setForeground( new Color( display, 65, 65, 65 ) );
+        e.gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_WHITE ) );
         Font font = new Font( e.display, "Sans", 10, SWT.BOLD ); //$NON-NLS-1$
         e.gc.setFont( font );
         e.gc.setAntialias( SWT.ON );
@@ -104,6 +104,7 @@ public class Splash {
 
     splash.open();
 
+
     if ( isMacOS() ) {
       long endTime = System.currentTimeMillis() + 5000; // 5 second delay... can you read the splash that fast?
       while ( splash != null && !splash.isDisposed() && endTime > System.currentTimeMillis() ) {
@@ -113,6 +114,7 @@ public class Splash {
       }
       splash.close();
     }
+
   }
 
   public void dispose() {
@@ -129,8 +131,10 @@ public class Splash {
     splash.setVisible( true );
   }
 
+
   public static boolean isMacOS() {
     String osName = System.getProperty( "os.name" ).toLowerCase();
     return osName.startsWith( "mac os x" );
   }
+
 }
