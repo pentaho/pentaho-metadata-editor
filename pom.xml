@@ -54,7 +54,7 @@
     <license-maven-plugin.version>2.3</license-maven-plugin.version>
     <livetribe-jsr223.version>2.0.6</livetribe-jsr223.version>
     <log4j.version>1.2.17</log4j.version>
-    <mail.version>1.4.7</mail.version>
+    <mail.version>1.6.1</mail.version>
     <mimepull.version>1.9.3</mimepull.version>
     <mockito-all.version>1.8.0</mockito-all.version>
     <nbmdr.version>200507110943-custom</nbmdr.version>
@@ -839,8 +839,8 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
       <version>${mail.version}</version>
     </dependency>
     <dependency>
