@@ -17,23 +17,21 @@
 
 package org.pentaho.pms.ui.util;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.util.VersionHelper;
@@ -61,34 +59,39 @@ public class Splash {
     FormLayout splashLayout = new FormLayout();
     splash.setLayout( splashLayout );
 
-    Canvas canvas = new Canvas( splash, SWT.NO_BACKGROUND );
+    Control above = splash;
+    int left = 290;
 
-    FormData fdCanvas = new FormData();
-    fdCanvas.left = new FormAttachment( 0, 0 );
-    fdCanvas.top = new FormAttachment( 0, 0 );
-    fdCanvas.right = new FormAttachment( 100, 0 );
-    fdCanvas.bottom = new FormAttachment( 100, 0 );
-    canvas.setLayoutData( fdCanvas );
+    VersionHelper helper = new VersionHelper();
+    Label versionLbl = new Label( splash, SWT.NONE );
+    above = placeBelow( versionLbl, above, left, 160 );
 
-    canvas.addPaintListener( new PaintListener() {
-      public void paintControl( PaintEvent e ) {
-        e.gc.drawImage( splashImage, 0, 0 );
-        e.gc.setBackground( new Color( e.display, new RGB( 255, 255, 255 ) ) );
-        // Updates for PMD-190 - Use version helper to display version information
-        VersionHelper helper = new VersionHelper();
-        e.gc.setForeground( new Color( display, 65, 65, 65 ) );
-        Font font = new Font( e.display, "Sans", 10, SWT.BOLD ); //$NON-NLS-1$
-        e.gc.setFont( font );
-        e.gc.setAntialias( SWT.ON );
-        e.gc.drawString( Messages.getString( "Splash.VERSION_INFO", helper.getVersionInformation( Splash.class, false ) ), 294, 220, true );
-        font = new Font( e.display, "Sans", 8, SWT.NONE ); //$NON-NLS-1$
-        e.gc.setFont( font );
-        e.gc.drawString( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_CORPORATION", "" + ( ( new Date() ).getYear() + 1900 ) ), 294, 260, true ); //$NON-NLS-1$
-        for ( int i = 1; i <= 11; i++ ) {
-          e.gc.drawString( Messages.getString( "Splash.LICENSE_LINE_" + i ), 294, 270 + i * 12, true ); //$NON-NLS-1$
-        }
-      }
-    } );
+    versionLbl.setFont( new Font( splash.getDisplay(), "Sans", 10, SWT.BOLD ) );
+    versionLbl.setText( Messages.getString( "Splash.VERSION_INFO", helper.getVersionInformation( Splash.class, false ) ) );
+    Label copyrightLbl1 = new Label( splash, SWT.NONE );
+    above = placeBelow( copyrightLbl1, above, left, 5 );
+
+    String year = "" + LocalDateTime.now().getYear();
+    copyrightLbl1.setText( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_CORPORATION", year ) );
+    Font copyrightFont = new Font( splash.getDisplay(), "Sans", 8, SWT.NONE );
+    copyrightLbl1.setFont( copyrightFont );
+
+    Label urlLbl = new Label( splash, SWT.NONE );
+    urlLbl.setFont( copyrightFont );
+    urlLbl.setText( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_URL" ) );
+    above = placeBelow( urlLbl, above, left, 5 );
+    Label copyrightLbl2 = new Label( splash, SWT.NONE );
+    copyrightLbl2.setFont( copyrightFont );
+    copyrightLbl2.setText( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_COPYRIGHT", year ) );
+    above = placeBelow( copyrightLbl2, above, left, 10 );
+
+    splash.setBackgroundImage( splashImage );
+    splash.setBackgroundMode( SWT.INHERIT_DEFAULT );
+    Link license = new Link( splash, SWT.NONE );
+    license.setText( Messages.getString( "Splash.LICENSE" ) );
+    license.setFont( new Font( splash.getDisplay(), "Sans", 9, SWT.NONE  ) );
+
+    above = placeBelow( license, above, left, 10 );
 
     splash.addDisposeListener( new DisposeListener() {
       public void widgetDisposed( DisposeEvent arg0 ) {
@@ -113,6 +116,14 @@ public class Splash {
       }
       splash.close();
     }
+  }
+
+  private static Control placeBelow( Control toPlace, Control above, int x, int yOffset ) {
+    FormData fd = new FormData();
+    fd.left = new FormAttachment( 0, x );
+    fd.top = new FormAttachment( above, yOffset );
+    toPlace.setLayoutData( fd );
+    return toPlace;
   }
 
   public void dispose() {
