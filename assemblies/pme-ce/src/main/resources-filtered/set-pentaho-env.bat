@@ -12,7 +12,7 @@
 @REM without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 @REM See the GNU Lesser General Public License for more details.
 @REM
-@REM Copyright (c) 2010-2018 Hitachi Vantara.  All rights reserved.
+@REM Copyright (c) 2010 - ${copyright.year} Hitachi Vantara. All rights reserved.
 
 rem ---------------------------------------------------------------------------
 rem Finds a suitable Java
