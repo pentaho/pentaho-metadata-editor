@@ -76,15 +76,6 @@ public class Splash {
     Font copyrightFont = new Font( splash.getDisplay(), "Sans", 8, SWT.NONE );
     copyrightLbl1.setFont( copyrightFont );
 
-    Label urlLbl = new Label( splash, SWT.NONE );
-    urlLbl.setFont( copyrightFont );
-    urlLbl.setText( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_URL" ) );
-    above = placeBelow( urlLbl, above, left, 5 );
-    Label copyrightLbl2 = new Label( splash, SWT.NONE );
-    copyrightLbl2.setFont( copyrightFont );
-    copyrightLbl2.setText( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_COPYRIGHT", year ) );
-    above = placeBelow( copyrightLbl2, above, left, 10 );
-
     splash.setBackgroundImage( splashImage );
     splash.setBackgroundMode( SWT.INHERIT_DEFAULT );
     Link license = new Link( splash, SWT.NONE );
