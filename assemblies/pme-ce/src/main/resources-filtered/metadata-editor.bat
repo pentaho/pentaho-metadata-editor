@@ -11,11 +11,11 @@
 @REM without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 @REM See the GNU Lesser General Public License for more details.
 @REM
-@REM Copyright (c) ${project.inceptionYear} - ${copyright.year} Hitachi Vantara. All rights reserved.
+@REM Copyright (c) ${license.inception.year} - ${copyright.year} Hitachi Vantara. All rights reserved.
 
 REM ${project.name}
-REM ${project.version}.${build.number}
-REM Copyright © ${project.inceptionYear} - ${copyright.year} ${project.organization.name}
+REM ${project.version}
+REM Copyright © ${license.inception.year} - ${copyright.year} ${project.organization.name}
 REM Classpath is built by launcher. See ..\launcher\launcher.properties.
 
 @echo off
