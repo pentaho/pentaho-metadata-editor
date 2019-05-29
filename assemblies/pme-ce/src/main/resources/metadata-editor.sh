@@ -126,4 +126,9 @@ OPT="-Xms1024m -Xmx2048m -Djava.library.path=$LIBPATH $OPT"
 # ***************
 # ** Run...    **
 # ***************
-"$_PENTAHO_JAVA" $OPT $STARTUP -lib $LIBPATH "${1+$@}"
+OS=`uname -s | tr '[:upper:]' '[:lower:]'`
+if [ $OS = "linux" ]; then
+    "$_PENTAHO_JAVA" $OPT $STARTUP -lib $LIBPATH "${1+$@}" 2>&1 | grep -viE "Gtk-WARNING|GLib-GObject|GLib-CRITICAL|^$"
+else
+    "$_PENTAHO_JAVA" $OPT $STARTUP -lib $LIBPATH "${1+$@}"
+fi
