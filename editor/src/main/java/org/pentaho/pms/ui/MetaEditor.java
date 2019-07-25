@@ -3970,7 +3970,7 @@ public class MetaEditor implements SelectionListener {
         MQLQueryFactory.getMQLQuery( new String( bytes, Const.XML_ENCODING ), null, Const.XML_ENCODING,
           cwmSchemaFactory );
     } catch ( Exception e ) {
-      log.logError( Messages.getString( "MetaEditor.ERROR_0003_CANT_LOAD_QUERY", e.toString() ) ); //$NON-NLS-1$
+      log.logBasic( Messages.getString( "MetaEditor.ERROR_0003_CANT_LOAD_QUERY", e.toString() ) ); //$NON-NLS-1$
     }
   }
 
