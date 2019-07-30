@@ -43,9 +43,9 @@
       <directory>${project.build.directory}/plugins</directory>
       <outputDirectory>plugins</outputDirectory>
     </fileSet>
-    <!-- Include pentaho-karaf-assembly-pme in system folder -->
+    <!-- Include pentaho-karaf-assembly-pme in system folder-->
     <fileSet>
-      <directory>${project.build.directory}/pentaho-karaf-assembly</directory>
+      <directory>${project.build.directory}/karaf</directory>
       <outputDirectory>system/karaf</outputDirectory>
     </fileSet>
 	<fileSet>
