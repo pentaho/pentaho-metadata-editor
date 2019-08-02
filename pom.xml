@@ -563,10 +563,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>pentaho</groupId>
-      <artifactId>pentaho-karaf-assembly</artifactId>
+      <groupId>org.hitachivantara.karaf.assemblies</groupId>
+      <artifactId>pme</artifactId>
       <version>${pentaho-karaf.version}</version>
-      <classifier>pme</classifier>
       <type>zip</type>
       <exclusions>
         <exclusion>
