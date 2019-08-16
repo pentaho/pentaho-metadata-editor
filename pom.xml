@@ -53,7 +53,6 @@
     <license.inception.year>2002</license.inception.year>
     <license-maven-plugin.version>2.3</license-maven-plugin.version>
     <livetribe-jsr223.version>2.0.6</livetribe-jsr223.version>
-    <log4j.version>1.2.17</log4j.version>
     <mail.version>1.6.1</mail.version>
     <mimepull.version>1.9.3</mimepull.version>
     <mockito-all.version>1.8.0</mockito-all.version>
@@ -140,17 +139,6 @@
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
       <version>${commons-collections.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>${log4j.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
