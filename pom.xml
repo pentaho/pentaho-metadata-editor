@@ -80,7 +80,6 @@
     <pdi-osgi-bridge.version>9.0.0.0-SNAPSHOT</pdi-osgi-bridge.version>
     <pentaho-metaverse.version>9.0.0.0-SNAPSHOT</pentaho-metaverse.version>
     <platform.version>9.0.0.0-SNAPSHOT</platform.version>
-    <pentaho-hadoop-shims-api.version>9.0.0.0-SNAPSHOT</pentaho-hadoop-shims-api.version>
     <pentaho-mql-editor.version>9.0.0.0-SNAPSHOT</pentaho-mql-editor.version>
   </properties>
 
@@ -648,17 +647,6 @@
       <groupId>pentaho</groupId>
       <artifactId>pentaho-platform-extensions</artifactId>
       <version>${platform.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho</groupId>
-      <artifactId>pentaho-hadoop-shims-api</artifactId>
-      <version>${pentaho-hadoop-shims-api.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
