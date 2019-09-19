@@ -265,7 +265,7 @@
                 <artifactItem>
                   <groupId>pentaho</groupId>
                   <artifactId>pentaho-big-data-plugin</artifactId>
-                  <version>${big-data-plugin.version.version}</version>
+                  <version>${big-data-plugin.version}</version>
                   <outputDirectory>${project.build.directory}/plugins</outputDirectory>
                   <type>zip</type>
                 </artifactItem>
