@@ -536,6 +536,16 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.apache.karaf.diagnostic</groupId>
+      <artifactId>org.apache.karaf.diagnostic.boot</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>com.tinkerpop.blueprints</groupId>
       <artifactId>blueprints-core</artifactId>
       <version>${blueprints-core.version}</version>
