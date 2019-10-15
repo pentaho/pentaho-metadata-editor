@@ -13,6 +13,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.pentaho</groupId>
+      <artifactId>pentaho-metadata</artifactId>
+      <version>${pentaho-metadata.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.dom4j</groupId>
       <artifactId>dom4j</artifactId>
     </dependency>
