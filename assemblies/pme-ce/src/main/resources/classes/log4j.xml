@@ -71,6 +71,10 @@
     <priority value="INFO"/>
   </category>
 
+  <category name="org.pentaho.hadoop.shim.DriverManager">
+      <priority value="INFO"/>
+  </category>
+
    <!-- ======================= -->
    <!-- Setup the Root category -->
    <!-- ======================= -->
