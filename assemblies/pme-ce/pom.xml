@@ -22,8 +22,51 @@
     <pentaho-metadata.version>9.0.0.0-SNAPSHOT</pentaho-metadata.version>
     <pentaho-launcher.version>9.0.0.0-SNAPSHOT</pentaho-launcher.version>
     <oss-licenses.version>9.0.0.0-SNAPSHOT</oss-licenses.version>
+
+    <!-- Pentaho drivers kar file dependencies versions -->
+    <pentaho-hadoop-shims-cdh61.version>9.0.0.0-SNAPSHOT</pentaho-hadoop-shims-cdh61.version>
+    <pentaho-hadoop-shims-hdp30.version>9.0.0.0-SNAPSHOT</pentaho-hadoop-shims-hdp30.version>
+    <pentaho-hadoop-shims-emr521.version>9.0.0.0-SNAPSHOT</pentaho-hadoop-shims-emr521.version>
   </properties>
   <dependencies>
+    <!-- START Pentaho drivers kar file dependencies -->
+    <dependency>
+      <groupId>org.pentaho.hadoop.shims</groupId>
+      <artifactId>pentaho-hadoop-shims-cdh61-kar</artifactId>
+      <version>${pentaho-hadoop-shims-cdh61.version}</version>
+      <type>kar</type>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.pentaho.hadoop.shims</groupId>
+      <artifactId>pentaho-hadoop-shims-hdp30-kar</artifactId>
+      <version>${pentaho-hadoop-shims-hdp30.version}</version>
+      <type>kar</type>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.pentaho.hadoop.shims</groupId>
+      <artifactId>pentaho-hadoop-shims-emr521-kar</artifactId>
+      <version>${pentaho-hadoop-shims-emr521.version}</version>
+      <type>kar</type>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- END Pentaho drivers kar file dependencies -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
