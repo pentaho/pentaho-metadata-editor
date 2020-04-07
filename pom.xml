@@ -30,7 +30,6 @@
     <blueprints-core.version>2.6.0</blueprints-core.version>
     <com.sun.jersey.version>1.19.1</com.sun.jersey.version>
     <commands.version>3.3.0-I20070605-0010</commands.version>
-    <commons-codec.version>1.10</commons-codec.version>
     <commons-collections.version>3.2.2</commons-collections.version>
     <commons-configuration.version>1.9</commons-configuration.version>
     <commons-io.version>2.2</commons-io.version>
@@ -148,17 +147,6 @@
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>${log4j.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-      <version>${commons-codec.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
