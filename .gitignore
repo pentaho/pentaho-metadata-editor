@@ -15,3 +15,10 @@ plugins/
 target
 .idea
 mdr*
+bin/
+dist/
+lib/
+libext/
+libswt/
+stage/
+test-lib/
