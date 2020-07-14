@@ -277,8 +277,6 @@ public class PublishDialog extends TitleAreaDialog {
           status = String.valueOf( resp.getStatus() );
           message = resp.getEntity( String.class );
         }
-
-        System.out.println( "Return Status: " + status );
         responseValue = displayMessageBox( status, message );
       } catch ( Exception e ) {
         e.printStackTrace();
