@@ -12,7 +12,7 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 * See the GNU Lesser General Public License for more details.
 *
-* Copyright (c) 2002-2018 Hitachi Vantara..  All rights reserved.
+* Copyright (c) 2002-2020 Hitachi Vantara..  All rights reserved.
 */
 
 package org.pentaho.pms.ui.dialog;
@@ -248,6 +248,12 @@ public class PublishDialog extends TitleAreaDialog {
   private boolean postPublishEvent() {
     boolean responseValue = false;
     if ( populateStrings() ) {
+
+      if ( domainNameContainsReservedChars() ) {
+        responseValue = displayMessageBox( PUBLISH_PROHIBITED_SYMBOLS_ERROR, "Domain Name contains '/' or '\\' characters! These characters are not allowed." );
+        return responseValue;
+      }
+
       try {
         InputStream fileStream = this.createInputStream();
         FormDataMultiPart part = new FormDataMultiPart()
@@ -262,7 +268,6 @@ public class PublishDialog extends TitleAreaDialog {
 
         WebResource resource = client.resource( serverURL );
 
-
         ClientResponse resp = resource
             .type( MediaType.MULTIPART_FORM_DATA_TYPE )
             .put( ClientResponse.class, part );
@@ -272,8 +277,6 @@ public class PublishDialog extends TitleAreaDialog {
           status = String.valueOf( resp.getStatus() );
           message = resp.getEntity( String.class );
         }
-
-        System.out.println( "Return Status" + status );
         responseValue = displayMessageBox( status, message );
       } catch ( Exception e ) {
         e.printStackTrace();
@@ -300,7 +303,9 @@ public class PublishDialog extends TitleAreaDialog {
       } else if ( PUBLISH_PROHIBITED_SYMBOLS_ERROR.equals( statusCode ) && message != null && message.length() > 0 ) {
         mb.setText( Messages.getString( "PublishDialog.PUBLISH_FAILED_DIALOG_TITLE" ) ); //$NON-NLS-1$
         mb.setMessage( message );
-        response = false;
+        overwriteInRepository = false;
+        mb.open();
+        return false;
       } else if ( PUBLISH_EMPTY_FIELDS_ERROR.equals( statusCode ) ) {
         if ( serverURLIsEmpty() ) {
           mb.setText( Messages.getString( "PublishDialog.PUBLISH_FAILED_DIALOG_TITLE" ) );
@@ -557,6 +562,11 @@ public class PublishDialog extends TitleAreaDialog {
   private boolean domainNameIsEmpty() {
     userDomain = domainName.getText();
     return StringUtils.isEmpty( userDomain );
+  }
+
+  private boolean domainNameContainsReservedChars() {
+    userDomain = domainName.getText();
+    return userDomain.contains( "\\" ) || userDomain.contains( "/" );
   }
 
   private void cancel() {
