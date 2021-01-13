@@ -5,30 +5,30 @@
   <parent>
     <groupId>pentaho</groupId>
     <artifactId>pentaho-metadata-editor-assemblies</artifactId>
-    <version>9.2.0.0-SNAPSHOT</version>
+    <version>9.2.0.0-178</version>
   </parent>
   <groupId>pentaho</groupId>
   <artifactId>pme-ce</artifactId>
-  <version>9.2.0.0-SNAPSHOT</version>
+  <version>9.2.0.0-178</version>
   <packaging>pom</packaging>
   <properties>
     <h2.version>1.0.20070617</h2.version>
     <hsqldb.version>2.3.2</hsqldb.version>
     <org.eclipse.swt.gtk.linux.version>4.3.2</org.eclipse.swt.gtk.linux.version>
 
-    <big-data-plugin.version>9.2.0.0-SNAPSHOT</big-data-plugin.version>
-    <pentaho-cassandra-plugin.version>9.2.0.0-SNAPSHOT</pentaho-cassandra-plugin.version>
-    <pdi-dataservice-client-plugin.version>9.2.0.0-SNAPSHOT</pdi-dataservice-client-plugin.version>
-    <pentaho-metadata.version>9.2.0.0-SNAPSHOT</pentaho-metadata.version>
-    <pentaho-launcher.version>9.2.0.0-SNAPSHOT</pentaho-launcher.version>
-    <oss-licenses.version>9.2.0.0-SNAPSHOT</oss-licenses.version>
+    <big-data-plugin.version>9.2.0.0-178</big-data-plugin.version>
+    <pentaho-cassandra-plugin.version>9.2.0.0-178</pentaho-cassandra-plugin.version>
+    <pdi-dataservice-client-plugin.version>9.2.0.0-178</pdi-dataservice-client-plugin.version>
+    <pentaho-metadata.version>9.2.0.0-178</pentaho-metadata.version>
+    <pentaho-launcher.version>9.2.0.0-178</pentaho-launcher.version>
+    <oss-licenses.version>9.2.0.0-178</oss-licenses.version>
 
-    <pentaho-hadoop-shims.version>9.2.0.0-SNAPSHOT</pentaho-hadoop-shims.version>
+    <pentaho-hadoop-shims.version>9.2.2021.05.00-178</pentaho-hadoop-shims.version>
     <!-- Pentaho drivers kar file dependencies versions -->
-    <pentaho-hadoop-shims-cdh61.version>9.2.0.0-SNAPSHOT</pentaho-hadoop-shims-cdh61.version>
-    <pentaho-hadoop-shims-hdp30.version>9.2.0.0-SNAPSHOT</pentaho-hadoop-shims-hdp30.version>
-    <pentaho-hadoop-shims-emr521.version>9.2.0.0-SNAPSHOT</pentaho-hadoop-shims-emr521.version>
-    <pentaho-hadoop-shims-dataproc1421.version>9.2.0.0-SNAPSHOT</pentaho-hadoop-shims-dataproc1421.version>
+    <pentaho-hadoop-shims-cdh61.version>9.2.2021.05.00-178</pentaho-hadoop-shims-cdh61.version>
+    <pentaho-hadoop-shims-hdp30.version>9.2.2021.05.00-178</pentaho-hadoop-shims-hdp30.version>
+    <pentaho-hadoop-shims-emr521.version>9.2.2021.05.00-178</pentaho-hadoop-shims-emr521.version>
+    <pentaho-hadoop-shims-dataproc1421.version>9.2.2021.05.00-178</pentaho-hadoop-shims-dataproc1421.version>
   </properties>
   <dependencies>
     <dependency>
