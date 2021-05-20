@@ -60,7 +60,6 @@
     <org.eclipse.swt.version>4.6</org.eclipse.swt.version>
     <pentaho-cwm.version>1.5.4</pentaho-cwm.version>
     <scannotation.version>1.0.2</scannotation.version>
-    <simple-jndi.version>1.0.3</simple-jndi.version>
     <snmp4j.version>1.9.3d</snmp4j.version>
     <trilead-ssh2.version>1.0.0-build215</trilead-ssh2.version>
 
