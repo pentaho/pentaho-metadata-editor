@@ -208,6 +208,12 @@
       <scope>runtime</scope>
       <type>zip</type>
     </dependency>
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>${jakarta-annotaion-api.version}</version>
+      <scope>runtime</scope>
+    </dependency>
     <!-- Use log4j implementation with SLF4J -->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -273,7 +279,7 @@
             </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/libs/lib</outputDirectory>
-              <includeArtifactIds>pentaho-metadata-editor</includeArtifactIds>
+              <includeArtifactIds>pentaho-metadata-editor,jakarta.annotation-api</includeArtifactIds>
             </configuration>
           </execution>
           <execution>
