@@ -54,9 +54,11 @@ if exist java.exe goto USEJAVAFROMPATH
 goto USEJAVAFROMPATH
 :USEJAVAFROMPENTAHOJAVAHOME
 FOR /F %%a IN ('.\java.exe -version 2^>^&1^|%windir%\system32\find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)
+FOR /F %%a IN ('.\java.exe -version 2^>^&1^|%windir%\system32\find /C "version ""1.8."') DO (SET /a ISJAVA8=%%a)
 GOTO CHECK32VS64BITJAVA
 :USEJAVAFROMPATH
 FOR /F %%a IN ('java -version 2^>^&1^|find /C "64-Bit"') DO (SET /a IS64BITJAVA=%%a)
+FOR /F %%a IN ('java -version 2^>^&1^|%windir%\system32\find /C "version ""1.8."') DO (SET /a ISJAVA8=%%a)
 GOTO CHECK32VS64BITJAVA
 :CHECK32VS64BITJAVA
 
@@ -98,7 +100,12 @@ REM ******************************************************************
 
 if "%PENTAHO_JAVA_OPTIONS%"=="" set PENTAHO_JAVA_OPTIONS="-Xms1024m" "-Xmx2048m"
 
-set OPT=%PENTAHO_JAVA_OPTIONS% "-Djava.library.path=%LIBSPATH%" 
+set OPT=%PENTAHO_JAVA_OPTIONS% "-Djava.library.path=%LIBSPATH%"
+
+IF %ISJAVA8% == 1 GOTO :SKIPLOCALE
+set OPT=%OPT% "-Djava.locale.providers=COMPAT,SPI"
+
+:SKIPLOCALE
 rem **** USE THIS LINE IF REMOTE DEBUGGING (port 5105) IS REQUIRED***
 REM set OPT=%OPT% -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5105
 
