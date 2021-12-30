@@ -17,9 +17,16 @@
 
 package org.pentaho.pms.ui;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.vfs2.FileObject;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Appender;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -34,9 +41,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.pentaho.di.core.logging.LogWriter;
+import org.pentaho.di.core.exception.KettleFileException;
+import org.pentaho.di.core.logging.log4j.Log4jKettleLayout;
+import org.pentaho.di.core.vfs.KettleVFS;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.spoon.dialog.LogSettingsDialog;
+import org.pentaho.platform.api.util.LogUtil;
 import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.ui.util.Const;
 import org.pentaho.pms.ui.util.GUIResource;
@@ -46,8 +56,7 @@ public class MetaEditorLog extends Composite
 	private PropsUI props;
 	private Shell shell;
 	private Display display;
-	private LogWriter log;
-	
+	private FileObject file;
 	private Text   wText;
 	private Button wRefresh;
 	private Button wClear;
@@ -57,17 +66,25 @@ public class MetaEditorLog extends Composite
 	
 	private SelectionListener lsRefresh, lsClear, lsLog;
 	private StringBuffer message;
-
+	private Appender appender;
 	private InputStream in;
 
 	public MetaEditorLog(Composite parent, int style, String fname)
 	{
 		super(parent, style);
 		shell=parent.getShell();
-		log=LogWriter.getInstance();
 		display=shell.getDisplay();
         props = PropsUI.getInstance();
-		
+
+		try {
+			file = KettleVFS.createTempFile( fname, ".log", System.getProperty( "java.io.tmpdir" ) );
+			appender =  LogUtil.makeAppender( fname,
+				new OutputStreamWriter( KettleVFS.getOutputStream( file, true ),
+						Charset.forName( "utf-8" ) ), new Log4jKettleLayout( true ) );
+			LogUtil.addAppender( appender, LogManager.getLogger(), Level.ALL );
+		} catch (KettleFileException | IOException e) {
+			e.printStackTrace();
+		}
 		FormLayout formLayout = new FormLayout ();
 		formLayout.marginWidth  = Const.FORM_MARGIN;
 		formLayout.marginHeight = Const.FORM_MARGIN;
@@ -116,7 +133,7 @@ public class MetaEditorLog extends Composite
 
 		try
 		{
-			in = log.getFileInputStream();
+			in = KettleVFS.getFileInputStream(file);
 		}
 		catch(Exception e)
 		{
