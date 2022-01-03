@@ -80,7 +80,7 @@ public class MetaEditorLog extends Composite
 			file = KettleVFS.createTempFile( fname, ".log", System.getProperty( "java.io.tmpdir" ) );
 			appender =  LogUtil.makeAppender( fname,
 				new OutputStreamWriter( KettleVFS.getOutputStream( file, true ),
-						Charset.forName( "utf-8" ) ), new Log4jKettleLayout( true ) );
+						Charset.forName( "utf-8" ) ), new Log4jKettleLayout( Charset.forName( "utf-8" ), true ) );
 			LogUtil.addAppender( appender, LogManager.getLogger(), Level.ALL );
 		} catch (KettleFileException | IOException e) {
 			e.printStackTrace();
