@@ -75,10 +75,9 @@ public class MetaEditorLog extends Composite
 		shell=parent.getShell();
 		display=shell.getDisplay();
         props = PropsUI.getInstance();
-
 		try {
-			file = KettleVFS.createTempFile( fname, ".log", System.getProperty( "java.io.tmpdir" ) );
-			appender =  LogUtil.makeAppender( fname,
+			file = KettleVFS.createTempFile( "MetaEditor", ".log", System.getProperty( "java.io.tmpdir" ) );
+			appender =  LogUtil.makeAppender( "MetaEditorLog",
 				new OutputStreamWriter( KettleVFS.getOutputStream( file, true ),
 						Charset.forName( "utf-8" ) ), new Log4jKettleLayout( Charset.forName( "utf-8" ), true ) );
 			LogUtil.addAppender( appender, LogManager.getLogger(), Level.ALL );
