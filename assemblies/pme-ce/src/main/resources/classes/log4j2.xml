@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <Configuration status="WARN">
         <Appenders>
-            <RollingFile name="FILE" fileName="logs/pme.log" filePattern="pme.log.%i" append="true">
+            <RollingFile name="FILE" fileName="logs/pme.log" filePattern="logs/pme.log.%i" append="false">
                 <PatternLayout pattern="%d %-5p [%c] %m%n"/>
                 <SizeBasedTriggeringPolicy size="500KB" />
                 <DefaultRolloverStrategy max="1" fileIndex="min"/>
