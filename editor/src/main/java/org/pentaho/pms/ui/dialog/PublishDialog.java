@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.core.dialog.ErrorDialog;
 import org.pentaho.di.ui.core.gui.WindowProperty;
@@ -74,17 +73,12 @@ public class PublishDialog extends TitleAreaDialog {
   protected static final String PUBLISH_PROHIBITED_SYMBOLS_ERROR = "10";
   protected static final String PUBLISH_EMPTY_FIELDS_ERROR = "11";
   private SchemaMeta schemaMeta;
-
-  private LogWriter log;
   private PropsUI props;
-
   private String serverURL;
   private String userId;
   private String userPassword;
-
   private Combo tServerURL;
   private Combo tMdFileName;
-
   private Text tUserId;
   private Text tUserPassword;
   private Text domainName;
@@ -102,7 +96,6 @@ public class PublishDialog extends TitleAreaDialog {
     super( parent );
 
     this.schemaMeta = schemaMeta;
-    log = LogWriter.getInstance();
     props = PropsUI.getInstance();
   }
 

@@ -12,14 +12,22 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 * See the GNU Lesser General Public License for more details.
 *
-* Copyright (c) 2002-2017 Hitachi Vantara..  All rights reserved.
+* Copyright (c) 2002-2021 Hitachi Vantara..  All rights reserved.
 */
 
 package org.pentaho.pms.ui;
-import java.io.InputStream;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -34,9 +42,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.pentaho.di.core.logging.LogWriter;
+import org.pentaho.di.core.logging.log4j.Log4jKettleLayout;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.spoon.dialog.LogSettingsDialog;
+import org.pentaho.platform.api.util.LogUtil;
 import org.pentaho.pms.ui.locale.Messages;
 import org.pentaho.pms.ui.util.Const;
 import org.pentaho.pms.ui.util.GUIResource;
@@ -46,8 +55,6 @@ public class MetaEditorLog extends Composite
 	private PropsUI props;
 	private Shell shell;
 	private Display display;
-	private LogWriter log;
-	
 	private Text   wText;
 	private Button wRefresh;
 	private Button wClear;
@@ -56,21 +63,31 @@ public class MetaEditorLog extends Composite
 	private FormData fdText, fdRefresh, fdClear, fdLog; 
 	
 	private SelectionListener lsRefresh, lsClear, lsLog;
-	private StringBuffer message;
-
-	private InputStream in;
+	private Appender appender;
+	private StringWriter writer;
 
 	public MetaEditorLog(Composite parent, int style, String fname)
 	{
-		super(parent, style);
-		shell=parent.getShell();
-		log=LogWriter.getInstance();
-		display=shell.getDisplay();
-        props = PropsUI.getInstance();
-		
-		FormLayout formLayout = new FormLayout ();
-		formLayout.marginWidth  = Const.FORM_MARGIN;
-		formLayout.marginHeight = Const.FORM_MARGIN;
+    super( parent, style );
+    shell = parent.getShell();
+    display = shell.getDisplay();
+    props = PropsUI.getInstance();
+    writer = new StringWriter();
+    
+    // Create an appender to capture logging events from org.pentaho.di and display in the Log View tab
+    Logger logger = LogManager.getLogger( "org.pentaho.di" );
+    appender =
+        LogUtil.makeAppender( "MetaEditorLog", writer, new Log4jKettleLayout( Charset.forName( "utf-8" ), true ) );
+    LogUtil.addAppender( appender, logger, null );
+    LogUtil.setLevel( logger, Level.ALL );
+    LoggerContext ctx = (LoggerContext) LogManager.getContext( false );
+    Configuration config = ctx.getConfiguration();
+    LoggerConfig loggerConfig = config.getLoggerConfig( logger.getName() );
+    loggerConfig.setAdditive( false );
+    
+    FormLayout formLayout = new FormLayout();
+    formLayout.marginWidth = Const.FORM_MARGIN;
+    formLayout.marginHeight = Const.FORM_MARGIN;
 		
 		setLayout(formLayout);
 		
@@ -114,15 +131,6 @@ public class MetaEditorLog extends Composite
 
 		pack();
 
-		try
-		{
-			in = log.getFileInputStream();
-		}
-		catch(Exception e)
-		{
-		  // Do nothing. This error will be reported in the readLog() method
-		}
-		
 		lsRefresh = new SelectionAdapter() 
 		{
 			public void widgetSelected(SelectionEvent e) 
@@ -182,39 +190,16 @@ public class MetaEditorLog extends Composite
 		);
 	}
 	
-	public void readLog()
-	{
-		int i, n;
-
-		if (message==null)  message = new StringBuffer(); else message.setLength(0);
-		if (in == null) {
-		  message.append(Messages.getString("MetaEditorLog.DEBUG_CANT_CREATE_CONNECTION"));
-		} else {
-	    try
-	    { 
-	      n = in.available();
-	          
-	      if (n>0)
-	      {
-	        byte buffer[] = new byte[n];
-	        int c = in.read(buffer, 0, n);
-	        for (i=0;i<c;i++) message.append((char)buffer[i]);
-	      }
-	            
-	    }
-	    catch(Exception ex)
-	    {
-	      message.append(ex.toString());
-	    }
-		}
-
-		if (!wText.isDisposed() && message.length()>0) 
-		{
-			wText.setSelection(wText.getText().length());
-			wText.clearSelection();
-			wText.insert(message.toString());
-		} 
-	}
+  public void readLog()
+  {
+    StringBuffer buffer = writer.getBuffer();
+    if ( !wText.isDisposed() && buffer.length() > 0 ) {
+      wText.setSelection( wText.getText().length() );
+      wText.clearSelection();
+      wText.insert( buffer.toString() );
+    }
+    buffer.setLength( 0 );
+  }
 	
 	private void clearLog()
 	{
