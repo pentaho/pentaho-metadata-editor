@@ -234,17 +234,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.pentaho.di.plugins</groupId>
-      <artifactId>kettle-log4j-core</artifactId>
-      <version>${pdi.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>org.pentaho.reporting.library</groupId>
       <artifactId>libformula</artifactId>
       <version>${pentaho-reporting.version}</version>

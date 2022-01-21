@@ -87,7 +87,6 @@ import org.pentaho.di.core.gui.Point;
 import org.pentaho.di.core.logging.LogChannel;
 import org.pentaho.di.core.logging.LogChannelInterface;
 import org.pentaho.di.core.logging.LogLevel;
-import org.pentaho.di.core.logging.LogWriter;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.core.row.ValueMetaInterface;
 import org.pentaho.di.ui.core.PrintSpool;
@@ -3678,7 +3677,6 @@ public class MetaEditor implements SelectionListener {
       .setProperty( "java.naming.factory.initial", "org.osjava.sj.SimpleContextFactory" ); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty( "org.osjava.sj.root", "simple-jndi" ); //$NON-NLS-1$ //$NON-NLS-2$
     System.setProperty( "org.osjava.sj.delimiter", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
-    LogWriter logwriter = LogWriter.getInstance( Const.META_EDITOR_LOG_FILE, false );
 
     LogChannel log = new LogChannel( APPLICATION_NAME );
     Display.setAppName( APPLICATION_NAME );
@@ -3746,7 +3744,6 @@ public class MetaEditor implements SelectionListener {
     win.dispose();
 
     // Close the logfile...
-    logwriter.close();
     System.exit( 0 );
   }
 
