@@ -13,9 +13,9 @@
             </Console>
         </Appenders>
         <Loggers>
-            <Logger name="org.pentaho.platform.osgi" additivity="false" level="INFO"/>
-            <Logger name="org.pentaho.platform.engine.core.system.status" additivity="false" level="INFO"/>
-            <Logger name="org.pentaho.hadoop.shim.DriverManager" additivity="false" level="INFO"/>
+            <Logger name="org.pentaho.platform.osgi" level="INFO"/>
+            <Logger name="org.pentaho.platform.engine.core.system.status" level="INFO"/>
+            <Logger name="org.pentaho.hadoop.shim.DriverManager" level="INFO"/>
             <Root level="info">
                 <AppenderRef ref="FILE"/>
                 <AppenderRef ref="CONSOLE"/>
