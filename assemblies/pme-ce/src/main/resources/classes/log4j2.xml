@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <Configuration status="WARN">
         <Appenders>
-            <RollingFile name="FILE" fileName="logs/pme.log" filePattern="logs/pme.log.%i" append="false">
+            <RollingFile name="FILE" fileName="logs/pme.log" filePattern="logs/pme.log.%i">
                 <PatternLayout pattern="%d %-5p [%c] %m%n"/>
                 <SizeBasedTriggeringPolicy size="500KB" />
-                <DefaultRolloverStrategy max="1" fileIndex="min"/>
+                <DefaultRolloverStrategy max="1"/>
             </RollingFile>
             <Console name="CONSOLE">
+                <ThresholdFilter level="INFO"/>
                 <PatternLayout>
                     <Pattern>%d{ABSOLUTE} %-5p [%c{1}] %m%n</Pattern>
                 </PatternLayout>
@@ -16,7 +17,7 @@
             <Logger name="org.pentaho.platform.osgi" level="INFO"/>
             <Logger name="org.pentaho.platform.engine.core.system.status" level="INFO"/>
             <Logger name="org.pentaho.hadoop.shim.DriverManager" level="INFO"/>
-            <Root level="info">
+            <Root level="ERROR">
                 <AppenderRef ref="FILE"/>
                 <AppenderRef ref="CONSOLE"/>
             </Root>
