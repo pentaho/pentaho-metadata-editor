@@ -15,7 +15,6 @@
     <h2.version>1.0.20070617</h2.version>
     <hsqldb.version>2.3.2</hsqldb.version>
 
-    <big-data-plugin.version>9.3.0.0-SNAPSHOT</big-data-plugin.version>
     <pentaho-cassandra-plugin.version>9.3.0.0-SNAPSHOT</pentaho-cassandra-plugin.version>
     <pdi-dataservice-client-plugin.version>9.3.0.0-SNAPSHOT</pdi-dataservice-client-plugin.version>
     <pentaho-metadata.version>9.3.0.0-SNAPSHOT</pentaho-metadata.version>
@@ -23,14 +22,6 @@
     <oss-licenses.version>9.3.0.0-SNAPSHOT</oss-licenses.version>
 
     <pentaho-hadoop-shims.version>9.3.0.0-SNAPSHOT</pentaho-hadoop-shims.version>
-    <!-- Pentaho drivers kar file dependencies versions -->
-    <pentaho-hadoop-shims-cdh61.version>9.3.0.0-SNAPSHOT</pentaho-hadoop-shims-cdh61.version>
-    <pentaho-hadoop-shims-hdp30.version>9.3.0.0-SNAPSHOT</pentaho-hadoop-shims-hdp30.version>
-    <pentaho-hadoop-shims-emr521.version>9.3.0.0-SNAPSHOT</pentaho-hadoop-shims-emr521.version>
-    <pentaho-hadoop-shims-dataproc1421.version>9.3.0.0-SNAPSHOT</pentaho-hadoop-shims-dataproc1421.version>
-    <pentaho-hadoop-shims-cdpdc71.version>9.3.0.0-SNAPSHOT</pentaho-hadoop-shims-cdpdc71.version>
-    <pentaho-hadoop-shims-mapr61.version>9.3.0.0-SNAPSHOT</pentaho-hadoop-shims-mapr61.version>
-    <pentaho-hadoop-shims-hdi40.version>9.3.0.0-SNAPSHOT</pentaho-hadoop-shims-hdi40.version>
   </properties>
   <dependencies>
     <dependency>
@@ -46,92 +37,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!-- START Pentaho drivers kar file dependencies -->
-    <dependency>
-      <groupId>org.pentaho.hadoop.shims</groupId>
-      <artifactId>pentaho-hadoop-shims-cdh61-kar</artifactId>
-      <version>${pentaho-hadoop-shims-cdh61.version}</version>
-      <type>kar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.hadoop.shims</groupId>
-      <artifactId>pentaho-hadoop-shims-hdp30-kar</artifactId>
-      <version>${pentaho-hadoop-shims-hdp30.version}</version>
-      <type>kar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.hadoop.shims</groupId>
-      <artifactId>pentaho-hadoop-shims-emr521-kar</artifactId>
-      <version>${pentaho-hadoop-shims-emr521.version}</version>
-      <type>kar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.hadoop.shims</groupId>
-      <artifactId>pentaho-hadoop-shims-dataproc1421-kar</artifactId>
-      <version>${pentaho-hadoop-shims-dataproc1421.version}</version>
-      <type>kar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.hadoop.shims</groupId>
-      <artifactId>pentaho-hadoop-shims-cdpdc71-kar</artifactId>
-      <version>${pentaho-hadoop-shims-cdpdc71.version}</version>
-      <type>kar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.hadoop.shims</groupId>
-      <artifactId>pentaho-hadoop-shims-mapr61-kar</artifactId>
-      <version>${pentaho-hadoop-shims-mapr61.version}</version>
-      <type>kar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.pentaho.hadoop.shims</groupId>
-      <artifactId>pentaho-hadoop-shims-hdi40-kar</artifactId>
-      <version>${pentaho-hadoop-shims-hdi40.version}</version>
-      <type>kar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <!-- END Pentaho drivers kar file dependencies -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
@@ -149,19 +54,6 @@
       <artifactId>hsqldb</artifactId>
       <version>${hsqldb.version}</version>
       <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>pentaho</groupId>
-      <artifactId>pentaho-big-data-plugin</artifactId>
-      <version>${big-data-plugin.version}</version>
-      <type>zip</type>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.pentaho</groupId>
@@ -375,13 +267,6 @@
             </goals>
             <configuration>
               <artifactItems>
-                <artifactItem>
-                  <groupId>pentaho</groupId>
-                  <artifactId>pentaho-big-data-plugin</artifactId>
-                  <version>${big-data-plugin.version}</version>
-                  <outputDirectory>${project.build.directory}/plugins</outputDirectory>
-                  <type>zip</type>
-                </artifactItem>
                 <artifactItem>
                   <groupId>org.pentaho</groupId>
                   <artifactId>pentaho-cassandra-plugin-package</artifactId>
