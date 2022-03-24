@@ -124,7 +124,7 @@ OPT="-Xms1024m -Xmx2048m -Djava.library.path=$LIBPATH $OPT"
 
 if $($_PENTAHO_JAVA -version 2>&1 | grep "version \"11\..*" > /dev/null )
 then
-  OPT="$OPT -Djava.locale.providers=COMPAT,SPI"
+  OPT="$OPT --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/sun.net.www.protocol.jar=ALL-UNNAMED -Djava.locale.providers=COMPAT,SPI"
 fi
 
 # ***************
