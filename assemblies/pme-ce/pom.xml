@@ -25,19 +25,6 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>org.pentaho</groupId>
-      <artifactId>shim-api-core</artifactId>
-      <version>${pentaho-hadoop-shims.version}</version>
-      <type>jar</type>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>*</artifactId>
-          <groupId>*</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>${h2.version}</version>
@@ -117,39 +104,12 @@
       <version>${log4j.version}</version>
       <scope>runtime</scope>
     </dependency>
-
-    <!-- OSGi Dependencies -->
-    <!-- Because of: -->
-    <!-- pdi-osgi-bridge-core (KarafLifecycleListener and OSGIPluginRegistryExtension) -->
-    <dependency>
-       <groupId>org.osgi</groupId>
-       <artifactId>org.osgi.core</artifactId>
-       <scope>runtime</scope>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
-          <execution>
-            <id>unpack-karaf-assembly</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.hitachivantara.karaf.assemblies</groupId>
-                  <artifactId>pme</artifactId>
-                  <version>${pentaho-karaf.version}</version>
-                  <type>zip</type>
-                  <outputDirectory>${project.build.directory}/karaf</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
           <execution>
             <id>copy-launcher</id>
             <phase>prepare-package</phase>
@@ -287,6 +247,103 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>assembly_package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <desciptor>${basedir}/src/assemblies/${assemblyFile}</desciptor>
+              </descriptors>
+              <appendAssemblyId>${assembly_appendId}</appendAssemblyId>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>standard</id>
+      <activation>
+        <property>
+          <name>!no-osgi</name>
+        </property>
+      </activation>
+      <properties>
+        <assemblyFile>assembly.xml</assemblyFile>
+        <assembly_appendId>false</assembly_appendId>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.pentaho</groupId>
+          <artifactId>shim-api-core</artifactId>
+          <version>${pentaho-hadoop-shims.version}</version>
+          <type>jar</type>
+          <scope>runtime</scope>
+          <exclusions>
+            <exclusion>
+              <artifactId>*</artifactId>
+              <groupId>*</groupId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+
+        <!-- OSGi Dependencies -->
+        <!-- Because of: -->
+        <!-- pdi-osgi-bridge-core (KarafLifecycleListener and OSGIPluginRegistryExtension) -->
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.core</artifactId>
+          <scope>runtime</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-karaf-assembly</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.hitachivantara.karaf.assemblies</groupId>
+                      <artifactId>pme</artifactId>
+                      <version>${pentaho-karaf.version}</version>
+                      <type>zip</type>
+                      <outputDirectory>${project.build.directory}/karaf</outputDirectory>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>no-osgi</id>
+      <activation>
+        <property>
+          <name>no-osgi</name>
+        </property>
+      </activation>
+      <properties>
+        <assemblyFile>assembly-no-osgi.xml</assemblyFile>
+        <assembly_appendId>true</assembly_appendId>
+      </properties>
+    </profile>
+  </profiles>
 </project>
