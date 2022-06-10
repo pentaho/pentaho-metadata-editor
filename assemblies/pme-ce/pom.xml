@@ -56,6 +56,43 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.pentaho.di.plugins</groupId>
+      <artifactId>pentaho-metastore-locator-plugin</artifactId>
+      <version>${pdi.version}</version>
+      <type>zip</type>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.pentaho.di.plugins</groupId>
+      <artifactId>pentaho-metastore-locator-api</artifactId>
+      <version>${pdi.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.pentaho.di.plugins</groupId>
+      <artifactId>pentaho-kettle-repository-locator-api</artifactId>
+      <version>${pdi.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>pentaho</groupId>
       <artifactId>pdi-dataservice-client-plugin</artifactId>
       <version>${pdi-dataservice-client-plugin.version}</version>
@@ -136,7 +173,7 @@
             </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/libs/lib</outputDirectory>
-              <includeArtifactIds>pentaho-metadata-editor,jakarta.annotation-api</includeArtifactIds>
+              <includeArtifactIds>pentaho-metadata-editor,jakarta.annotation-api,pentaho-metastore-locator-api,pentaho-kettle-repository-locator-api</includeArtifactIds>
             </configuration>
           </execution>
           <execution>
@@ -231,6 +268,13 @@
                   <groupId>org.pentaho</groupId>
                   <artifactId>pentaho-cassandra-plugin-package</artifactId>
                   <version>${pentaho-cassandra-plugin.version}</version>
+                  <outputDirectory>${project.build.directory}/plugins</outputDirectory>
+                  <type>zip</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.pentaho.di.plugins</groupId>
+                  <artifactId>pentaho-metastore-locator-plugin</artifactId>
+                  <version>${pdi.version}</version>
                   <outputDirectory>${project.build.directory}/plugins</outputDirectory>
                   <type>zip</type>
                 </artifactItem>
