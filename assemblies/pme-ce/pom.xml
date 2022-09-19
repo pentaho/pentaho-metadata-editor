@@ -417,11 +417,11 @@
                     import java.util.zip.ZipFile;
                     import java.util.zip.ZipInputStream;
                     import java.util.zip.ZipOutputStream;
-                    
+
                     import org.apache.commons.io.IOUtils;
 
-                    try {                    
-                    
+                    try {
+
                       File noOsgiZip = new File( "${project.build.directory}/${project.artifactId}-${project.version}.zip" );
                       if ( !noOsgiZip.exists() ) {
                         println("ERROR: ${project.build.directory}/${project.artifactId}-${project.version}.zip not found");
@@ -475,9 +475,16 @@
                         copyFile = false;
                         j++;
                       }
-                      ZipEntry readmeEntry = new ZipEntry( "README" );
+                      ZipEntry readmeEntry = new ZipEntry( "metadata-editor/HADOOP_ADDON_README" );
                       zipOutputStream.putNextEntry( readmeEntry );
                       IOUtils.copy( new FileInputStream( new File ( "${project.basedir}/src/main/docs/addon.README" ) ), zipOutputStream );
+                      ZipEntry batchFileEntry = new ZipEntry( "metadata-editor/uninstall-hadoop-addon.bat" );
+                      zipOutputStream.putNextEntry( batchFileEntry );
+                      IOUtils.copy( new FileInputStream( new File ( "${project.basedir}/src/main/resources-addon/uninstall-hadoop-addon.bat" ) ), zipOutputStream );
+                      ZipEntry shellFileEntry = new ZipEntry( "metadata-editor/uninstall-hadoop-addon.sh" );
+                      zipOutputStream.putNextEntry( shellFileEntry );
+                      IOUtils.copy( new FileInputStream( new File ( "${project.basedir}/src/main/resources-addon/uninstall-hadoop-addon.sh" ) ), zipOutputStream );
+
                       zipOutputStream.closeEntry();
 
                       println( "osgi: " + j + " files");
