@@ -5,23 +5,23 @@
   <parent>
     <groupId>pentaho</groupId>
     <artifactId>pentaho-metadata-editor-assemblies</artifactId>
-    <version>9.4.0.0-SNAPSHOT</version>
+    <version>9.4.0.0-266</version>
   </parent>
   <groupId>pentaho</groupId>
   <artifactId>pme-ce</artifactId>
-  <version>9.4.0.0-SNAPSHOT</version>
+  <version>9.4.0.0-266</version>
   <packaging>pom</packaging>
   <properties>
     <h2.version>1.0.20070617</h2.version>
     <hsqldb.version>2.3.2</hsqldb.version>
 
-    <pentaho-cassandra-plugin.version>9.4.0.0-SNAPSHOT</pentaho-cassandra-plugin.version>
-    <pdi-dataservice-client-plugin.version>9.4.0.0-SNAPSHOT</pdi-dataservice-client-plugin.version>
-    <pentaho-metadata.version>9.4.0.0-SNAPSHOT</pentaho-metadata.version>
-    <pentaho-launcher.version>9.4.0.0-SNAPSHOT</pentaho-launcher.version>
-    <oss-licenses.version>9.4.0.0-SNAPSHOT</oss-licenses.version>
+    <pentaho-cassandra-plugin.version>9.4.0.0-266</pentaho-cassandra-plugin.version>
+    <pdi-dataservice-client-plugin.version>9.4.0.0-266</pdi-dataservice-client-plugin.version>
+    <pentaho-metadata.version>9.4.0.0-266</pentaho-metadata.version>
+    <pentaho-launcher.version>9.4.0.0-266</pentaho-launcher.version>
+    <oss-licenses.version>9.4.0.0-266</oss-licenses.version>
 
-    <pentaho-hadoop-shims.version>9.4.0.0-SNAPSHOT</pentaho-hadoop-shims.version>
+    <pentaho-hadoop-shims.version>9.4.2022.03.00-266</pentaho-hadoop-shims.version>
   </properties>
   <dependencies>
     <dependency>
