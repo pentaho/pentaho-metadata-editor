@@ -57,7 +57,7 @@ public class TreeContentProvider implements ITreeContentProvider, ITreeNodeChang
       if (!parent.getChildren().contains(child)){
         parent.addChild(child);
       }else{
-        if (viewer != null)
+        if (viewer != null && !viewer.isBusy())
           viewer.refresh(parent,true);        
       }
     }
