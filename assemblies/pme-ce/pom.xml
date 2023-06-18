@@ -5,25 +5,25 @@
   <parent>
     <groupId>pentaho</groupId>
     <artifactId>pentaho-metadata-editor-assemblies</artifactId>
-    <version>9.6.0.0-SNAPSHOT</version>
+    <version>9.6.0.0-62</version>
   </parent>
   <groupId>pentaho</groupId>
   <artifactId>pme-ce</artifactId>
-  <version>9.6.0.0-SNAPSHOT</version>
+  <version>9.6.0.0-62</version>
   <packaging>pom</packaging>
   <properties>
     <h2.version>1.0.20070617</h2.version>
     <hsqldb.version>2.3.2</hsqldb.version>
 
-    <pentaho-cassandra-plugin.version>9.6.0.0-SNAPSHOT</pentaho-cassandra-plugin.version>
-    <pdi-dataservice-client-plugin.version>9.6.0.0-SNAPSHOT</pdi-dataservice-client-plugin.version>
-    <pentaho-metadata.version>9.6.0.0-SNAPSHOT</pentaho-metadata.version>
-    <pentaho-launcher.version>9.6.0.0-SNAPSHOT</pentaho-launcher.version>
-    <oss-licenses.version>9.6.0.0-SNAPSHOT</oss-licenses.version>
+    <pentaho-cassandra-plugin.version>9.6.0.0-62</pentaho-cassandra-plugin.version>
+    <pdi-dataservice-client-plugin.version>9.6.0.0-62</pdi-dataservice-client-plugin.version>
+    <pentaho-metadata.version>9.6.0.0-62</pentaho-metadata.version>
+    <pentaho-launcher.version>9.6.0.0-62</pentaho-launcher.version>
+    <oss-licenses.version>9.6.0.0-62</oss-licenses.version>
     <xml-graphics-common.version>2.2</xml-graphics-common.version>
-    <commons-database.version>9.6.0.0-SNAPSHOT</commons-database.version>
+    <commons-database.version>9.6.0.0-62</commons-database.version>
 
-    <pentaho-hadoop-shims.version>9.6.0.0-SNAPSHOT</pentaho-hadoop-shims.version>
+    <pentaho-hadoop-shims.version>9.6.2023.04.00-62</pentaho-hadoop-shims.version>
   </properties>
   <dependencies>
     <dependency>
