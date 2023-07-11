@@ -41,7 +41,6 @@
     <javadbf.version>0.4.0</javadbf.version>
     <javassist.version>3.20.0-GA</javassist.version>
     <jface.version>3.22.0</jface.version>
-    <js.version>1.7R3</js.version>
     <jsch.version>0.1.54</jsch.version>
     <jsr311-api.version>1.1.1</jsr311-api.version>
     <jug-lgpl.version>2.0.0</jug-lgpl.version>
@@ -714,9 +713,8 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>rhino</groupId>
-      <artifactId>js</artifactId>
-      <version>${js.version}</version>
+      <groupId>org.mozilla</groupId>
+      <artifactId>rhino</artifactId>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
