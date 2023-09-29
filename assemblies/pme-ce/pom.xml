@@ -20,7 +20,7 @@
     <pentaho-metadata.version>10.1.0.0-SNAPSHOT</pentaho-metadata.version>
     <pentaho-launcher.version>10.1.0.0-SNAPSHOT</pentaho-launcher.version>
     <oss-licenses.version>10.1.0.0-SNAPSHOT</oss-licenses.version>
-    <xml-graphics-common.version>2.2</xml-graphics-common.version>
+    <!--<xml-graphics-common.version>2.2</xml-graphics-common.version>-->
     <commons-database.version>10.1.0.0-SNAPSHOT</commons-database.version>
 
     <pentaho-hadoop-shims.version>10.1.0.0-SNAPSHOT</pentaho-hadoop-shims.version>
