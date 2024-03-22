@@ -43,7 +43,7 @@
     <jface.version>3.22.0</jface.version>
     <jsr311-api.version>1.1.1</jsr311-api.version>
     <jug-lgpl.version>2.0.0</jug-lgpl.version>
-    <junit.version>4.4</junit.version>
+    <junit.version>4.11</junit.version>
     <jxl.version>2.5.7</jxl.version>
     <license.header.file>license/templates/licenseHeader.txt</license.header.file>
     <license.inception.year>2002</license.inception.year>
@@ -51,7 +51,7 @@
     <livetribe-jsr223.version>2.0.6</livetribe-jsr223.version>
     <mail.version>1.6.1</mail.version>
     <mimepull.version>1.9.3</mimepull.version>
-    <mockito-all.version>1.8.0</mockito-all.version>
+    <mockito.version>5.10.0</mockito.version>
     <nbmdr.version>200507110943-custom</nbmdr.version>
     <net.sf.saxon.version>9.1.0.8</net.sf.saxon.version>
     <org.netbeans.version>200507110943</org.netbeans.version>
