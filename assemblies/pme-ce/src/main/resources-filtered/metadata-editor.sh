@@ -117,7 +117,6 @@ esac
 
 export LIBPATH
 
-
 # ******************************************************************
 # ** Set java runtime options                                     **
 # ** Change 2048m to higher values in case you run out of memory. **
@@ -125,10 +124,28 @@ export LIBPATH
 
 OPT="-Xms1024m -Xmx2048m -Djava.library.path=$LIBPATH $OPT"
 
-if $($_PENTAHO_JAVA -version 2>&1 | grep "version \"11\..*" > /dev/null )
-then
-  OPT="$OPT --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/sun.net.www.protocol.jar=ALL-UNNAMED -Djava.locale.providers=COMPAT,SPI"
-fi
+JAVA_ADD_OPENS=
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens=java.base/sun.net.www.protocol.jar=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens=java.base/java.lang=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens=java.base/java.io=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens=java.base/java.net=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens=java.base/java.security=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens=java.base/java.util=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.base/sun.net.www.protocol.file=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.base/sun.net.www.protocol.ftp=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.base/sun.net.www.protocol.http=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.base/sun.net.www.protocol.https=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.base/sun.reflect.misc=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.management/javax.management=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.management/javax.management.openmbean=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.naming/com.sun.jndi.ldap=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.base/java.math=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.base/java.lang.Object=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.base/sun.nio.ch=ALL-UNNAMED"
+JAVA_ADD_OPENS="$JAVA_ADD_OPENS --add-opens java.base/java.nio=ALL-UNNAMED"
+OPT="$OPT $JAVA_ADD_OPENS -Djava.locale.providers=COMPAT,SPI"
+
 
 # ***************
 # ** Run...    **
