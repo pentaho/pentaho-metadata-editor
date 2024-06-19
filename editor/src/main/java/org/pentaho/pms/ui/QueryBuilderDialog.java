@@ -56,6 +56,7 @@ import org.pentaho.di.core.variables.Variables;
 import org.pentaho.di.ui.core.dialog.EnterTextDialog;
 import org.pentaho.di.ui.core.dialog.ErrorDialog;
 import org.pentaho.di.ui.core.dialog.PreviewRowsDialog;
+import org.pentaho.platform.util.StringUtil;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.mql.MQLQuery;
 import org.pentaho.pms.mql.MQLQueryImpl;
@@ -420,7 +421,10 @@ public class QueryBuilderDialog extends Dialog {
       if (columnsMap != null){
         for (int i = 0; i < rm.size(); i++){
           ValueMetaInterface value = rm.getValueMeta(i);
-          value.setName((String)columnsMap.get(rm.getValueMeta(i).getName()));
+          String colName = (String)columnsMap.get(rm.getValueMeta(i).getName());
+          if(!StringUtil.isEmpty(colName)) {
+            value.setName(colName);
+          }
         }        
       }
       
