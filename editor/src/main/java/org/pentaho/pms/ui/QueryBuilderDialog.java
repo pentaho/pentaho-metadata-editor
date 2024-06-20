@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -420,7 +421,10 @@ public class QueryBuilderDialog extends Dialog {
       if (columnsMap != null){
         for (int i = 0; i < rm.size(); i++){
           ValueMetaInterface value = rm.getValueMeta(i);
-          value.setName((String)columnsMap.get(rm.getValueMeta(i).getName()));
+          String colName = (String)columnsMap.get(rm.getValueMeta(i).getName());
+          if(!StringUtils.isEmpty(colName)) {
+            value.setName(colName);
+          }
         }        
       }
       
