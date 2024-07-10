@@ -51,6 +51,7 @@ export UBUNTU_MENUPROXY=0
 # **************************************************
 
 BASEDIR=`dirname $0`
+CURRENTDIR="."
 cd $BASEDIR
 DIR=`pwd`
 cd -
@@ -70,8 +71,39 @@ setPentahoEnv
 
 case `uname -s` in 
   Darwin)
-	LIBPATH=$BASEDIR/../libswt/osx64/
-	OPT="-XstartOnFirstThread $OPT"
+    ARCH=`uname -m`
+	if [ -z "$IS_KITCHEN" ]; then
+		OPT="-XstartOnFirstThread $OPT"
+	fi
+	case $ARCH in
+		x86_64)
+			if $($_PENTAHO_JAVA -version 2>&1 | grep "64-Bit" > /dev/null )
+                            then
+			  LIBPATH=$CURRENTDIR/../libswt/osx64/:$CURRENTDIR/../native-lib/osx64/:$CURRENTDIR/native-lib/osx64/
+                            else
+			  LIBPATH=$CURRENTDIR/../libswt/osx/:$CURRENTDIR/../native-lib/osx/:$CURRENTDIR/native-lib/osx/
+                            fi
+			;;
+    arm64)
+        if $($_PENTAHO_JAVA -version 2>&1 | grep "version \"1\.8\..*" > /dev/null )
+                              then
+          echo "I'm sorry, this Mac platform [$ARCH] is not supported in Java 8"
+          exit
+                              else
+          LIBPATH=$CURRENTDIR/../libswt/osx64_aarch/:$CURRENTDIR/../native-lib/osx64_aarch/:$CURRENTDIR/native-lib/osx64_aarch/
+                              fi
+      ;;
+		i[3-6]86)
+			LIBPATH=$CURRENTDIR/../libswt/osx/:$CURRENTDIR/../native-lib/osx/:$CURRENTDIR/native-lib/osx/
+			;;
+
+		*)
+			echo "I'm sorry, this Mac platform [$ARCH] is not yet supported!"
+			echo "Please try starting using 'Data Integration 32-bit' or"
+			echo "'Data Integration 64-bit' as appropriate."
+			exit
+			;;
+	esac
 	;;
 
 
