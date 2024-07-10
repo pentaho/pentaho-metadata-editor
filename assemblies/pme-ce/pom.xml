@@ -234,6 +234,13 @@
                    <outputDirectory>${project.build.directory}/libs/libswt/osx64</outputDirectory>
                    <destFileName>swt.jar</destFileName>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>org.eclipse.platform</groupId>
+                  <artifactId>org.eclipse.swt.cocoa.macosx.aarch64</artifactId>
+                  <version>${org.eclipse.swt.cocoa.macosx.aarch64.version}</version>
+                  <outputDirectory>${project.build.directory}/libs/libswt/osx64_aarch</outputDirectory>
+                  <destFileName>swt.jar</destFileName>
+                </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
