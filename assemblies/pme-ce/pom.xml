@@ -356,7 +356,7 @@
         <!-- pdi-osgi-bridge-core (KarafLifecycleListener and OSGIPluginRegistryExtension) -->
         <dependency>
           <groupId>org.osgi</groupId>
-          <artifactId>org.osgi.core</artifactId>
+          <artifactId>osgi.core</artifactId>
           <scope>runtime</scope>
         </dependency>
       </dependencies>
