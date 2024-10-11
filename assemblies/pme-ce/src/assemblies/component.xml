@@ -35,9 +35,5 @@
       <directory>${project.build.directory}/plugins</directory>
       <outputDirectory>plugins</outputDirectory>
     </fileSet>
-    <fileSet>
-      <directory>${project.build.directory}/oss-licenses</directory>
-      <outputDirectory>.</outputDirectory>
-    </fileSet>
   </fileSets>
 </component>
