@@ -248,7 +248,7 @@ public class GUIResource
     
     private void loadImages()
     {
-        imageMetaSplash  = new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "splash_metadata_editor.png")); //$NON-NLS-1$
+        imageMetaSplash  = new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "aboutScreen.png")); //$NON-NLS-1$
         imageConnectionsParent  = new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "folder_connection.png")); //$NON-NLS-1$
         imageConnection  = new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "connection.png")); //$NON-NLS-1$
         imagePhysicalTable  = new Image(display, getClass().getResourceAsStream(Const.IMAGE_DIRECTORY + "connection_table.png")); //$NON-NLS-1$

@@ -17,7 +17,6 @@
     <pdi-dataservice-client-plugin.version>10.3.0.0-SNAPSHOT</pdi-dataservice-client-plugin.version>
     <pentaho-metadata.version>10.3.0.0-SNAPSHOT</pentaho-metadata.version>
     <pentaho-launcher.version>10.3.0.0-SNAPSHOT</pentaho-launcher.version>
-    <oss-licenses.version>10.3.0.0-SNAPSHOT</oss-licenses.version>
     <commons-database.version>10.3.0.0-SNAPSHOT</commons-database.version>
 
     <pentaho-hadoop-shims.version>10.3.0.0-SNAPSHOT</pentaho-hadoop-shims.version>
@@ -101,13 +100,6 @@
       <artifactId>pentaho-application-launcher</artifactId>
       <version>${pentaho-launcher.version}</version>
       <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>pentaho</groupId>
-      <artifactId>oss-licenses</artifactId>
-      <version>${oss-licenses.version}</version>
-      <scope>runtime</scope>
-      <type>zip</type>
     </dependency>
     <dependency>
       <groupId>jakarta.annotation</groupId>
@@ -274,14 +266,6 @@
                   <artifactId>pentaho-metastore-locator-plugin</artifactId>
                   <version>${pdi.version}</version>
                   <outputDirectory>${project.build.directory}/plugins</outputDirectory>
-                  <type>zip</type>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>pentaho</groupId>
-                  <artifactId>oss-licenses</artifactId>
-                  <version>${oss-licenses.version}</version>
-                  <includes>PentahoMetadata**</includes>
-                  <outputDirectory>${project.build.directory}/oss-licenses</outputDirectory>
                   <type>zip</type>
                 </artifactItem>
               </artifactItems>

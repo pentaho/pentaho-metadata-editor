@@ -159,6 +159,7 @@ import org.pentaho.pms.ui.tree.PhysicalTableTreeNode;
 import org.pentaho.pms.ui.tree.RelationshipTreeNode;
 import org.pentaho.pms.ui.tree.RelationshipsTreeNode;
 import org.pentaho.pms.ui.tree.SchemaMetaTreeNode;
+import org.pentaho.pms.ui.util.AboutDialog;
 import org.pentaho.pms.ui.util.Const;
 import org.pentaho.pms.ui.util.EnterOptionsDialog;
 import org.pentaho.pms.ui.util.GUIResource;
@@ -169,12 +170,10 @@ import org.pentaho.pms.util.ObjectAlreadyExistsException;
 import org.pentaho.pms.util.Settings;
 import org.pentaho.pms.util.UniqueArrayList;
 import org.pentaho.pms.util.UniqueList;
-import org.pentaho.pms.util.VersionHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -3074,33 +3073,12 @@ public class MetaEditor implements SelectionListener {
   }
 
   public void helpAbout() {
-    MessageBox mb = new MessageBox( shell, SWT.OK | SWT.ICON_INFORMATION | SWT.CENTER );
-
-    VersionHelper verHelper = new VersionHelper();
-    StringBuffer message = new StringBuffer();
-
-    message.append( verHelper.getVersionInformation( MetaEditor.class ) ).append( Const.CR )
-      .append( Const.CR ); //$NON-NLS-1$
-    // .append(Messages.getString("MetaEditor.USER_HELP_METADATA_EDITOR")).append(Const.VERSION).append(Const.CR)
-    // .append(Const.CR);
-    // //$NON-NLS-1$
-    message
-      .append(
-        Messages.getString( "MetaEditor.USER_HELP_PENTAHO_CORPORATION", "" + ( ( new Date() ).getYear() + 1900 ) ) )
-      .append( Const.CR ); //$NON-NLS-1$
-    message.append( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_URL" ) ).append( Const.CR ); //$NON-NLS-1$
-
-    message
-      .append( Messages
-        .getString( "MetaEditor.USER_HELP_PENTAHO_COPYRIGHT", "" + ( ( new Date() ).getYear() + 1900 ) ) ) //$NON-NLS-1$
-      .append( Const.CR ).append( Const.CR )
-      .append( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_MESSAGE" ) ) //$NON-NLS-1$
-      .append( Const.CR ).append( Const.CR )
-      .append( Messages.getString( "MetaEditor.USER_HELP_PENTAHO_MESSAGE2" ) ); //$NON-NLS-1$
-
-    mb.setMessage( message.toString() );
-    mb.setText( Messages.getString( "MetaEditor.USER_HELP_METADATA_EDITOR" ) ); //$NON-NLS-1$
-    mb.open();
+    try {
+      AboutDialog aboutDialog = new AboutDialog( this.shell );
+      aboutDialog.open();
+    } catch ( Exception e ) {
+      log.logError( "Error opening about dialog", e );
+    }
   }
 
   public void editUnselectAll() {
