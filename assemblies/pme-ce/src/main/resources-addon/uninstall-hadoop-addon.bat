@@ -32,7 +32,7 @@ if exist %CURRENTFOLDER%\drivers move %CURRENTFOLDER%\drivers %UNINSTALLEDFOLDER
 if exist %CURRENTFOLDER%\system move %CURRENTFOLDER%\system %UNINSTALLEDFOLDER%\system
 md %UNINSTALLEDFOLDER%\libext\pentaho
 move "%CURRENTFOLDER%\libext\pentaho\org.apache.karaf*.jar" %UNINSTALLEDFOLDER%\libext\pentaho\
-move "%CURRENTFOLDER%\libext\pentaho\org.osgi.core*.jar" %UNINSTALLEDFOLDER%\libext\pentaho\
+move "%CURRENTFOLDER%\libext\pentaho\osgi.core*.jar" %UNINSTALLEDFOLDER%\libext\pentaho\
 move "%CURRENTFOLDER%\libext\pentaho\pdi-osgi-bridge-core*.jar" %UNINSTALLEDFOLDER%\libext\pentaho\
 move "%CURRENTFOLDER%\libext\pentaho\pentaho-osgi-utils-api*.jar" %UNINSTALLEDFOLDER%\libext\pentaho\
 move "%CURRENTFOLDER%\libext\pentaho\pentaho-service-coordinator*.jar" %UNINSTALLEDFOLDER%\libext\pentaho\
