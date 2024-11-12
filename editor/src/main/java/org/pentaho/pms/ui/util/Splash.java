@@ -18,7 +18,9 @@
 package org.pentaho.pms.ui.util;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +53,8 @@ public class Splash {
   private static final Log logger = LogFactory.getLog( Splash.class );
 
   private static final String FONT_TYPE = "Helvetica";
+
+  private static final String LICENSE_FILE_PATH = "./LICENSE.TXT";
 
   private Shell shell;
   private Font verFont;
@@ -135,13 +139,13 @@ public class Splash {
       String line;
       try {
         BufferedReader reader =
-          new BufferedReader( new InputStreamReader( Splash.class.getClassLoader().getResourceAsStream(
-            "org/pentaho/pms/ui/dialog/license.txt" ) ) );
+          new BufferedReader( new FileReader( LICENSE_FILE_PATH ));
 
         while ( ( line = reader.readLine() ) != null ) {
           sb.append( line + System.getProperty( "line.separator" ) );
         }
-      } catch ( Exception ex ) {
+      } catch ( IOException ex ) {
+        sb.append( String.format( "Error reading license file from product directory: \"%s\"", LICENSE_FILE_PATH ) );
         logger.error( Messages.getString( "MetaEditor.USER_HELP_LICENSE_TEXT_NOT_FOUND" ), ex );
       }
       String licenseText = sb.toString();
@@ -197,7 +201,10 @@ public class Splash {
 
     shell.addDisposeListener( disposeEvent -> {
 
-      aboutScreenImage.dispose();
+      //dispose of the image only once the program is closed
+      if( ( (Shell) disposeEvent.widget ).getParent() == null ) {
+        aboutScreenImage.dispose();
+      }
       verFont.dispose();
       licFont.dispose();
 
