@@ -22,7 +22,7 @@ if [ -e $PWD/drivers ];then mv $PWD/drivers $INSTALLEDDIR/drivers ; fi
 if [ -e $PWD/system ];then mv $PWD/system $INSTALLEDDIR/system ; fi
 mkdir -p -- $INSTALLEDDIR/libext/pentaho
 mv "$PWD"/libext/pentaho/org.apache.karaf*.jar $INSTALLEDDIR/libext/pentaho/
-mv "$PWD"/libext/pentaho/org.osgi.core*.jar $INSTALLEDDIR/libext/pentaho/
+mv "$PWD"/libext/pentaho/osgi.core*.jar $INSTALLEDDIR/libext/pentaho/
 mv "$PWD"/libext/pentaho/pdi-osgi-bridge-core*.jar $INSTALLEDDIR/libext/pentaho/
 mv "$PWD"/libext/pentaho/pentaho-osgi-utils-api*.jar $INSTALLEDDIR/libext/pentaho/
 mv "$PWD"/libext/pentaho/pentaho-service-coordinator*.jar $INSTALLEDDIR/libext/pentaho/
