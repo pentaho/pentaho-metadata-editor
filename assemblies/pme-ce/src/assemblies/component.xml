@@ -35,8 +35,12 @@
       <directory>${project.build.directory}/plugins</directory>
       <outputDirectory>plugins</outputDirectory>
     </fileSet>
+    <!-- license -->
     <fileSet>
-      <directory>${project.build.directory}/oss-licenses</directory>
+      <directory>${project.basedir}/../..</directory>
+      <includes>
+        <include>LICENSE.TXT</include>
+      </includes>
       <outputDirectory>.</outputDirectory>
     </fileSet>
   </fileSets>
