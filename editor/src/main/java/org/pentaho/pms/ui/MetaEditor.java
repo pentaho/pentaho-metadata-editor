@@ -3705,10 +3705,6 @@ public class MetaEditor implements SelectionListener {
       }
     }
 
-    if ( !Splash.isMacOS() ) {
-      splash.hide();
-    }
-
     win.open();
     while ( !win.isDisposed() ) {
       if ( !win.readAndDispatch() ) {
