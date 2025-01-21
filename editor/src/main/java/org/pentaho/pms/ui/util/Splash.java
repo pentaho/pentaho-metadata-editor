@@ -49,6 +49,9 @@ public class Splash {
   private static final String FONT_TYPE = "Helvetica";
   private static final String LICENSE_FILE_PATH = "./LICENSE.TXT";
 
+  // 5 Seconds to display startup splash if not clicked to close early
+  private static final int STARTUP_SPLASH_DISPLAY_TIME = 5000;
+
   private boolean isStartup;
   private boolean isMouseDown = false;
   private boolean isMouseMoveInProgress = false;
@@ -91,14 +94,40 @@ public class Splash {
     shell.open();
 
     if ( isStartup ) { //show splash for 5s on startup
-      long endTime = System.currentTimeMillis() + 5000;
-      while ( !shell.isDisposed() && endTime > System.currentTimeMillis() ) {
-        if ( isMacOS() && !display.readAndDispatch() ) {
+
+      // Start timer in a separate thread so that it isn't blocked and that it doesn't block clicks to close the
+      // splash early
+      new Thread( () -> {
+        try {
+          Thread.sleep( STARTUP_SPLASH_DISPLAY_TIME );
+        } catch ( InterruptedException e ) {
+          logger.warn( "Splash timer thread interrupted during sleep:\n" + e.getMessage() );
+          // Close the splash shell on the UI thread immediately so that it doesn't get stuck
+          closeSplashShell();
+
+          Thread.currentThread().interrupt();
+        }
+        // Close the splash shell on the UI thread now that the timer has completed
+        closeSplashShell();
+      } ).start();
+
+      // Sleep the display thread while there is nothing to do
+      while ( !shell.isDisposed() ) {
+        if ( !display.readAndDispatch() ) {
           display.sleep();
         }
       }
+
       shell.dispose();
     }
+  }
+
+  private void closeSplashShell(){
+    display.asyncExec( () -> {
+      if ( !shell.isDisposed() ) {
+        shell.close();
+      }
+    } );
   }
 
   private void setupShellDimensions() {
@@ -122,7 +151,7 @@ public class Splash {
           isMouseDown = false;
           isMouseMoveInProgress = false;
         } else {
-          shell.dispose();
+          closeSplashShell();
         }
       }
 
@@ -277,11 +306,6 @@ public class Splash {
       e.gc.drawText( licenseText, textHorizontalPosition, 150, true );
 
     } );
-  }
-
-  public static boolean isMacOS() {
-    String osName = System.getProperty( "os.name" ).toLowerCase();
-    return osName.startsWith( "mac os x" );
   }
 
   // determine if the license text will fit the allocated space
