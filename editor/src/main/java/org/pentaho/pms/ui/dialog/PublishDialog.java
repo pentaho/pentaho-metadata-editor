@@ -13,12 +13,15 @@
 
 package org.pentaho.pms.ui.dialog;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataMultiPart;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -39,7 +42,7 @@ import org.pentaho.pms.core.CWM;
 import org.pentaho.pms.messages.Messages;
 import org.pentaho.pms.schema.SchemaMeta;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -252,19 +255,21 @@ public class PublishDialog extends TitleAreaDialog {
         part.getField( "metadataFile" ).setContentDisposition(
             FormDataContentDisposition.name( "metadataFile" )
             .fileName( "metadataFile" + System.currentTimeMillis() ).build() );
-        Client client = Client.create();
-        client.addFilter( new HTTPBasicAuthFilter( userId, userPassword ) );
+        ClientConfig clientConfig = new ClientConfig();
+        Client client = ClientBuilder.newClient( clientConfig );
+        HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic( userId, userPassword );
+        client.register( feature );
 
-        WebResource resource = client.resource( serverURL );
+        WebTarget target = client.target( serverURL );
 
-        ClientResponse resp = resource
-            .type( MediaType.MULTIPART_FORM_DATA_TYPE )
-            .put( ClientResponse.class, part );
+       Response resp = target
+                  .request( MediaType.MULTIPART_FORM_DATA_TYPE )
+                  .put( Entity.entity( part, MediaType.MULTIPART_FORM_DATA_TYPE ) );
         String status = "-1";
         String message = "";
         if ( resp != null && resp.getStatus() > 0 ) {
           status = String.valueOf( resp.getStatus() );
-          message = resp.getEntity( String.class );
+          message = resp.readEntity( String.class );
         }
         responseValue = displayMessageBox( status, message );
       } catch ( Exception e ) {
