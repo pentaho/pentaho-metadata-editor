@@ -5,21 +5,21 @@
   <parent>
     <groupId>pentaho</groupId>
     <artifactId>pentaho-metadata-editor-assemblies</artifactId>
-    <version>10.3.0.0-SNAPSHOT</version>
+    <version>11.0.0.0-SNAPSHOT</version>
   </parent>
   <groupId>pentaho</groupId>
   <artifactId>pme-ce</artifactId>
-  <version>10.3.0.0-SNAPSHOT</version>
+  <version>11.0.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <properties>
     <hsqldb.version>2.3.2</hsqldb.version>
 
-    <pdi-dataservice-client-plugin.version>10.3.0.0-SNAPSHOT</pdi-dataservice-client-plugin.version>
-    <pentaho-metadata.version>10.3.0.0-SNAPSHOT</pentaho-metadata.version>
-    <pentaho-launcher.version>10.3.0.0-SNAPSHOT</pentaho-launcher.version>
-    <commons-database.version>10.3.0.0-SNAPSHOT</commons-database.version>
+    <pdi-dataservice-client-plugin.version>11.0.0.0-SNAPSHOT</pdi-dataservice-client-plugin.version>
+    <pentaho-metadata.version>11.0.0.0-SNAPSHOT</pentaho-metadata.version>
+    <pentaho-launcher.version>11.0.0.0-SNAPSHOT</pentaho-launcher.version>
+    <commons-database.version>11.0.0.0-SNAPSHOT</commons-database.version>
 
-    <pentaho-hadoop-shims.version>10.3.0.0-SNAPSHOT</pentaho-hadoop-shims.version>
+    <pentaho-hadoop-shims.version>11.0.0.0-SNAPSHOT</pentaho-hadoop-shims.version>
   </properties>
   <dependencies>
     <dependency>

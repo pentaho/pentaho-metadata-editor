@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.pentaho</groupId>
     <artifactId>pentaho-ce-jar-parent-pom</artifactId>
-    <version>10.3.0.0-SNAPSHOT</version>
+    <version>11.0.0.0-SNAPSHOT</version>
   </parent>
   <groupId>pentaho</groupId>
   <artifactId>pentaho-metadata-editor-parent</artifactId>
-  <version>10.3.0.0-SNAPSHOT</version>
+  <version>11.0.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>${project.artifactId}</name>
   <description></description>
@@ -65,18 +65,18 @@
     <snmp4j.version>1.9.3d</snmp4j.version>
     <trilead-ssh2.version>1.0.0-build215</trilead-ssh2.version>
 
-    <pentaho-connections.version>10.3.0.0-SNAPSHOT</pentaho-connections.version>
-    <pdi.version>10.3.0.0-SNAPSHOT</pdi.version>
-    <pentaho-reporting.version>10.3.0.0-SNAPSHOT</pentaho-reporting.version>
-    <pentaho-metadata.version>10.3.0.0-SNAPSHOT</pentaho-metadata.version>
-    <pentaho-vfs-browser.version>10.3.0.0-SNAPSHOT</pentaho-vfs-browser.version>
-    <commons-xul.version>10.3.0.0-SNAPSHOT</commons-xul.version>
-    <pentaho-karaf.version>10.3.0.0-SNAPSHOT</pentaho-karaf.version>
-    <pentaho-osgi-bundles.version>10.3.0.0-SNAPSHOT</pentaho-osgi-bundles.version>
-    <pdi-osgi-bridge.version>10.3.0.0-SNAPSHOT</pdi-osgi-bridge.version>
-    <pentaho-metaverse.version>10.3.0.0-SNAPSHOT</pentaho-metaverse.version>
-    <platform.version>10.3.0.0-SNAPSHOT</platform.version>
-    <pentaho-mql-editor.version>10.3.0.0-SNAPSHOT</pentaho-mql-editor.version>
+    <pentaho-connections.version>11.0.0.0-SNAPSHOT</pentaho-connections.version>
+    <pdi.version>11.0.0.0-SNAPSHOT</pdi.version>
+    <pentaho-reporting.version>11.0.0.0-SNAPSHOT</pentaho-reporting.version>
+    <pentaho-metadata.version>11.0.0.0-SNAPSHOT</pentaho-metadata.version>
+    <pentaho-vfs-browser.version>11.0.0.0-SNAPSHOT</pentaho-vfs-browser.version>
+    <commons-xul.version>11.0.0.0-SNAPSHOT</commons-xul.version>
+    <pentaho-karaf.version>11.0.0.0-SNAPSHOT</pentaho-karaf.version>
+    <pentaho-osgi-bundles.version>11.0.0.0-SNAPSHOT</pentaho-osgi-bundles.version>
+    <pdi-osgi-bridge.version>11.0.0.0-SNAPSHOT</pdi-osgi-bridge.version>
+    <pentaho-metaverse.version>11.0.0.0-SNAPSHOT</pentaho-metaverse.version>
+    <platform.version>11.0.0.0-SNAPSHOT</platform.version>
+    <pentaho-mql-editor.version>11.0.0.0-SNAPSHOT</pentaho-mql-editor.version>
     <jakarta-annotaion-api.version>1.3.5</jakarta-annotaion-api.version>
   </properties>
 
