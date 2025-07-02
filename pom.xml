@@ -53,7 +53,6 @@
     <mimepull.version>1.9.3</mimepull.version>
     <mockito.version>5.10.0</mockito.version>
     <nbmdr.version>200507110943-custom</nbmdr.version>
-    <net.sf.saxon.version>9.1.0.8</net.sf.saxon.version>
     <org.netbeans.version>200507110943</org.netbeans.version>
     <org.eclipse.swt.gtk.linux.x86.version>3.108.0</org.eclipse.swt.gtk.linux.x86.version>
     <org.eclipse.swt.gtk.linux.x86_64.version>3.108.0</org.eclipse.swt.gtk.linux.x86_64.version>
@@ -796,7 +795,6 @@
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>saxon</artifactId>
-      <version>${net.sf.saxon.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -807,7 +805,6 @@
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>saxon-dom</artifactId>
-      <version>${net.sf.saxon.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
