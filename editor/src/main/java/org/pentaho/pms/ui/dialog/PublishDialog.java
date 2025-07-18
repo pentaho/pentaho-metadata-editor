@@ -262,9 +262,7 @@ public class PublishDialog extends TitleAreaDialog {
 
         WebTarget target = client.target( serverURL );
 
-       Response resp = target
-                  .request( MediaType.MULTIPART_FORM_DATA_TYPE )
-                  .put( Entity.entity( part, MediaType.MULTIPART_FORM_DATA_TYPE ) );
+       Response resp = target.request( MediaType.MULTIPART_FORM_DATA_TYPE ).put( Entity.entity( part, MediaType.MULTIPART_FORM_DATA_TYPE ) );
         String status = "-1";
         String message = "";
         if ( resp != null && resp.getStatus() > 0 ) {
