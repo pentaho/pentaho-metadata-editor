@@ -794,7 +794,7 @@
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
-      <artifactId>Saxon-HE</artifactId>
+      <artifactId>saxon</artifactId>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
