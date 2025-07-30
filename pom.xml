@@ -28,7 +28,6 @@
 
   <properties>
     <blueprints-core.version>2.6.0</blueprints-core.version>
-    <com.sun.jersey.version>1.19.1</com.sun.jersey.version>
     <commons-collections.version>3.2.2</commons-collections.version>
     <commons-configuration.version>1.9</commons-configuration.version>
     <commons-lang.version>2.6</commons-lang.version>
@@ -326,9 +325,9 @@
       <version>${mimepull.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.sun.jersey.contribs</groupId>
-      <artifactId>jersey-multipart</artifactId>
-      <version>${com.sun.jersey.version}</version>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-multipart</artifactId>
+      <version>${jersey.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -337,9 +336,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.sun.jersey.contribs</groupId>
-      <artifactId>jersey-apache-client</artifactId>
-      <version>${com.sun.jersey.version}</version>
+      <groupId>org.glassfish.jersey.ext</groupId>
+      <artifactId>jersey-spring6</artifactId>
+      <version>${jersey.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -348,43 +347,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.sun.jersey.contribs</groupId>
-      <artifactId>jersey-spring</artifactId>
-      <version>${com.sun.jersey.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-core</artifactId>
-      <version>${com.sun.jersey.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-json</artifactId>
-      <version>${com.sun.jersey.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
+      <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-client</artifactId>
-      <version>${com.sun.jersey.version}</version>
+      <version>${jersey.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -393,9 +358,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.sun.jersey</groupId>
+      <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-server</artifactId>
-      <version>${com.sun.jersey.version}</version>
+      <version>${jersey.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -404,9 +369,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-servlet</artifactId>
-      <version>${com.sun.jersey.version}</version>
+      <groupId>org.glassfish.jersey.containers</groupId>
+      <artifactId>jersey-container-servlet</artifactId>
+      <version>${jersey.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -415,9 +380,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>jsr311-api</artifactId>
-      <version>${jsr311-api.version}</version>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <version>${jakarta.ws.rs-api.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
