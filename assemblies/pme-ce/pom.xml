@@ -104,7 +104,7 @@
     <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
-      <version>${jakarta-annotaion-api.version}</version>
+      <version>${jakarta.annotation-api.version}</version>
       <scope>runtime</scope>
     </dependency>
     <!-- Use log4j implementation with SLF4J -->
