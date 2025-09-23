@@ -1,4 +1,12 @@
-<component>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+  <id>pme</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <baseDirectory>metadata-editor</baseDirectory>
   <fileSets>
     <fileSet>
       <directory>${project.basedir}/src/main/resources-filtered</directory>
@@ -44,4 +52,4 @@
       <outputDirectory>.</outputDirectory>
     </fileSet>
   </fileSets>
-</component>
+</assembly>
