@@ -61,7 +61,6 @@
     <pentaho-cwm.version>1.5.4</pentaho-cwm.version>
     <scannotation.version>1.0.2</scannotation.version>
     <snmp4j.version>1.9.3d</snmp4j.version>
-    <trilead-ssh2.version>1.0.0-build215</trilead-ssh2.version>
 
     <pentaho-connections.version>11.0.0.0-SNAPSHOT</pentaho-connections.version>
     <pdi.version>11.0.0.0-SNAPSHOT</pdi.version>
@@ -770,17 +769,6 @@
       <groupId>pentaho</groupId>
       <artifactId>simple-jndi</artifactId>
       <version>${simple-jndi.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.trilead</groupId>
-      <artifactId>trilead-ssh2</artifactId>
-      <version>${trilead-ssh2.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
