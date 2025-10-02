@@ -174,7 +174,7 @@
             </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/libs/libext/JDBC</outputDirectory>
-              <includeArtifactIds>h2,hsqldb</includeArtifactIds>
+              <includeArtifactIds>hsqldb</includeArtifactIds>
             </configuration>
           </execution>
           <execution>
