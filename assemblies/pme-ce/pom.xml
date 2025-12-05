@@ -18,7 +18,7 @@
     <pentaho-metadata.version>11.1.0.0-SNAPSHOT</pentaho-metadata.version>
     <pentaho-launcher.version>11.1.0.0-SNAPSHOT</pentaho-launcher.version>
     <commons-database.version>11.1.0.0-SNAPSHOT</commons-database.version>
-
+    <osgi.version>8.0.0</osgi.version>
     <pentaho-hadoop-shims.version>11.1.0.0-SNAPSHOT</pentaho-hadoop-shims.version>
   </properties>
   <dependencies>
@@ -118,6 +118,48 @@
       <artifactId>commons-database-model</artifactId>
       <version>${commons-database.version}</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.pentaho</groupId>
+      <artifactId>shim-api-core</artifactId>
+      <version>${pentaho-hadoop-shims.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>*</artifactId>
+          <groupId>*</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.pentaho</groupId>
+      <artifactId>shim-api</artifactId>
+      <version>${pentaho-hadoop-shims.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>*</artifactId>
+          <groupId>*</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi.core</artifactId>
+      <version>${osgi.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>${jakarta.servlet.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>*</artifactId>
+          <groupId>*</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <build>
