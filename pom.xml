@@ -39,7 +39,7 @@
     <hibernate.version>5.4.24.Final</hibernate.version>
     <javadbf.version>0.4.0</javadbf.version>
     <javassist.version>3.20.0-GA</javassist.version>
-    <jface.version>3.22.0</jface.version>
+    <jface.version>3.31.0</jface.version>
     <jsr311-api.version>1.1.1</jsr311-api.version>
     <jug-lgpl.version>2.0.0</jug-lgpl.version>
     <junit.version>4.13.2</junit.version>
