@@ -564,14 +564,14 @@ public class QueryBuilderDialog extends Dialog {
   }
 
   @Override
-  public void okPressed() {
+  protected void okPressed() {
     // Ensure that if the getMqlQuery operation fails, an error message shows and the dialog is not closed
     try {
       getMqlQuery();
       super.okPressed();
     } catch ( Exception e ) {
-      new ErrorDialog( getParentShell(), Messages.getString( "General.USER_TITLE_ERROR" ),
-        Messages.getString( "QueryDialog.USER_ERROR_LOADING_QUERY" ), e );
+      new ErrorDialog( getShell(), Messages.getString( "General.USER_TITLE_ERROR" ),
+        Messages.getString( "QueryDialog.USER_ERROR_GENERATING_QUERY" ), e );
     }
   }
 }
