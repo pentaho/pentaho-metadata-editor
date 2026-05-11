@@ -36,7 +36,6 @@
     <ehcache.version>1.1</ehcache.version>
     <equinox.bidi.version>1.3.0</equinox.bidi.version>
     <equinox.common.version>3.14.0</equinox.common.version>
-    <hibernate.version>5.4.24.Final</hibernate.version>
     <javadbf.version>0.4.0</javadbf.version>
     <javassist.version>3.20.0-GA</javassist.version>
     <jface.version>3.22.0</jface.version>
@@ -686,9 +685,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>${hibernate.version}</version>
+      <version>${hibernate-core.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
