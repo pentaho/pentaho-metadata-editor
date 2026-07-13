@@ -13,12 +13,14 @@
 
 package org.pentaho.pms.security;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.Manifest;
 
 import org.junit.Test;
@@ -38,15 +40,20 @@ public class JFaceCveRegressionTest {
 
   @Test
   public void jfaceBundleIsAtOrAboveCveFixedVersion() throws Exception {
-    String bundleVersion = resolveJFaceBundleVersion();
-    assertNotNull( "org.eclipse.jface bundle was not found on the classpath", bundleVersion );
-    assertTrue(
-      "Vulnerable org.eclipse.jface " + bundleVersion
-        + " is below the CVE-2023-4218 fixed line (3.29.0); bump jface.version.",
-      compareToMinimum( bundleVersion ) >= 0 );
+    List<String> bundleVersions = resolveJFaceBundleVersions();
+    assertFalse( "org.eclipse.jface bundle was not found on the classpath", bundleVersions.isEmpty() );
+    // Check EVERY jface bundle on the classpath (order-independent): if any copy is below the
+    // fixed line the guard must fail, regardless of which one Maven resolution would win.
+    for ( String bundleVersion : bundleVersions ) {
+      assertTrue(
+        "Vulnerable org.eclipse.jface " + bundleVersion + " (all found: " + bundleVersions
+          + ") is below the CVE-2023-4218 fixed line (3.29.0); bump jface.version.",
+        compareToMinimum( bundleVersion ) >= 0 );
+    }
   }
 
-  private static String resolveJFaceBundleVersion() throws Exception {
+  private static List<String> resolveJFaceBundleVersions() throws Exception {
+    List<String> versions = new ArrayList<>();
     Enumeration<URL> manifests =
       JFaceCveRegressionTest.class.getClassLoader().getResources( "META-INF/MANIFEST.MF" );
     while ( manifests.hasMoreElements() ) {
@@ -54,11 +61,14 @@ public class JFaceCveRegressionTest {
         Manifest manifest = new Manifest( in );
         String symbolicName = manifest.getMainAttributes().getValue( "Bundle-SymbolicName" );
         if ( symbolicName != null && "org.eclipse.jface".equals( symbolicName.split( ";" )[ 0 ].trim() ) ) {
-          return manifest.getMainAttributes().getValue( "Bundle-Version" );
+          String version = manifest.getMainAttributes().getValue( "Bundle-Version" );
+          if ( version != null ) {
+            versions.add( version );
+          }
         }
       }
     }
-    return null;
+    return versions;
   }
 
   private static int compareToMinimum( String actualVersion ) {
