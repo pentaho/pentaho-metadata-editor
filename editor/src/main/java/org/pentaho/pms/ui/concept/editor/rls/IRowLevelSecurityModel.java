@@ -18,7 +18,7 @@ import java.util.EventObject;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.pentaho.pms.schema.security.RowLevelSecurity;
 import org.pentaho.pms.schema.security.SecurityOwner;
 import org.pentaho.pms.schema.security.RowLevelSecurity.Type;

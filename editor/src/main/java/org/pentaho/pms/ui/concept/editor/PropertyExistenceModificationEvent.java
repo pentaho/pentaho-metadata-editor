@@ -16,7 +16,7 @@ package org.pentaho.pms.ui.concept.editor;
 
 import java.lang.reflect.Field;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pms.schema.concept.ConceptPropertyInterface;
