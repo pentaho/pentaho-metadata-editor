@@ -29,8 +29,6 @@
   <properties>
     <blueprints-core.version>2.6.0</blueprints-core.version>
     <commons-collections.version>3.2.2</commons-collections.version>
-    <commons-configuration.version>1.9</commons-configuration.version>
-    <commons-lang.version>2.6</commons-lang.version>
     <core.commands.version>3.9.800</core.commands.version>
     <edtftpj.version>2.1.0</edtftpj.version>
     <ehcache.version>1.1</ehcache.version>
@@ -104,9 +102,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>${commons-lang.version}</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -447,9 +445,9 @@
 
     <!-- Include jar and zip artifacts -->
     <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
-      <version>${commons-configuration.version}</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-configuration2</artifactId>
+      <version>${commons-configuration2.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>

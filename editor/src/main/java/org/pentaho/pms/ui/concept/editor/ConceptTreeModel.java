@@ -25,7 +25,7 @@ import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.apache.commons.collections.map.MultiValueMap;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pms.schema.SchemaMeta;
