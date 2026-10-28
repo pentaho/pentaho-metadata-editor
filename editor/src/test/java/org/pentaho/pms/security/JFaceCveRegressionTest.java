@@ -14,6 +14,7 @@
 package org.pentaho.pms.security;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
@@ -29,14 +30,34 @@ import org.junit.Test;
  * Regression guard for CVE-2023-4218 (Eclipse JFace XXE, CWE-611).
  *
  * <p>Fails if the {@code org.eclipse.jface} bundle resolved on the classpath is older than the
- * first fixed version on the current line (3.29.0). This encodes the remediation invariant so the
+ * first fixed version on the current line (3.31.0). This encodes the remediation invariant so the
  * vulnerable 3.22.0 cannot silently creep back via {@code jface.version}. RED on 3.22.0, GREEN on
  * 3.31.0.</p>
  */
 public class JFaceCveRegressionTest {
 
   /** First fixed version on the current JFace line for CVE-2023-4218. */
-  private static final int[] MIN_FIXED_VERSION = { 3, 29, 0 };
+  private static final int[] MIN_FIXED_VERSION = { 3, 31, 0 };
+
+  @Test
+  public void rejectsVulnerable330() {
+    assertTrue( compareToMinimum( "3.30.0" ) < 0 );
+  }
+
+  @Test
+  public void acceptsFixed331() {
+    assertTrue( compareToMinimum( "3.31.0" ) >= 0 );
+  }
+
+  @Test( expected = AssertionError.class )
+  public void rejectsMissingVersion() {
+    compareToMinimum( null );
+  }
+
+  @Test( expected = AssertionError.class )
+  public void rejectsMalformedVersion() {
+    compareToMinimum( "4garbage.0.0" );
+  }
 
   @Test
   public void jfaceBundleIsAtOrAboveCveFixedVersion() throws Exception {
@@ -47,7 +68,7 @@ public class JFaceCveRegressionTest {
     for ( String bundleVersion : bundleVersions ) {
       assertTrue(
         "Vulnerable org.eclipse.jface " + bundleVersion + " (all found: " + bundleVersions
-          + ") is below the CVE-2023-4218 fixed line (3.29.0); bump jface.version.",
+          + ") is below the CVE-2023-4218 fixed line (3.31.0); bump jface.version.",
         compareToMinimum( bundleVersion ) >= 0 );
     }
   }
@@ -62,9 +83,8 @@ public class JFaceCveRegressionTest {
         String symbolicName = manifest.getMainAttributes().getValue( "Bundle-SymbolicName" );
         if ( symbolicName != null && "org.eclipse.jface".equals( symbolicName.split( ";" )[ 0 ].trim() ) ) {
           String version = manifest.getMainAttributes().getValue( "Bundle-Version" );
-          if ( version != null ) {
-            versions.add( version );
-          }
+          assertNotNull( "org.eclipse.jface bundle has no Bundle-Version", version );
+          versions.add( version );
         }
       }
     }
@@ -72,21 +92,15 @@ public class JFaceCveRegressionTest {
   }
 
   private static int compareToMinimum( String actualVersion ) {
+    assertTrue( "Invalid org.eclipse.jface Bundle-Version: " + actualVersion,
+      actualVersion != null && actualVersion.matches( "\\d+\\.\\d+\\.\\d+(?:\\.[A-Za-z0-9_-]+)?" ) );
     String[] parts = actualVersion.split( "\\." );
     for ( int i = 0; i < MIN_FIXED_VERSION.length; i++ ) {
-      int actual = i < parts.length ? leadingInt( parts[ i ] ) : 0;
+      int actual = Integer.parseInt( parts[ i ] );
       if ( actual != MIN_FIXED_VERSION[ i ] ) {
-        return actual - MIN_FIXED_VERSION[ i ];
+        return Integer.compare( actual, MIN_FIXED_VERSION[ i ] );
       }
     }
     return 0;
-  }
-
-  private static int leadingInt( String value ) {
-    int end = 0;
-    while ( end < value.length() && Character.isDigit( value.charAt( end ) ) ) {
-      end++;
-    }
-    return end == 0 ? 0 : Integer.parseInt( value.substring( 0, end ) );
   }
 }
