@@ -29,9 +29,6 @@
   <properties>
     <blueprints-core.version>2.6.0</blueprints-core.version>
     <commons-collections.version>3.2.2</commons-collections.version>
-    <commons-configuration.version>1.9</commons-configuration.version>
-    <commons-lang.version>2.6</commons-lang.version>
-    <!-- Eclipse UI libs bumped together to remediate CVE-2023-4218 (jface XXE); aligned with pentaho-kettle PPP-6529 (jface 3.31.0 / commands 3.12.100 / common 3.18.0). jface 3.31.0 requires equinox.common [3.18.0,4.0.0). -->
     <core.commands.version>3.12.100</core.commands.version>
     <edtftpj.version>2.1.0</edtftpj.version>
     <ehcache.version>1.1</ehcache.version>
@@ -105,9 +102,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>${commons-lang.version}</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -448,9 +445,9 @@
 
     <!-- Include jar and zip artifacts -->
     <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
-      <version>${commons-configuration.version}</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-configuration2</artifactId>
+      <version>${commons-configuration2.version}</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -900,7 +897,7 @@
     <repository>
       <id>pentaho-public</id>
       <name>Pentaho Public</name>
-      <url>https://repo.orl.eng.hitachivantara.com/artifactory/pnt-mvn/</url>
+      <url>https://repo.pentaho.com/artifactory/pnt-mvn/</url>
       <releases>
         <enabled>true</enabled>
         <updatePolicy>daily</updatePolicy>
@@ -916,7 +913,7 @@
     <pluginRepository>
       <id>pentaho-public-plugins</id>
       <name>Pentaho Public Plugins</name>
-      <url>https://repo.orl.eng.hitachivantara.com/artifactory/pnt-mvn/</url>
+      <url>https://repo.pentaho.com/artifactory/pnt-mvn/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
